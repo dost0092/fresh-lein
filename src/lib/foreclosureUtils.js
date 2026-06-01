@@ -1,18 +1,20 @@
 import { differenceInDays, parseISO } from 'date-fns';
+import { getCountyCentroid } from '@/data/countyCentroids';
 
-const SAMPLE_COORDS = {
-  'sample-1': [40.7357, -74.1724],
-  'sample-2': [26.7153, -80.0534],
-  'sample-3': [33.5092, -112.034],
-  'sample-4': [40.5853, -105.0844],
-  'sample-5': [40.744, -74.0324],
-  'sample-6': [39.9526, -75.1652],
-  'sample-7': [42.3636, -87.8448],
-  'sample-8': [31.5493, -97.1467],
-  'sample-9': [39.3643, -74.4229],
-  'sample-10': [41.1384, -81.8637],
-  'sample-11': [33.5092, -112.039],
-  'sample-12': [40.0712, -74.8649],
+/** Per-record coordinates (property-level) for sample MVP data */
+const SAMPLE_PROPERTY_COORDS = {
+  'sample-1': { latitude: 40.7357, longitude: -74.1724 },
+  'sample-2': { latitude: 26.7153, longitude: -80.0534 },
+  'sample-3': { latitude: 33.5092, longitude: -112.034 },
+  'sample-4': { latitude: 40.5853, longitude: -105.0844 },
+  'sample-5': { latitude: 40.744, longitude: -74.0324 },
+  'sample-6': { latitude: 39.9526, longitude: -75.1652 },
+  'sample-7': { latitude: 42.3636, longitude: -87.8448 },
+  'sample-8': { latitude: 31.5493, longitude: -97.1467 },
+  'sample-9': { latitude: 39.3643, longitude: -74.4229 },
+  'sample-10': { latitude: 41.1384, longitude: -81.8637 },
+  'sample-11': { latitude: 33.5022, longitude: -112.039 },
+  'sample-12': { latitude: 40.0712, longitude: -74.8649 },
 };
 
 export function daysToSale(saleDate) {
@@ -24,16 +26,47 @@ export function daysToSale(saleDate) {
   }
 }
 
+function parseCoord(value) {
+  if (value == null || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Resolve lat/lng from record fields, sample lookup, or county centroid */
+export function resolveCoordinates(row) {
+  let lat = parseCoord(row.latitude);
+  let lng = parseCoord(row.longitude);
+
+  if (lat != null && lng != null) {
+    return { latitude: lat, longitude: lng };
+  }
+
+  const sample = SAMPLE_PROPERTY_COORDS[row.id];
+  if (sample) {
+    return { latitude: sample.latitude, longitude: sample.longitude };
+  }
+
+  const county = getCountyCentroid(row.county_name, row.state);
+  if (county) {
+    return county;
+  }
+
+  return { latitude: null, longitude: null };
+}
+
 /** Normalize API/sample rows for map, list, and drawer */
 export function enrichForeclosure(row) {
   if (!row) return null;
   const days = daysToSale(row.sale_date);
-  const coords = SAMPLE_COORDS[row.id];
+  const { latitude, longitude } = resolveCoordinates(row);
+
   return {
     ...row,
-    latitude: row.latitude ?? coords?.[0],
-    longitude: row.longitude ?? coords?.[1],
-    address_full: row.address_full || `${row.property_address}, ${row.city}, ${row.state} ${row.zip_code || ''}`.trim(),
+    latitude,
+    longitude,
+    address_full:
+      row.address_full ||
+      `${row.property_address}, ${row.city}, ${row.state} ${row.zip_code || ''}`.trim(),
     auction_date: row.sale_date,
     defendant_primary: row.defendant,
     days_to_auction: days,
@@ -48,7 +81,10 @@ export function enrichForeclosure(row) {
   };
 }
 
-export function filterForeclosures(rows, { search = '', county = 'all', state = 'all', status = 'all', dateFrom = '', dateTo = '' }) {
+export function filterForeclosures(
+  rows,
+  { search = '', county = 'all', state = 'all', status = 'all', dateFrom = '', dateTo = '' }
+) {
   const q = search.toLowerCase().trim();
   return rows.filter((r) => {
     if (county !== 'all' && r.county_name !== county) return false;
@@ -70,5 +106,14 @@ export function filterForeclosures(rows, { search = '', county = 'all', state = 
       .join(' ')
       .toLowerCase();
     return hay.includes(q);
+  });
+}
+
+/** Records that can be plotted on the map */
+export function getMappableFilings(filings) {
+  return filings.filter((f) => {
+    const lat = parseCoord(f.latitude);
+    const lng = parseCoord(f.longitude);
+    return lat != null && lng != null;
   });
 }

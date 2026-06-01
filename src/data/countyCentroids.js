@@ -1,0 +1,58 @@
+/** Approximate county seat coordinates for map fallback when lat/lng missing */
+export const COUNTY_CENTROIDS = {
+  'Allen-OH': [40.8689, -84.13],
+  'Ascension Parish-LA': [30.2166, -90.9218],
+  'Atlantic-NJ': [39.3643, -74.4229],
+  'Bergen-NJ': [40.9168, -74.0816],
+  'Burlington-NJ': [40.0712, -74.8649],
+  'Camden-NJ': [39.7998, -75.1196],
+  'Canyon-ID': [43.6629, -116.6874],
+  'Cape May-NJ': [39.084, -74.71],
+  'Champaign-IL': [40.1164, -88.2434],
+  'Cumberland-NJ': [39.4284, -75.121],
+  'Deschutes-OR': [44.0582, -121.3153],
+  'Essex-NJ': [40.7357, -74.1724],
+  'Gloucester-NJ': [39.7173, -75.1441],
+  'Guadalupe-TX': [29.5685, -97.9647],
+  'Hudson-NJ': [40.744, -74.0324],
+  'Hunterdon-NJ': [40.5673, -74.911],
+  'Josephine-OR': [42.439, -123.327],
+  'Kent-DE': [39.1582, -75.5244],
+  'Lake-IL': [42.3636, -87.8448],
+  'Larimer-CO': [40.5853, -105.0844],
+  'Lehigh-PA': [40.6084, -75.4902],
+  'Lorain-OH': [41.4528, -82.1824],
+  'Maricopa-AZ': [33.4484, -112.074],
+  'McLennan-TX': [31.5493, -97.1467],
+  'Medina-OH': [41.1384, -81.8637],
+  'Middlesex-NJ': [40.4862, -74.4518],
+  'Monmouth-NJ': [40.2204, -74.0121],
+  'Montgomery-PA': [40.127, -75.444],
+  'Morris-NJ': [40.7968, -74.4815],
+  'New Castle-DE': [39.7391, -75.5398],
+  'Ocean-NJ': [39.9548, -74.1979],
+  'Orleans Parish-LA': [29.9511, -90.0715],
+  'Palm Beach-FL': [26.7153, -80.0534],
+  'Passaic-NJ': [40.9168, -74.1718],
+  'Philadelphia-PA': [39.9526, -75.1652],
+  'Pottawattamie-IA': [41.2586, -95.8517],
+  'Pulaski-AR': [34.7465, -92.2896],
+  'Richland-OH': [40.7584, -82.5154],
+  'Rockwall-TX': [32.9312, -96.4597],
+  'Salem-NJ': [39.5718, -75.3588],
+  'Santa Rosa-FL': [30.6327, -87.0396],
+  'Scott-IA': [41.5236, -90.5776],
+  'Shawnee-KS': [39.0558, -95.689],
+  'Snohomish-WA': [47.9789, -122.2021],
+  'Stearns-MN': [45.5579, -94.1632],
+  'Story-IA': [42.0308, -93.6319],
+  'Sussex-DE': [38.6496, -75.6049],
+  'Union-NJ': [40.6599, -74.3047],
+};
+
+export function getCountyCentroid(countyName, state) {
+  if (!countyName || !state) return null;
+  const key = `${countyName}-${state}`;
+  const c = COUNTY_CENTROIDS[key];
+  return c ? { latitude: c[0], longitude: c[1] } : null;
+}

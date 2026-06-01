@@ -214,7 +214,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
               />
             </div>
           ) : view === 'map' ? (
-            <div className="flex-1 relative min-h-[400px]">
+            <div className="flex-1 relative min-h-[calc(100vh-220px)] h-full">
               <MapView
                 filings={filtered}
                 onSelectFiling={setSelected}

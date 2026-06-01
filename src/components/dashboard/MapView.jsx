@@ -1,84 +1,140 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { format } from 'date-fns';
 import { getUrgency, getMarkerColor } from './UrgencyBadge';
+import { getMappableFilings } from '@/lib/foreclosureUtils';
 
-function MapController({ center, zoom }) {
+function FitBounds({ points }) {
   const map = useMap();
+
   useEffect(() => {
-    if (center) map.setView(center, zoom || map.getZoom());
-  }, [center]);
+    if (!points.length) return;
+
+    if (points.length === 1) {
+      map.setView(points[0], 13);
+      return;
+    }
+
+    const bounds = L.latLngBounds(points);
+    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 12 });
+  }, [map, points]);
+
   return null;
 }
 
-export default function MapView({ filings, onSelectFiling, selectedId }) {
-  const [mapCenter] = useState([27.5, -82.0]);
+function formatPopupDate(d) {
+  try {
+    return d ? format(new Date(d), 'MMM d, yyyy') : '—';
+  } catch {
+    return '—';
+  }
+}
 
-  const grouped = {};
-  filings.forEach(f => {
-    if (f.latitude && f.longitude) {
-      const key = `${f.latitude.toFixed(4)},${f.longitude.toFixed(4)}`;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(f);
-    }
-  });
+export default function MapView({ filings, onSelectFiling, selectedId }) {
+  const mappable = useMemo(() => getMappableFilings(filings), [filings]);
+
+  const points = useMemo(
+    () => mappable.map((f) => [Number(f.latitude), Number(f.longitude)]),
+    [mappable]
+  );
+
+  const defaultCenter = useMemo(() => {
+    if (points.length) return points[0];
+    return [39.8283, -98.5795];
+  }, [points]);
+
+  const grouped = useMemo(() => {
+    const g = {};
+    mappable.forEach((f) => {
+      const lat = Number(f.latitude);
+      const lng = Number(f.longitude);
+      const key = `${lat.toFixed(5)},${lng.toFixed(5)}`;
+      if (!g[key]) g[key] = [];
+      g[key].push(f);
+    });
+    return g;
+  }, [mappable]);
+
+  const unmappedCount = filings.length - mappable.length;
 
   return (
-    <div className="flex-1 relative">
+    <div className="absolute inset-0 z-0">
       <MapContainer
-        center={mapCenter}
-        zoom={7}
-        style={{ height: '100%', width: '100%' }}
-        zoomControl={true}
+        center={defaultCenter}
+        zoom={points.length ? 8 : 4}
+        style={{ height: '100%', width: '100%', minHeight: '480px' }}
+        zoomControl
+        scrollWheelZoom
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {points.length > 0 && <FitBounds points={points} />}
+
         {Object.entries(grouped).map(([key, group]) => {
           const [lat, lng] = key.split(',').map(Number);
           const f = group[0];
-          const urgency = getUrgency(f.days_to_auction, f.filing_type);
+          const urgency = getUrgency(f.days_to_auction, f.status === 'Appraisal' ? 'PRE' : 'NTS');
           const color = getMarkerColor(urgency);
-          const isSelected = group.some(g => g.id === selectedId);
+          const isSelected = group.some((g) => g.id === selectedId);
           const count = group.length;
 
           return (
             <CircleMarker
               key={key}
               center={[lat, lng]}
-              radius={count > 1 ? 14 : 9}
+              radius={count > 1 ? 14 : 10}
               pathOptions={{
                 fillColor: color,
-                fillOpacity: 0.9,
-                color: isSelected ? '#4257A7' : 'white',
+                fillOpacity: 0.92,
+                color: isSelected ? '#4257A7' : '#ffffff',
                 weight: isSelected ? 3 : 2,
               }}
               eventHandlers={{
-                click: () => onSelectFiling(f)
+                click: () => onSelectFiling(f),
               }}
             >
-              <Popup className="freshlien-popup">
-                <div className="min-w-[200px]">
-                  {group.slice(0, 3).map((filing, i) => (
+              <Popup>
+                <div className="min-w-[220px] max-w-[280px]">
+                  {group.slice(0, 4).map((filing, i) => (
                     <div
                       key={filing.id}
-                      className="cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                      role="button"
+                      tabIndex={0}
+                      className="cursor-pointer hover:bg-slate-50 p-2 rounded transition-colors"
                       onClick={() => onSelectFiling(filing)}
+                      onKeyDown={(e) => e.key === 'Enter' && onSelectFiling(filing)}
                     >
-                      {i > 0 && <hr className="my-1.5" />}
-                      <p className="font-semibold text-xs text-gray-900 leading-tight">{filing.address_full}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] font-medium text-blue-600">{filing.filing_type}</span>
-                        {filing.judgment_amount && (
-                          <span className="text-[10px] text-gray-500">${Number(filing.judgment_amount).toLocaleString()}</span>
-                        )}
+                      {i > 0 && <hr className="my-2 border-slate-200" />}
+                      <p className="font-semibold text-sm text-slate-900 leading-snug">
+                        {filing.property_address}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {filing.city}, {filing.state} · {filing.county_name} Co.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
+                          {filing.status}
+                        </span>
+                        <span className="text-[10px] text-slate-600">
+                          Sale {formatPopupDate(filing.sale_date)}
+                        </span>
                       </div>
+                      {filing.starting_bid != null && (
+                        <p className="text-xs font-medium text-slate-800 mt-1">
+                          Opening ${Number(filing.starting_bid).toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   ))}
-                  {group.length > 3 && (
-                    <p className="text-[10px] text-gray-400 mt-1 text-center">+{group.length - 3} more</p>
+                  {group.length > 4 && (
+                    <p className="text-[10px] text-slate-400 mt-1 text-center">
+                      +{group.length - 4} more at this location
+                    </p>
                   )}
                 </div>
               </Popup>
@@ -87,16 +143,13 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
         })}
       </MapContainer>
 
-      {/* Legend */}
-      <div className="absolute bottom-6 left-4 z-[1000] bg-white rounded-xl shadow-card border border-border p-3 text-xs">
-        <p className="font-semibold text-foreground mb-2 text-[11px] uppercase tracking-wide">Urgency</p>
+      <div className="absolute bottom-6 left-4 z-[1000] bg-white rounded-xl shadow-card border border-border p-3 text-xs pointer-events-none">
+        <p className="font-semibold text-foreground mb-2 text-[11px] uppercase tracking-wide">Auction urgency</p>
         {[
-          { color: '#E63946', label: 'Auction < 7 days' },
-          { color: '#F4A261', label: 'Auction 7–30 days' },
-          { color: '#FFD166', label: 'Auction 30–90 days' },
-          { color: '#4257A7', label: 'Pre-foreclosure / Appraisal' },
-          { color: '#7B2D8B', label: 'Probate' },
-          { color: '#94A3B8', label: 'REO / Post-auction' },
+          { color: '#E63946', label: '< 7 days' },
+          { color: '#F4A261', label: '7–30 days' },
+          { color: '#FFD166', label: '30–90 days' },
+          { color: '#4257A7', label: 'Appraisal / no date' },
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-2 mb-1 last:mb-0">
             <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: color }} />
@@ -105,11 +158,13 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
         ))}
       </div>
 
-      {/* Results count */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-secondary text-secondary-foreground text-xs font-medium px-4 py-1.5 rounded-full shadow-lg">
-        {filings.length} results
-        {filings.filter(f => f.latitude && f.longitude).length < filings.length && (
-          <span className="text-white/60 ml-1">({filings.filter(f => f.latitude && f.longitude).length} mapped)</span>
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-secondary text-secondary-foreground text-xs font-medium px-4 py-1.5 rounded-full shadow-lg pointer-events-none">
+        {mappable.length} on map
+        {filings.length !== mappable.length && (
+          <span className="opacity-70 ml-1">/ {filings.length} total</span>
+        )}
+        {unmappedCount > 0 && (
+          <span className="opacity-70 ml-1">· {unmappedCount} need coordinates</span>
         )}
       </div>
     </div>
