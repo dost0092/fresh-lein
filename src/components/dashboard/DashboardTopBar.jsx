@@ -72,7 +72,7 @@ export default function DashboardTopBar({ view, onViewChange, filters, onFilterR
             <button
               key={f.key}
               onClick={() => onFilterRemove(f.key)}
-              className="flex items-center gap-1 text-xs bg-green-900/10 text-[#0F5132] px-2.5 py-1 rounded-full hover:bg-green-900/20 transition-colors font-medium"
+              className="flex items-center gap-1 text-xs bg-secondary/10 text-secondary px-2.5 py-1 rounded-full hover:bg-secondary/20 transition-colors font-medium"
             >
               {f.label} <X className="w-3 h-3 ml-0.5" />
             </button>

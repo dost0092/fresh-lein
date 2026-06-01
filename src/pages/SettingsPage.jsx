@@ -62,7 +62,7 @@ export default function SettingsPage() {
                   <option>Hedge Fund / PE</option>
                 </select>
               </div>
-              <Button className="bg-[#0F5132] text-white hover:bg-[#0a3622]">Save Changes</Button>
+              <Button className="bg-secondary text-white hover:bg-navy-dark">Save Changes</Button>
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export default function SettingsPage() {
             <div className="flex items-start justify-between mb-5 p-4 bg-green-50 rounded-xl border border-green-100">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-heading font-bold text-[#0F5132] text-lg">Pro Plan</span>
+                  <span className="font-heading font-bold text-secondary text-lg">Pro Plan</span>
                   <span className="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2 py-0.5 rounded-full">Active</span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5">$199/month · Renews Jul 1, 2026</p>

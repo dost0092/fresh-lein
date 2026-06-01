@@ -8,7 +8,7 @@ import { TrendingUp, BarChart2, MapPin, Calendar, Lock, Activity } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { format, parseISO, startOfMonth } from 'date-fns';
 
-const COLORS = ['#F97316', '#0F5132', '#E63946', '#22c55e', '#FFD166', '#7B2D8B'];
+const COLORS = ['#F97316', '#1e293b', '#135133', '#E63946', '#FFD166', '#7B2D8B'];
 
 export default function AnalyticsPage() {
   const [filings, setFilings] = useState([]);
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
               { label: 'Total Filings', value: filings.length.toLocaleString(), icon: BarChart2, color: 'text-orange-600 bg-orange-50' },
-              { label: 'States Covered', value: Object.keys(byState).length, icon: MapPin, color: 'text-[#0F5132] bg-green-50' },
+              { label: 'States Covered', value: Object.keys(byState).length, icon: MapPin, color: 'text-secondary bg-slate-100' },
               { label: 'Avg Judgment', value: filings.length > 0 ? formatK(Math.round(filings.reduce((s, f) => s + (f.judgment_amount || 0), 0) / filings.filter(f => f.judgment_amount).length)) : '$0', icon: TrendingUp, color: 'text-emerald-600 bg-emerald-50' },
               { label: 'Active Auctions', value: filings.filter(f => f.auction_date).length, icon: Calendar, color: 'text-orange-600 bg-orange-50' },
             ].map(({ label, value, icon: Icon, color }) => (
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="count" stroke="#0F5132" strokeWidth={2.5} dot={{ fill: '#0F5132', r: 4 }} />
+                  <Line type="monotone" dataKey="count" stroke="#1e293b" strokeWidth={2.5} dot={{ fill: '#1e293b', r: 4 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -145,7 +145,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 11 }} tickFormatter={formatK} />
                   <Tooltip formatter={(v) => [formatK(v), 'Avg Judgment']} />
-                  <Bar dataKey="avg" fill="#0F5132" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="avg" fill="#1e293b" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

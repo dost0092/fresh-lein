@@ -50,7 +50,7 @@ export default function SkipTracePage() {
               </div>
             </div>
             <Link to="/settings">
-              <Button className="bg-[#0F5132] hover:bg-[#0a3622] text-white font-semibold px-8">
+              <Button className="bg-secondary hover:bg-navy-dark text-white font-semibold px-8">
                 Upgrade to Pro
               </Button>
             </Link>

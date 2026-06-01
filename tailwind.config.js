@@ -44,14 +44,16 @@ module.exports = {
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
   			brand: {
-  				blue: '#445aa6',
   				green: '#135133',
-  				'green-light': '#1a6b42'
+  				'green-light': '#1a6b42',
+  				slate: '#1e293b',
+  				'slate-dark': '#0f172a',
+  				'slate-light': '#334155'
   			},
   			navy: {
-  				DEFAULT: '#135133',
-  				dark: '#0e3d26',
-  				light: '#1a6b42'
+  				DEFAULT: '#1e293b',
+  				dark: '#0f172a',
+  				light: '#334155'
   			},
   			cyan: {
   				DEFAULT: '#F97316',

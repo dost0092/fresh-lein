@@ -91,7 +91,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
               pathOptions={{
                 fillColor: color,
                 fillOpacity: 0.92,
-                color: isSelected ? '#445aa6' : '#ffffff',
+                color: isSelected ? '#135133' : '#ffffff',
                 weight: isSelected ? 3 : 2,
               }}
               eventHandlers={{
@@ -117,7 +117,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
                         {filing.city}, {filing.state} · {filing.county_name} Co.
                       </p>
                       <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
                           {filing.status}
                         </span>
                         <span className="text-[10px] text-slate-600">
@@ -149,7 +149,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
           { color: '#E63946', label: '< 7 days' },
           { color: '#F4A261', label: '7–30 days' },
           { color: '#FFD166', label: '30–90 days' },
-          { color: '#445aa6', label: 'Appraisal / no date' },
+          { color: '#135133', label: 'Appraisal / no date' },
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-2 mb-1 last:mb-0">
             <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: color }} />

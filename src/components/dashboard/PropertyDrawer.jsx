@@ -41,7 +41,7 @@ export default function PropertyDrawer({ filing, onClose }) {
   return (
     <div className="w-[420px] flex flex-col bg-white border-l border-border shadow-drawer animate-slide-in-right overflow-hidden">
       {/* Header */}
-      <div className="flex items-start justify-between p-5 border-b border-border bg-[#0F5132]">
+      <div className="flex items-start justify-between p-5 border-b border-border bg-[#1e293b]">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
             <FilingTypeBadge type={filing.filing_type} />
@@ -156,7 +156,7 @@ export default function PropertyDrawer({ filing, onClose }) {
 
       {/* Actions */}
       <div className="p-4 border-t border-border bg-muted/30 space-y-2">
-        <Button className="w-full bg-[#0F5132] hover:bg-[#0a3622] text-white font-medium text-sm h-9">
+        <Button className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white font-medium text-sm h-9">
           <Zap className="w-3.5 h-3.5 mr-2" /> Skip Trace Owner
           <span className="ml-auto text-[10px] bg-white/20 px-1.5 py-0.5 rounded">PRO</span>
         </Button>

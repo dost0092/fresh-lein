@@ -52,7 +52,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-border">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-4 h-4 text-[#0F5132]" />
+          <SlidersHorizontal className="w-4 h-4 text-[#1e293b]" />
           <span className="font-semibold text-sm text-foreground">Filters</span>
           {activeCount > 0 && (
             <Badge className="bg-orange-500 text-white text-[10px] px-1.5 py-0.5 h-4">{activeCount}</Badge>
@@ -76,8 +76,8 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 className={cn(
                   "px-2.5 py-1 rounded-md text-xs font-medium border transition-all",
                   (filters.states || []).includes(s)
-                  ? "bg-[#0F5132] text-white border-[#0F5132]"
-                  : "bg-white text-foreground border-border hover:border-[#0F5132]/50"
+                  ? "bg-[#1e293b] text-white border-[#1e293b]"
+                  : "bg-white text-foreground border-border hover:border-[#1e293b]/50"
                 )}
               >{s}</button>
             ))}
@@ -161,8 +161,8 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 className={cn(
                   "px-2.5 py-1 rounded-md text-xs font-medium border transition-all",
                   (filters.property_types || []).includes(t)
-                  ? "bg-[#0F5132] text-white border-[#0F5132]"
-                  : "bg-white text-foreground border-border hover:border-[#0F5132]/50"
+                  ? "bg-[#1e293b] text-white border-[#1e293b]"
+                  : "bg-white text-foreground border-border hover:border-[#1e293b]/50"
                 )}
               >{t}</button>
             ))}
@@ -218,7 +218,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
 
       {/* Apply button */}
       <div className="p-4 border-t border-border">
-        <Button className="w-full bg-[#0F5132] hover:bg-[#0a3622] text-white font-medium text-sm">
+        <Button className="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white font-medium text-sm">
           Apply Filters
         </Button>
       </div>

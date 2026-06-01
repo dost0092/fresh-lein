@@ -99,7 +99,7 @@ export default function ExportsPage() {
             <Button
               onClick={handleExport}
               disabled={exporting || loading}
-              className="bg-[#0F5132] hover:bg-[#0a3622] text-white font-semibold px-8"
+              className="bg-secondary hover:bg-navy-dark text-white font-semibold px-8"
             >
               <Download className="w-4 h-4 mr-2" />
               {exporting ? 'Exporting...' : 'Download CSV'}

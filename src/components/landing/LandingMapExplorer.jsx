@@ -11,6 +11,7 @@ import {
   LANDING_FREE_SEARCH_LIMIT,
 } from '@/lib/landingSearchLimit';
 import ProGateModal from '@/components/landing/ProGateModal';
+import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -80,22 +81,26 @@ export default function LandingMapExplorer() {
 
   return (
     <>
-      <section id="explorer" className="py-12 bg-white border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-6">
-          <h2 className="font-display text-xl font-semibold text-foreground mb-1">
-            Foreclosure coverage map
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Search any address, city, or ZIP — preview {LANDING_FREE_SEARCH_LIMIT} searches free, then upgrade
-            to Pro for unlimited access.
-            {remaining > 0 && (
-              <span className="text-primary font-medium"> · {remaining} preview search{remaining !== 1 ? 'es' : ''} left</span>
-            )}
-          </p>
-        </div>
+      <section id="explorer" className="border-b border-border bg-slate-50/50 py-12 lg:py-14">
+        <LandingContainer>
+          <LandingSectionHeader
+            eyebrow="Live explorer"
+            title="Foreclosure coverage map"
+            description={
+              <>
+                Search any address, city, or ZIP — preview {LANDING_FREE_SEARCH_LIMIT} searches free, then
+                upgrade to Pro for unlimited access.
+                {remaining > 0 && (
+                  <span className="font-medium text-primary">
+                    {' '}
+                    · {remaining} preview search{remaining !== 1 ? 'es' : ''} left
+                  </span>
+                )}
+              </>
+            }
+          />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="rounded-xl border border-border overflow-hidden shadow-card bg-white flex flex-col lg:flex-row h-[520px] lg:h-[560px]">
+          <div className="flex h-[520px] flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm lg:h-[560px] lg:flex-row">
             {/* Sidebar */}
             <div className="w-full lg:w-[340px] shrink-0 border-b lg:border-b-0 lg:border-r border-border flex flex-col bg-white">
               <div className="p-4 border-b border-border">
@@ -209,7 +214,7 @@ export default function LandingMapExplorer() {
               )}
             </div>
           </div>
-        </div>
+        </LandingContainer>
       </section>
 
       <ProGateModal open={showProGate} onClose={() => setShowProGate(false)} />

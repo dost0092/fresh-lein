@@ -16,7 +16,7 @@ export function getMarkerColor(urgency) {
     urgent: '#E63946',
     soon: '#F4A261',
     upcoming: '#FFD166',
-    pre: '#445aa6',
+    pre: '#135133',
     probate: '#7B2D8B',
     reo: '#94A3B8'
   };

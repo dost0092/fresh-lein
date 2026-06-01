@@ -40,7 +40,7 @@ export default function AdminPage() {
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-[#0F5132] rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -52,7 +52,7 @@ export default function AdminPage() {
           {/* System Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
-              { label: 'Total Counties', value: counties.length, icon: Map, color: 'text-[#0F5132] bg-green-50' },
+              { label: 'Total Counties', value: counties.length, icon: Map, color: 'text-secondary bg-slate-100' },
               { label: 'Active Scrapers', value: byStatus.active || 0, icon: Activity, color: 'text-emerald-600 bg-emerald-50' },
               { label: 'Failed Scrapers', value: byStatus.failed || 0, icon: XCircle, color: 'text-red-600 bg-red-50' },
               { label: 'Total Filings', value: filingCount, icon: Database, color: 'text-navy bg-navy/10' },

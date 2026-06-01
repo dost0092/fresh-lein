@@ -1,122 +1,189 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Bell, ChevronDown, Menu } from 'lucide-react';
+import { ArrowRight, Bell, Bot, ChevronDown, Code2, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useScrollHeader } from '@/hooks/useScrollHeader';
+import { LANDING_MAX, LANDING_PAD } from '@/components/landing/LandingLayout';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
-const productLinks = [
+const platformProducts = [
   { label: 'Foreclosures', href: '/dashboard/foreclosures', soon: false },
   { label: 'Pre-Foreclosures', href: '/dashboard/pre-foreclosures', soon: true },
   { label: 'Probate', href: '/dashboard/probate', soon: true },
   { label: 'Tax Delinquency', href: '/dashboard/tax', soon: true },
 ];
 
-function ProductsDropdown({ onNavigate, align = 'start' }) {
+function SoonBadge() {
+  return (
+    <span className="ml-auto shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+      Soon
+    </span>
+  );
+}
+
+const navLinkClass =
+  'py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground';
+
+function PlatformProductItems({ mobile, onNavigate }) {
+  return platformProducts.map(({ label, href, soon }) =>
+    soon ? (
+      <div
+        key={label}
+        className={
+          mobile
+            ? 'flex items-center justify-between px-3 py-2.5 text-sm text-muted-foreground'
+            : 'flex text-sm opacity-60'
+        }
+      >
+        {label}
+        <SoonBadge />
+      </div>
+    ) : mobile ? (
+      <Link key={label} to={href} onClick={onNavigate} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+        {label}
+      </Link>
+    ) : (
+      <DropdownMenuItem key={label} asChild>
+        <Link to={href} className="cursor-pointer text-sm">
+          {label}
+        </Link>
+      </DropdownMenuItem>
+    )
+  );
+}
+
+function ProductsDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          'flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-foreground',
-          'outline-none focus-visible:ring-2 focus-visible:ring-primary/30 rounded-md px-1 py-2'
+          navLinkClass,
+          'flex items-center gap-1 rounded-md px-1 outline-none focus-visible:ring-2 focus-visible:ring-primary/30'
         )}
       >
         Products
-        <ChevronDown className="w-4 h-4 opacity-60" />
+        <ChevronDown className="h-4 w-4 opacity-60" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={align} className="w-52">
-        {productLinks.map(({ label, href, soon }) =>
-          soon ? (
-            <DropdownMenuItem key={label} disabled className="text-xs opacity-60">
-              {label}
-              <span className="ml-auto text-[10px] font-semibold uppercase text-muted-foreground">Soon</span>
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem key={label} asChild>
-              <Link to={href} onClick={onNavigate} className="cursor-pointer text-sm w-full">
-                {label}
-              </Link>
-            </DropdownMenuItem>
-          )
-        )}
+      <DropdownMenuContent align="center" className="w-56">
+        <DropdownMenuLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Platform
+        </DropdownMenuLabel>
+        <PlatformProductItems />
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          API
+        </DropdownMenuLabel>
+        <DropdownMenuItem asChild>
+          <Link to="/#pricing-api" className="flex cursor-pointer items-center gap-2 text-sm">
+            <Code2 className="h-3.5 w-3.5 text-primary/70" />
+            REST API
+          </Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
+function FreshLienAiNavItem({ mobile }) {
+  if (mobile) {
+    return (
+      <div className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-muted-foreground">
+        <span className="flex items-center gap-2 font-medium">
+          <Bot className="h-4 w-4 text-primary/70" />
+          FreshLien AI
+        </span>
+        <SoonBadge />
+      </div>
+    );
+  }
+
+  return (
+    <span
+      className={cn(navLinkClass, 'inline-flex cursor-default items-center gap-1.5 text-foreground/55')}
+      title="FreshLien AI — coming soon"
+    >
+      <Bot className="h-4 w-4 text-primary/60" />
+      FreshLien AI
+      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+        Soon
+      </span>
+    </span>
+  );
+}
+
 function MobileNav({ open, onOpenChange }) {
+  const close = () => onOpenChange(false);
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         <button
           type="button"
-          className="lg:hidden p-2 rounded-md hover:bg-muted text-foreground"
+          className="rounded-md p-2 text-foreground hover:bg-muted lg:hidden"
           aria-label="Open menu"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="h-5 w-5" />
         </button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[min(100vw,320px)]">
         <SheetHeader>
           <SheetTitle className="text-left text-base">Menu</SheetTitle>
         </SheetHeader>
-        <nav className="mt-6 flex flex-col gap-1">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground px-2 mb-2">
-            Products
+        <nav className="mt-6 flex flex-col gap-0.5">
+          <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Platform
           </p>
-          {productLinks.map(({ label, href, soon }) =>
-            soon ? (
-              <div
-                key={label}
-                className="flex items-center justify-between px-3 py-2.5 text-sm text-muted-foreground"
-              >
-                {label}
-                <span className="text-[10px] font-semibold uppercase">Soon</span>
-              </div>
-            ) : (
-              <Link
-                key={label}
-                to={href}
-                onClick={() => onOpenChange(false)}
-                className="px-3 py-2.5 text-sm font-medium rounded-md hover:bg-muted"
-              >
-                {label}
-              </Link>
-            )
-          )}
-          <div className="h-px bg-border my-3" />
+          <PlatformProductItems mobile onNavigate={close} />
+
+          <p className="mb-1 mt-3 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            API
+          </p>
           <Link
-            to="/#pricing"
-            onClick={() => onOpenChange(false)}
-            className="px-3 py-2.5 text-sm font-medium rounded-md hover:bg-muted"
+            to="/#pricing-api"
+            onClick={close}
+            className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted"
           >
+            <Code2 className="h-4 w-4 text-primary/70" />
+            REST API
+          </Link>
+
+          <div className="my-3 h-px bg-border" />
+
+          <Link to="/dashboard" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+            Dashboard
+          </Link>
+          <FreshLienAiNavItem mobile />
+          <Link to="/#pricing" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Pricing
           </Link>
+
+          <div className="my-3 h-px bg-border" />
+
           <Link
             to="/dashboard/alerts"
-            onClick={() => onOpenChange(false)}
-            className="px-3 py-2.5 text-sm font-medium rounded-md hover:bg-muted flex items-center gap-2"
+            onClick={close}
+            className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted"
           >
-            <Bell className="w-4 h-4" /> Alerts
+            <Bell className="h-4 w-4" />
+            Alerts
           </Link>
-          <div className="h-px bg-border my-3" />
-          <Link
-            to="/login"
-            onClick={() => onOpenChange(false)}
-            className="px-3 py-2.5 text-sm font-medium rounded-md hover:bg-muted"
-          >
+          <Link to="/login" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Login
           </Link>
           <Link
             to="/register"
-            onClick={() => onOpenChange(false)}
-            className="mx-3 mt-2 text-center bg-primary text-primary-foreground text-sm font-medium py-2.5 rounded-lg"
+            onClick={close}
+            className="mx-3 mt-3 rounded-lg bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground"
           >
             Sign Up
           </Link>
@@ -131,66 +198,63 @@ export default function MarketingNav() {
   const headerVisible = useScrollHeader();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const pricingActive = location.hash === '#pricing' || location.pathname.includes('pricing');
+  const pricingActive =
+    location.hash === '#pricing' ||
+    location.hash === '#pricing-api' ||
+    location.pathname.includes('pricing');
+  const dashboardActive = location.pathname.startsWith('/dashboard');
 
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-border backdrop-blur-md shadow-sm',
+        'fixed left-0 right-0 top-0 z-50 border-b border-border bg-white/95 shadow-sm backdrop-blur-md',
         'transition-transform duration-300 ease-out will-change-transform',
         headerVisible ? 'translate-y-0' : '-translate-y-full'
       )}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-20">
-        <div className="h-14 lg:h-16 flex items-center justify-between gap-6 max-w-[1600px] mx-auto">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 min-w-[140px]">
-            <div className="w-8 h-8 lg:w-9 lg:h-9 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-heading font-bold text-xs lg:text-sm">FL</span>
+      <div className={cn('w-full', LANDING_PAD)}>
+        <div className={cn('mx-auto flex h-14 items-center justify-between gap-4 lg:h-16', LANDING_MAX)}>
+          <Link to="/" className="flex shrink-0 items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary lg:h-9 lg:w-9">
+              <span className="font-heading text-xs font-bold text-primary-foreground lg:text-sm">FL</span>
             </div>
-            <span className="font-heading font-semibold text-foreground text-base lg:text-lg tracking-tight hidden sm:inline">
+            <span className="hidden font-heading text-base font-semibold tracking-tight text-foreground sm:inline lg:text-lg">
               FreshLien
             </span>
           </Link>
 
-          {/* Center nav — desktop */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-10 xl:gap-14">
+          <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex xl:gap-10">
             <ProductsDropdown />
-            <Link
-              to="/#pricing"
-              className={cn(
-                'text-sm font-medium transition-colors py-2',
-                pricingActive ? 'text-primary' : 'text-foreground/80 hover:text-foreground'
-              )}
-            >
+            <Link to="/dashboard" className={cn(navLinkClass, dashboardActive && 'text-primary')}>
+              Dashboard
+            </Link>
+            <FreshLienAiNavItem />
+            <Link to="/#pricing" className={cn(navLinkClass, pricingActive && 'text-primary')}>
               Pricing
             </Link>
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center justify-end gap-2 sm:gap-3 lg:gap-4 min-w-[140px] lg:min-w-[280px]">
+          <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
             <Link
               to="/dashboard/alerts"
-              className="p-2 rounded-lg text-foreground/70 hover:text-primary hover:bg-primary/5 transition-colors"
+              className="rounded-lg p-2 text-foreground/70 transition-colors hover:bg-primary/5 hover:text-primary"
               title="Alerts"
               aria-label="Alerts"
             >
-              <Bell className="w-5 h-5" />
+              <Bell className="h-5 w-5" />
             </Link>
-
             <Link
               to="/login"
-              className="hidden sm:inline-flex text-sm font-medium text-foreground/80 hover:text-primary px-3 py-2"
+              className="hidden px-2 py-2 text-sm font-medium text-foreground/80 hover:text-primary sm:inline-flex lg:px-3"
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="hidden sm:inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 lg:px-5 py-2 lg:py-2.5 rounded-lg text-sm transition-colors"
+              className="hidden items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:inline-flex lg:py-2.5"
             >
-              Sign Up <ArrowRight className="w-4 h-4" />
+              Sign Up <ArrowRight className="h-4 w-4" />
             </Link>
-
             <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
           </div>
         </div>

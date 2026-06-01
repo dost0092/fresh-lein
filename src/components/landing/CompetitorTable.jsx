@@ -1,5 +1,6 @@
 import { Check, X, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 
 const competitors = [
   { name: 'PropStream', price: '$99/mo', lag: '30–60 days', probate: false, api: false, freshlienEdge: 'Same-day + probate + API' },
@@ -10,77 +11,92 @@ const competitors = [
   { name: 'REDX', price: '$70–150/mo', lag: '7–30 days', probate: false, api: false, freshlienEdge: 'Fresher + richer data' },
 ];
 
-function Cell({ value, highlight }) {
-  if (value === true) return <Check className={cn("w-5 h-5 mx-auto", highlight ? "text-cyan" : "text-emerald-500")} />;
-  if (value === false) return <X className="w-5 h-5 mx-auto text-muted-foreground/40" />;
-  if (value === 'partial') return <Minus className="w-5 h-5 mx-auto text-yellow-500" />;
-  return <span className={cn("text-sm font-medium", highlight ? "text-cyan" : "text-foreground")}>{value}</span>;
+function Cell({ value }) {
+  if (value === true) return <Check className="mx-auto h-4 w-4 text-primary" />;
+  if (value === false) return <X className="mx-auto h-4 w-4 text-muted-foreground/35" />;
+  if (value === 'partial') return <Minus className="mx-auto h-4 w-4 text-amber-500" />;
+  return <span className="text-xs font-medium text-foreground">{value}</span>;
 }
 
 export default function CompetitorTable() {
   return (
-    <section className="py-24 bg-[#F8FAFC]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <h2 className="font-display text-4xl font-bold text-foreground mb-4">
-            Why FreshLien wins on every metric
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            The only platform with same-day county-direct data at a price investors can afford.
-          </p>
-        </div>
+    <section className="bg-slate-50/60 py-12 lg:py-14">
+      <LandingContainer>
+        <LandingSectionHeader
+          eyebrow="Benchmark"
+          title="Why FreshLien wins on every metric"
+          description="The only platform with same-day county-direct data at a price investors can afford."
+        />
 
-        <div className="bg-white rounded-2xl border border-border shadow-card overflow-hidden">
+        <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-sm">
               <thead>
-                <tr className="bg-muted/50">
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Platform</th>
-                  <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price</th>
-                  <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Data Lag</th>
-                  <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Probate</th>
-                  <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">API</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">FreshLien Edge</th>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    Platform
+                  </th>
+                  <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    Price
+                  </th>
+                  <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    Data lag
+                  </th>
+                  <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    Probate
+                  </th>
+                  <th className="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    API
+                  </th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    FreshLien edge
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {competitors.map((c, i) => (
-                  <tr key={c.name} className={cn("border-t border-border/50", i % 2 === 1 && "bg-muted/20")}>
-                    <td className="px-6 py-4 font-semibold text-foreground">{c.name}</td>
-                    <td className="px-6 py-4 text-center text-sm text-muted-foreground">{c.price}</td>
-                    <td className="px-6 py-4 text-center text-sm text-orange-600 font-medium">{c.lag}</td>
-                    <td className="px-6 py-4 text-center"><Cell value={c.probate} /></td>
-                    <td className="px-6 py-4 text-center"><Cell value={c.api} /></td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">{c.freshlienEdge}</td>
+                  <tr
+                    key={c.name}
+                    className={cn('border-t border-border/50', i % 2 === 1 && 'bg-muted/15')}
+                  >
+                    <td className="px-4 py-3 text-xs font-semibold text-foreground">{c.name}</td>
+                    <td className="px-4 py-3 text-center text-xs text-muted-foreground">{c.price}</td>
+                    <td className="px-4 py-3 text-center text-xs font-medium text-amber-700">{c.lag}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Cell value={c.probate} />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Cell value={c.api} />
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{c.freshlienEdge}</td>
                   </tr>
                 ))}
-                {/* FreshLien row */}
-                <tr className="border-t-2 border-orange-400 bg-[#0F5132]">
-                  <td className="px-6 py-5 font-bold text-white text-lg">FreshLien</td>
-                  <td className="px-6 py-5 text-center">
-                    <span className="text-orange-400 font-bold text-sm">$79–999/mo</span>
-                  </td>
-                  <td className="px-6 py-5 text-center">
-                    <span className="inline-flex items-center gap-1.5 bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full text-sm font-bold">
-                      ⚡ SAME-DAY
+                <tr className="border-t-2 border-primary bg-primary">
+                  <td className="px-4 py-4 text-sm font-bold text-white">FreshLien</td>
+                  <td className="px-4 py-4 text-center text-xs font-semibold text-white/90">$79–999/mo</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-flex items-center rounded-md bg-white/15 px-2 py-0.5 text-[11px] font-bold text-white">
+                      Same-day
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-center"><Cell value={true} highlight /></td>
-                  <td className="px-6 py-5 text-center"><Cell value={true} highlight /></td>
-                  <td className="px-6 py-5 text-white font-semibold text-sm">— THE BENCHMARK —</td>
+                  <td className="px-4 py-4 text-center">
+                    <Check className="mx-auto h-4 w-4 text-white" />
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <Check className="mx-auto h-4 w-4 text-white" />
+                  </td>
+                  <td className="px-4 py-4 text-xs font-semibold text-white/90">County-direct benchmark</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
-          <p className="text-center text-[#0F5132] font-medium text-sm">
-            <span className="font-bold">Core Moat:</span> County-direct scraping → same-day data → investor contacts homeowner 
-            <span className="text-orange-600 font-bold"> BEFORE PropStream users even see the filing.</span>
-          </p>
-        </div>
-      </div>
+        <p className="mt-6 rounded-lg border border-primary/15 bg-primary/5 px-4 py-3 text-center text-xs leading-relaxed text-primary">
+          <span className="font-semibold">Core moat:</span> County-direct scraping → same-day data → reach homeowners
+          before legacy list providers surface the filing.
+        </p>
+      </LandingContainer>
     </section>
   );
 }
