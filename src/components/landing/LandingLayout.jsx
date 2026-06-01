@@ -1,8 +1,13 @@
 import { cn } from '@/lib/utils';
 
-/** Single content width for every landing section (aligned with hero). */
 export const LANDING_MAX = 'max-w-7xl';
 export const LANDING_PAD = 'px-4 sm:px-6 lg:px-8';
+
+export const highlightMarkStyle = {
+  backgroundColor: 'rgba(19, 81, 51, 0.14)',
+  boxDecorationBreak: 'clone',
+  WebkitBoxDecorationBreak: 'clone',
+};
 
 export function LandingContainer({ children, className, innerClassName }) {
   return (
@@ -14,16 +19,25 @@ export function LandingContainer({ children, className, innerClassName }) {
 
 export function LandingEyebrow({ children, className }) {
   return (
-    <div className={cn('mb-3 flex items-center gap-2.5', className)}>
-      <span className="h-4 w-1 shrink-0 rounded-full bg-primary" aria-hidden />
-      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/55">
-        {children}
-      </span>
-    </div>
+    <p
+      className={cn(
+        'mb-3 text-xs font-bold uppercase tracking-[0.18em] text-primary',
+        className
+      )}
+    >
+      {children}
+    </p>
   );
 }
 
-export function LandingSectionHeader({ eyebrow, title, description, className, align = 'left' }) {
+export function LandingSectionHeader({
+  eyebrow,
+  title,
+  titleHighlight,
+  description,
+  className,
+  align = 'left',
+}) {
   return (
     <div
       className={cn(
@@ -34,13 +48,26 @@ export function LandingSectionHeader({ eyebrow, title, description, className, a
       )}
     >
       {eyebrow && (
-        <LandingEyebrow className={align === 'center' ? 'justify-center' : undefined}>
+        <LandingEyebrow className={align === 'center' ? 'text-center' : undefined}>
           {eyebrow}
         </LandingEyebrow>
       )}
-      <h2 className="font-display text-xl font-semibold text-foreground lg:text-2xl">{title}</h2>
+      <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-[1.75rem] lg:text-[2rem]">
+        {title}
+        {titleHighlight && (
+          <>
+            {' '}
+            <span
+              className="inline box-decoration-clone rounded-sm px-1.5 py-0.5 text-primary"
+              style={highlightMarkStyle}
+            >
+              {titleHighlight}
+            </span>
+          </>
+        )}
+      </h2>
       {description && (
-        <div className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</div>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
       )}
     </div>
   );

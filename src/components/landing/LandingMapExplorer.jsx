@@ -81,22 +81,20 @@ export default function LandingMapExplorer() {
 
   return (
     <>
-      <section id="explorer" className="border-b border-border bg-slate-50/50 py-12 lg:py-14">
+      <section id="explorer" className="border-b border-border bg-white py-11 lg:py-14">
         <LandingContainer>
           <LandingSectionHeader
             eyebrow="Live explorer"
             title="Foreclosure coverage map"
             description={
-              <>
-                Search any address, city, or ZIP — preview {LANDING_FREE_SEARCH_LIMIT} searches free, then
-                upgrade to Pro for unlimited access.
-                {remaining > 0 && (
-                  <span className="font-medium text-primary">
-                    {' '}
-                    · {remaining} preview search{remaining !== 1 ? 'es' : ''} left
-                  </span>
-                )}
-              </>
+              remaining > 0 ? (
+                <>
+                  {LANDING_FREE_SEARCH_LIMIT} free searches ·{' '}
+                  <span className="font-medium text-primary">{remaining} left</span>
+                </>
+              ) : (
+                `${LANDING_FREE_SEARCH_LIMIT} free searches — then upgrade to Pro`
+              )
             }
           />
 

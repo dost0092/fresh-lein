@@ -8,14 +8,12 @@ import { API_PLANS, PLATFORM_PLANS } from '@/data/pricingPlans';
 
 const COPY = {
   platform: {
-    eyebrow: 'Platform plans',
-    title: 'Simple, transparent platform pricing',
-    description: 'Search, map, export, and alerts — everything in the FreshLien investor dashboard.',
+    eyebrow: 'Plans',
+    title: 'Simple, transparent pricing',
   },
   api: {
-    eyebrow: 'API plans',
-    title: 'Foreclosure data via REST API',
-    description: 'Pipe same-day county court data into your CRM, proptech stack, or internal tools.',
+    eyebrow: 'API',
+    title: 'Foreclosure data via API',
   },
 };
 
@@ -39,7 +37,7 @@ function PlanCards({ plans }) {
           )}
 
           <div className="mb-5">
-            <h3 className="mb-1 font-display text-base font-semibold text-foreground">{plan.name}</h3>
+            <h3 className="mb-1 font-display text-lg font-semibold text-foreground">{plan.name}</h3>
             <div className="mb-2 flex items-baseline gap-1">
               {plan.price != null ? (
                 <>
@@ -50,12 +48,12 @@ function PlanCards({ plans }) {
                 <span className="font-display text-xl font-bold">Contact Sales</span>
               )}
             </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">{plan.description}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{plan.description}</p>
           </div>
 
           <ul className="mb-6 flex-1 space-y-2">
             {plan.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-2 text-xs text-foreground">
+              <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
                 <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
                 {feature}
               </li>
@@ -101,13 +99,15 @@ export default function PricingSection({ pricingType, onPricingTypeChange }) {
   const plans = type === 'api' ? API_PLANS : PLATFORM_PLANS;
 
   return (
-    <section id="pricing" className="bg-white py-12 lg:py-14">
+    <section id="pricing" className="bg-slate-50/40 py-11 lg:py-14">
       <LandingContainer>
         <LandingSectionHeader
           align="center"
           eyebrow={copy.eyebrow}
           title={copy.title}
+          titleHighlight={copy.titleHighlight}
           description={copy.description}
+          className="mx-auto"
         />
 
         <div className="flex justify-center">

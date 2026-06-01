@@ -22,9 +22,12 @@ function mapRow(row) {
     starting_bid: row.starting_bid,
     appraised_value: row.appraised_value,
     status: row.status,
+    latitude: row.latitude,
+    longitude: row.longitude,
     county_name: county?.county_name ?? row.county_name,
     status_history: row.status_history || [],
     created_at: row.created_at,
+    updated_at: row.updated_at,
   };
 }
 

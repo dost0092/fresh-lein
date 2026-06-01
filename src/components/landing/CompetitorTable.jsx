@@ -20,12 +20,11 @@ function Cell({ value }) {
 
 export default function CompetitorTable() {
   return (
-    <section className="bg-slate-50/60 py-12 lg:py-14">
+    <section className="bg-white py-11 lg:py-14">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Benchmark"
-          title="Why FreshLien wins on every metric"
-          description="The only platform with same-day county-direct data at a price investors can afford."
+          title="Why FreshLien wins"
         />
 
         <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
@@ -92,9 +91,8 @@ export default function CompetitorTable() {
           </div>
         </div>
 
-        <p className="mt-6 rounded-lg border border-primary/15 bg-primary/5 px-4 py-3 text-center text-xs leading-relaxed text-primary">
-          <span className="font-semibold">Core moat:</span> County-direct scraping → same-day data → reach homeowners
-          before legacy list providers surface the filing.
+        <p className="mt-5 text-center text-sm text-muted-foreground">
+          Same-day county-direct data — before it hits legacy list platforms.
         </p>
       </LandingContainer>
     </section>

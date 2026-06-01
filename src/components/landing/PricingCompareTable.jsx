@@ -30,17 +30,13 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
   const rows = isApi ? API_COMPARE_ROWS : PLATFORM_COMPARE_ROWS;
 
   return (
-    <section id="compare-plans" className="border-t border-border bg-slate-50/50 py-12 lg:py-14">
+    <section id="compare-plans" className="border-t border-border bg-white py-11 lg:py-14">
       <LandingContainer>
         <LandingSectionHeader
           align="center"
-          eyebrow={isApi ? 'API matrix' : 'Feature matrix'}
-          title={isApi ? 'Compare API plans' : 'Compare platform plans'}
-          description={
-            isApi
-              ? 'Endpoints, limits, and support for developers building on FreshLien data.'
-              : 'Explore what each FreshLien platform plan includes for investors.'
-          }
+          eyebrow="Compare"
+          title="Plan features"
+          className="mx-auto"
         />
 
         <div className="flex flex-col gap-4 xl:flex-row">
