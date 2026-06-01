@@ -47,19 +47,14 @@ export default function HeroSection() {
             <div>
               <LandingEyebrow>AI-driven foreclosure intelligence</LandingEyebrow>
 
-              <h1 className="font-display mb-4 font-semibold leading-[1.15] tracking-tight">
-                <span className="block text-[1.85rem] text-primary sm:text-[2.1rem] lg:text-[2.5rem]">
-                  <span
-                    className="inline box-decoration-clone rounded-sm px-1.5 py-0.5"
-                    style={highlightMarkStyle}
-                  >
-                    Discover high-equity foreclosure deals
-                  </span>
+              <h1 className="font-display mb-4 font-semibold leading-[1.15] tracking-tight text-primary">
+                <span className="block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
+                  Discover high-equity foreclosure deals
                 </span>
-                <span className="mt-1.5 block text-[1.85rem] text-primary sm:text-[2.1rem] lg:text-[2.5rem]">
+                <span className="mt-1.5 block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
                   with{' '}
                   <span
-                    className="inline box-decoration-clone rounded-sm px-1.5 py-0.5"
+                    className="inline box-decoration-clone rounded-sm px-1.5 py-0.5 text-primary"
                     style={highlightMarkStyle}
                   >
                     AI-powered insights
