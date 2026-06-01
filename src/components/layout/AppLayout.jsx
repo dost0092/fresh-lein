@@ -20,7 +20,7 @@ import { useAuth } from '@/lib/AuthContext';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Gavel, label: 'Active Foreclosures', path: '/dashboard/foreclosures' },
+  { icon: Gavel, label: 'Foreclosures', path: '/dashboard/foreclosures' },
   { icon: Clock, label: 'Pre-Foreclosures', path: '/dashboard/pre-foreclosures', comingSoon: true },
   { icon: Clock, label: 'Probate', path: '/dashboard/probate', comingSoon: true },
   { icon: Clock, label: 'Tax Delinquency', path: '/dashboard/tax', comingSoon: true },
@@ -83,7 +83,7 @@ function NavContent({ collapsed, onNavClick }) {
               onClick={onNavClick}
               title={collapsed ? label : undefined}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150',
+                'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all duration-150',
                 active
                   ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/60',
@@ -158,7 +158,7 @@ export default function AppLayout({ children }) {
               <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-heading font-bold text-xs">FL</span>
               </div>
-              <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
+              <span className="font-heading font-semibold text-foreground text-sm">FreshLien</span>
             </Link>
           ) : (
             <Link to="/" className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">

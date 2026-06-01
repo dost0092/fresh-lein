@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-[#0F5132] overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative bg-brand-green overflow-hidden min-h-[85vh] flex items-center">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10"
         style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, #F97316 0%, transparent 50%), radial-gradient(circle at 75% 20%, #22c55e 0%, transparent 40%)' }}
@@ -22,13 +22,13 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
+          <h1 className="font-display text-4xl lg:text-5xl font-bold text-white leading-[1.08] tracking-tight mb-5">
             Find distressed properties{' '}
             <span className="text-orange-400">30 days before</span>{' '}
             your competitors
           </h1>
 
-          <p className="text-lg lg:text-xl text-white/70 leading-relaxed mb-10 max-w-2xl">
+          <p className="text-base text-white/75 leading-relaxed mb-8 max-w-2xl">
             FreshLien scrapes US county courts directly — delivering same-day NOD, Lis Pendens, 
             auction, and probate data. While PropStream shows you 60-day-old leads, 
             you're already closing deals.

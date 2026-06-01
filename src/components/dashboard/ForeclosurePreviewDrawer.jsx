@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import { X, MapPin, Calendar, DollarSign, ChevronRight, ExternalLink } from 'lucide-react';
+import { X, MapPin, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import UrgencyBadge from './UrgencyBadge';
-import { cn } from '@/lib/utils';
 
 export default function ForeclosurePreviewDrawer({ record, onClose }) {
   if (!record) return null;
@@ -18,77 +17,62 @@ export default function ForeclosurePreviewDrawer({ record, onClose }) {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l border-border shadow-drawer flex flex-col animate-slide-in-right">
-      <div className="p-5 border-b border-border bg-white">
-        <div className="flex items-start justify-between gap-3">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white border-l border-border shadow-drawer flex flex-col animate-slide-in-right">
+      <div className="p-4 border-b border-border">
+        <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             {record.days_to_auction != null && record.status === 'Scheduled' && (
-              <div className="mb-2">
+              <div className="mb-1.5">
                 <UrgencyBadge daysToAuction={record.days_to_auction} filingType="NTS" />
               </div>
             )}
-            <h3 className="font-heading font-semibold text-lg text-foreground leading-snug">
-              {record.property_address}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              {record.city}, {record.state} {record.zip_code}
+            <h3 className="font-semibold text-sm text-foreground leading-snug">{record.property_address}</h3>
+            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <MapPin className="w-3 h-3" />
+              {record.city}, {record.state}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-5 h-5" />
+          <button type="button" onClick={onClose} className="p-1.5 rounded-md hover:bg-muted text-muted-foreground">
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-px bg-border shrink-0">
-        <div className="bg-white p-4 text-center">
-          <p className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">Sale date</p>
-          <p className="text-sm font-bold mt-1">{formatDate(record.sale_date)}</p>
+      <div className="grid grid-cols-3 gap-px bg-border text-center text-xs">
+        <div className="bg-white p-3">
+          <p className="text-[10px] text-muted-foreground uppercase">Sale</p>
+          <p className="font-semibold mt-0.5">{formatDate(record.sale_date)}</p>
         </div>
-        <div className="bg-white p-4 text-center">
-          <p className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">Opening bid</p>
-          <p className="text-sm font-bold mt-1">{formatCurrency(record.starting_bid)}</p>
+        <div className="bg-white p-3">
+          <p className="text-[10px] text-muted-foreground uppercase">Bid</p>
+          <p className="font-semibold mt-0.5">{formatCurrency(record.starting_bid)}</p>
         </div>
-        <div className="bg-white p-4 text-center">
-          <p className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">Appraised</p>
-          <p className="text-sm font-bold mt-1">{formatCurrency(record.appraised_value)}</p>
+        <div className="bg-white p-3">
+          <p className="text-[10px] text-muted-foreground uppercase">Value</p>
+          <p className="font-semibold mt-0.5">{formatCurrency(record.appraised_value)}</p>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 text-sm">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Defendant</p>
-          <p className="font-medium">{record.defendant}</p>
+          <p className="text-[10px] font-medium text-muted-foreground uppercase">Defendant</p>
+          <p className="font-medium mt-0.5">{record.defendant}</p>
         </div>
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Plaintiff</p>
-          <p className="text-muted-foreground">{record.plaintiff}</p>
+          <p className="text-[10px] font-medium text-muted-foreground uppercase">Plaintiff</p>
+          <p className="text-muted-foreground mt-0.5">{record.plaintiff}</p>
         </div>
-        <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Sheriff #</p>
-          <p className="font-mono text-xs">{record.sheriff_number}</p>
-        </div>
-        {record.estimated_equity > 0 && (
-          <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4">
-            <p className="text-xs font-medium text-emerald-800">Est. equity spread</p>
-            <p className="text-xl font-bold text-emerald-700 mt-0.5">{formatCurrency(record.estimated_equity)}</p>
-          </div>
-        )}
+        <p className="font-mono text-[11px] text-muted-foreground">{record.sheriff_number}</p>
       </div>
 
-      <div className="p-5 border-t border-border bg-white space-y-2">
-        <Button asChild className="w-full bg-primary hover:bg-primary/90">
+      <div className="p-4 border-t border-border space-y-2">
+        <Button asChild size="sm" className="w-full h-8 text-xs">
           <Link to={`/dashboard/foreclosures/${record.id}`}>
-            View full record <ChevronRight className="w-4 h-4 ml-1" />
+            Full record <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
           </Link>
         </Button>
-        <Button variant="secondary" className="w-full" onClick={onClose}>
-          Close preview
+        <Button variant="outline" size="sm" className="w-full h-8 text-xs" onClick={onClose}>
+          Close
         </Button>
       </div>
     </div>

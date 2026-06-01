@@ -43,10 +43,15 @@ module.exports = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			brand: {
+  				blue: '#445aa6',
+  				green: '#135133',
+  				'green-light': '#1a6b42'
+  			},
   			navy: {
-  				DEFAULT: '#0F5132',
-  				dark: '#0a3622',
-  				light: '#166534'
+  				DEFAULT: '#135133',
+  				dark: '#0e3d26',
+  				light: '#1a6b42'
   			},
   			cyan: {
   				DEFAULT: '#F97316',

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Download, Map, List, SlidersHorizontal, X } from 'lucide-react';
+import { Search, Download, Map, List, SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import MapView from '@/components/dashboard/MapView';
 import ForeclosureListCompact from '@/components/dashboard/ForeclosureListCompact';
@@ -22,9 +22,9 @@ import { MVP_COUNTIES } from '@/data/counties';
 import { cn } from '@/lib/utils';
 
 const STATUSES = ['Appraisal', 'Scheduled', 'Sold', 'Cancelled'];
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 20;
 
-export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) {
+export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [allRows, setAllRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,12 +75,12 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
     setSearchParams({});
   };
 
-  const hasFilters = county !== 'all' || state !== 'all' || status !== 'all' || dateFrom || dateTo;
+  const hasFilters = county !== 'all' || state !== 'all' || status !== 'all' || dateFrom || dateTo || search.trim();
 
   const filterControls = (
-    <div className="flex flex-wrap gap-2">
+    <>
       <Select value={county} onValueChange={setCounty}>
-        <SelectTrigger className="w-[160px] h-9 bg-white border-border">
+        <SelectTrigger className="filter-chip w-[140px]">
           <SelectValue placeholder="County" />
         </SelectTrigger>
         <SelectContent>
@@ -91,7 +91,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
         </SelectContent>
       </Select>
       <Select value={state} onValueChange={setState}>
-        <SelectTrigger className="w-[100px] h-9 bg-white border-border">
+        <SelectTrigger className="filter-chip w-[88px]">
           <SelectValue placeholder="State" />
         </SelectTrigger>
         <SelectContent>
@@ -102,7 +102,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
         </SelectContent>
       </Select>
       <Select value={status} onValueChange={setStatus}>
-        <SelectTrigger className="w-[130px] h-9 bg-white border-border">
+        <SelectTrigger className="filter-chip w-[120px]">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -112,132 +112,129 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
           ))}
         </SelectContent>
       </Select>
-      <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-[140px] h-9 bg-white" />
-      <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-[140px] h-9 bg-white" />
-      {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 text-muted-foreground">
-          <X className="w-3.5 h-3.5 mr-1" /> Clear
-        </Button>
-      )}
-    </div>
+      <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="filter-chip w-[130px]" />
+      <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="filter-chip w-[130px]" />
+    </>
   );
 
   return (
     <AppLayout>
       <div className="flex-1 flex flex-col overflow-hidden bg-white">
-        {/* Command-bar search */}
-        <div className="shrink-0 border-b border-border bg-white px-4 sm:px-6 py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-            <div className="flex-1 min-w-0">
-              <h1 className="font-display text-xl font-bold text-foreground tracking-tight">{title}</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Search {allRows.length.toLocaleString()} listings · {filtered.length.toLocaleString()} matches
+        <div className="control-bar space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h1 className="page-title">{title}</h1>
+              <p className="page-subtitle">
+                {filtered.length} of {allRows.length} listings
+                {hasFilters && ' · filtered'}
               </p>
             </div>
-            <div className="flex-1 max-w-2xl relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search address, defendant, plaintiff, sheriff #, parcel..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-12 pl-12 pr-4 text-base border border-border rounded-xl bg-muted/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary transition-all shadow-sm"
-              />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center bg-muted/50 rounded-md p-0.5 border border-border/80">
+                <button
+                  type="button"
+                  onClick={() => setView('list')}
+                  className={cn(
+                    'flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium transition-all',
+                    view === 'list' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground'
+                  )}
+                >
+                  <List className="w-3.5 h-3.5" /> List
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView('map')}
+                  className={cn(
+                    'flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium transition-all',
+                    view === 'map' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground'
+                  )}
+                >
+                  <Map className="w-3.5 h-3.5" /> Map
+                </button>
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="h-8 text-xs"
+                onClick={() => exportForeclosuresCsv(filtered)}
+                disabled={!filtered.length}
+              >
+                <Download className="w-3.5 h-3.5 mr-1" /> Export
+              </Button>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 mt-4">
-            <div className="hidden md:flex flex-wrap gap-2 flex-1">{filterControls}</div>
+          <div className="relative max-w-3xl">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <input
+              type="search"
+              placeholder="Search address, defendant, plaintiff, sheriff #..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="search-input"
+            />
+          </div>
 
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mr-1 hidden sm:inline">
+              Filters
+            </span>
+            <div className="hidden md:flex flex-wrap gap-2 flex-1">{filterControls}</div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="md:hidden h-9">
-                  <SlidersHorizontal className="w-4 h-4 mr-1.5" /> Filters
+                <Button variant="outline" size="sm" className="md:hidden h-8 text-xs">
+                  <SlidersHorizontal className="w-3.5 h-3.5 mr-1" /> Filters
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-auto max-h-[70vh]">
+              <SheetContent side="bottom" className="rounded-t-xl">
                 <SheetHeader>
-                  <SheetTitle>Filters</SheetTitle>
+                  <SheetTitle className="text-base">Filters</SheetTitle>
                 </SheetHeader>
-                <div className="py-4 flex flex-col gap-3">{filterControls}</div>
+                <div className="py-4 flex flex-wrap gap-2">{filterControls}</div>
               </SheetContent>
             </Sheet>
-
-            <div className="flex items-center bg-muted/60 rounded-lg p-1 border border-border/60">
-              <button
-                type="button"
-                onClick={() => setView('map')}
-                className={cn(
-                  'flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all',
-                  view === 'map' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <Map className="w-4 h-4" /> Map
-              </button>
-              <button
-                type="button"
-                onClick={() => setView('list')}
-                className={cn(
-                  'flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all',
-                  view === 'list' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <List className="w-4 h-4" /> List
-              </button>
-            </div>
-
-            <Button
-              variant="secondary"
-              size="sm"
-              className="h-9"
-              onClick={() => exportForeclosuresCsv(filtered)}
-              disabled={!filtered.length}
-            >
-              <Download className="w-4 h-4 mr-1.5" /> Export
-            </Button>
+            {hasFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs text-muted-foreground">
+                <RotateCcw className="w-3 h-3 mr-1" /> Reset
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Main explorer */}
-        <div className="flex-1 overflow-hidden flex flex-col min-h-0 bg-[#f8f9fb]">
+        <div className="flex-1 overflow-hidden flex flex-col min-h-0 bg-muted/30">
           {loading ? (
             <div className="flex-1 flex items-center justify-center">
-              <div className="w-10 h-10 border-2 border-border border-t-primary rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center p-8">
+            <div className="flex-1 flex items-center justify-center p-6">
               <EmptyState
                 title="No matches"
-                description="Try a broader search or clear your filters."
-                actionLabel="Clear all"
+                description="Broaden your search or reset filters."
+                actionLabel="Reset filters"
                 onAction={clearFilters}
               />
             </div>
           ) : view === 'map' ? (
-            <div className="flex-1 relative min-h-[calc(100vh-220px)] h-full">
-              <MapView
-                filings={filtered}
-                onSelectFiling={setSelected}
-                selectedId={selected?.id}
-              />
+            <div className="flex-1 relative min-h-[calc(100vh-200px)]">
+              <MapView filings={filtered} onSelectFiling={setSelected} selectedId={selected?.id} />
             </div>
           ) : (
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto py-3">
               <ForeclosureListCompact
                 rows={paginated}
                 selectedId={selected?.id}
                 onSelect={setSelected}
-                onOpenDetail={(row) => setSelected(row)}
               />
-              <div className="sticky bottom-0 flex items-center justify-between px-6 py-3 border-t border-border bg-white">
-                <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between px-5 py-2.5 mx-4 sm:mx-5 bg-white border border-border rounded-lg text-xs text-muted-foreground">
+                <span>
                   {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
-                </p>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-                    Previous
+                </span>
+                <div className="flex gap-1.5">
+                  <Button variant="outline" size="sm" className="h-7 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                    Prev
                   </Button>
-                  <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                  <Button variant="outline" size="sm" className="h-7 text-xs" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
                     Next
                   </Button>
                 </div>
@@ -246,12 +243,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosure Explorer' }) 
           )}
         </div>
 
-        {selected && (
-          <ForeclosurePreviewDrawer
-            record={selected}
-            onClose={() => setSelected(null)}
-          />
-        )}
+        {selected && <ForeclosurePreviewDrawer record={selected} onClose={() => setSelected(null)} />}
       </div>
     </AppLayout>
   );

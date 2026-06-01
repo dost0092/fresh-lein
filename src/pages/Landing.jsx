@@ -88,7 +88,7 @@ export default function Landing() {
         </section>
 
         {/* Data Categories */}
-        <section id="data" className="py-24 bg-[#0F5132]">
+        <section id="data" className="py-20 bg-brand-green">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-14">
               <h2 className="font-display text-4xl font-bold text-white mb-4">
@@ -119,7 +119,7 @@ export default function Landing() {
         <PricingSection />
 
         {/* CTA */}
-        <section className="py-24 bg-[#0F5132]">
+        <section className="py-20 bg-brand-green">
           <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-white mb-6">
               Ready to find deals before the crowd?
@@ -129,7 +129,7 @@ export default function Landing() {
             </p>
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 bg-white text-[#0F5132] font-bold px-10 py-4 rounded-xl text-lg hover:bg-white/90 transition-all shadow-xl"
+              className="inline-flex items-center gap-2 bg-white text-brand-green font-semibold px-8 py-3 rounded-lg text-base hover:bg-white/90 transition-all shadow-xl"
             >
               Start Free Trial <ArrowRight className="w-5 h-5" />
             </Link>
@@ -137,7 +137,7 @@ export default function Landing() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-[#0a3622] border-t border-white/10 py-12">
+        <footer className="bg-navy-dark border-t border-white/10 py-10">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2">

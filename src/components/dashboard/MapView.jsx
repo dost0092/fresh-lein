@@ -91,7 +91,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
               pathOptions={{
                 fillColor: color,
                 fillOpacity: 0.92,
-                color: isSelected ? '#4257A7' : '#ffffff',
+                color: isSelected ? '#445aa6' : '#ffffff',
                 weight: isSelected ? 3 : 2,
               }}
               eventHandlers={{
@@ -149,7 +149,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
           { color: '#E63946', label: '< 7 days' },
           { color: '#F4A261', label: '7–30 days' },
           { color: '#FFD166', label: '30–90 days' },
-          { color: '#4257A7', label: 'Appraisal / no date' },
+          { color: '#445aa6', label: 'Appraisal / no date' },
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-2 mb-1 last:mb-0">
             <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: color }} />

@@ -36,82 +36,80 @@ export default function DashboardHome() {
   return (
     <AppLayout>
       <div className="flex-1 overflow-y-auto bg-white">
-        <div className="border-b border-border bg-gradient-to-b from-white to-[#f8f9fb]">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 text-center">
-            <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground tracking-tight text-balance">
-              Find foreclosure deals in seconds
+        <div className="border-b border-border bg-white">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-foreground tracking-tight">
+              Find foreclosure deals fast
             </h1>
-            <p className="text-muted-foreground mt-3 text-lg max-w-2xl mx-auto">
-              Search across {stats?.countiesCovered ?? 48} counties. Switch between map and list. Full case files on every property.
+            <p className="text-muted-foreground mt-2 text-sm max-w-lg mx-auto">
+              Search {stats?.countiesCovered ?? 48} counties · map or list view · full case details
             </p>
-            <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <form onSubmit={handleSearch} className="mt-5 max-w-xl mx-auto relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Address, defendant, sheriff number, county..."
-                className="w-full h-14 pl-14 pr-36 text-base rounded-2xl border border-border bg-white shadow-card focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                placeholder="Address, defendant, sheriff number..."
+                className="search-input pr-24"
               />
-              <Button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-6 rounded-xl">
+              <Button type="submit" size="sm" className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 text-xs px-3">
                 Search
               </Button>
             </form>
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
-              <Button asChild variant="secondary" size="sm">
+            <div className="flex justify-center gap-2 mt-4">
+              <Button asChild size="sm" variant="default" className="h-8 text-xs">
                 <Link to="/dashboard/foreclosures">
-                  <Gavel className="w-4 h-4 mr-1.5" /> Browse all foreclosures
+                  <Gavel className="w-3.5 h-3.5 mr-1" /> Browse all
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild size="sm" variant="outline" className="h-8 text-xs">
                 <Link to="/dashboard/foreclosures?view=map">
-                  <Map className="w-4 h-4 mr-1.5" /> Open map explorer
+                  <Map className="w-3.5 h-3.5 mr-1" /> Map view
                 </Link>
               </Button>
             </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10 space-y-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-5">
           <StatsCards stats={stats} loading={loading} />
 
           <div className="saas-card overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/20">
               <div>
-                <h2 className="font-heading font-semibold text-foreground">Upcoming auctions</h2>
-                <p className="text-sm text-muted-foreground">Scheduled sheriff sales — soonest first</p>
+                <h2 className="text-sm font-semibold text-foreground">Upcoming auctions</h2>
+                <p className="text-xs text-muted-foreground">Soonest sale dates first</p>
               </div>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="ghost" size="sm" className="h-7 text-xs text-primary">
                 <Link to="/dashboard/foreclosures">
-                  Open explorer <ArrowRight className="w-4 h-4 ml-1" />
+                  View all <ArrowRight className="w-3 h-3 ml-0.5" />
                 </Link>
               </Button>
             </div>
             {loading ? (
-              <div className="p-6 space-y-3">
+              <div className="p-4 space-y-2">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-14 bg-muted/50 rounded-lg animate-pulse" />
+                  <div key={i} className="h-11 bg-muted/40 rounded animate-pulse" />
                 ))}
               </div>
             ) : (
-              <ul className="divide-y divide-border">
+              <ul className="divide-y divide-border text-sm">
                 {recent.map((c) => (
                   <li key={c.id}>
                     <Link
                       to={`/dashboard/foreclosures/${c.id}`}
-                      className="flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors group"
+                      className="flex items-center justify-between px-4 py-3 hover:bg-muted/30 group"
                     >
-                      <div className="min-w-0">
-                        <p className="font-medium text-foreground truncate group-hover:text-primary">
-                          {c.property_address}, {c.city}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {c.county_name} County, {c.state}
+                      <div className="min-w-0 pr-4">
+                        <p className="font-medium truncate group-hover:text-primary">{c.property_address}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {c.county_name} Co., {c.state}
                         </p>
                       </div>
-                      <p className="text-sm font-medium shrink-0 ml-4">
-                        {c.sale_date ? format(new Date(c.sale_date), 'MMM d, yyyy') : '—'}
-                      </p>
+                      <span className="text-xs font-medium shrink-0">
+                        {c.sale_date ? format(new Date(c.sale_date), 'MMM d') : '—'}
+                      </span>
                     </Link>
                   </li>
                 ))}
