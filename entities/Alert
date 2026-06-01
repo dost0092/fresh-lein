@@ -1,0 +1,40 @@
+{
+  "name": "Alert",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "zip_codes": {
+      "type": "string",
+      "description": "Comma-separated ZIP codes"
+    },
+    "states": {
+      "type": "string",
+      "description": "Comma-separated state codes"
+    },
+    "filing_types": {
+      "type": "string",
+      "description": "Comma-separated filing types"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_triggered": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_deliveries": {
+      "type": "number",
+      "default": 0
+    },
+    "last_filings_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

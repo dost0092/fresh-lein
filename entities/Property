@@ -1,0 +1,108 @@
+{
+  "name": "Property",
+  "type": "object",
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "description": "County APN/parcel number"
+    },
+    "address_full": {
+      "type": "string",
+      "description": "Full address string"
+    },
+    "address_street": {
+      "type": "string"
+    },
+    "address_city": {
+      "type": "string"
+    },
+    "address_state": {
+      "type": "string",
+      "description": "2-letter state code"
+    },
+    "address_zip": {
+      "type": "string"
+    },
+    "county_fips": {
+      "type": "string",
+      "description": "5-digit FIPS code"
+    },
+    "county_name": {
+      "type": "string"
+    },
+    "property_type": {
+      "type": "string",
+      "enum": [
+        "SFR",
+        "MFR",
+        "CONDO",
+        "LAND",
+        "COMM"
+      ],
+      "default": "SFR"
+    },
+    "bedrooms": {
+      "type": "number"
+    },
+    "bathrooms": {
+      "type": "number"
+    },
+    "sqft": {
+      "type": "number"
+    },
+    "year_built": {
+      "type": "number"
+    },
+    "assessed_value": {
+      "type": "number"
+    },
+    "last_sale_price": {
+      "type": "number"
+    },
+    "last_sale_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "estimated_value": {
+      "type": "number",
+      "description": "AVM estimate"
+    },
+    "estimated_equity": {
+      "type": "number",
+      "description": "Estimated equity amount"
+    },
+    "equity_pct": {
+      "type": "number",
+      "description": "Equity as percentage"
+    },
+    "tax_status": {
+      "type": "string",
+      "enum": [
+        "CURRENT",
+        "DELINQUENT",
+        "EXEMPT"
+      ],
+      "default": "CURRENT"
+    },
+    "tax_annual": {
+      "type": "number"
+    },
+    "flood_zone": {
+      "type": "string",
+      "description": "FEMA zone code e.g. AE, X"
+    },
+    "zoning": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "address_full",
+    "address_state"
+  ]
+}

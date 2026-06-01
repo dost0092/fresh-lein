@@ -1,0 +1,58 @@
+/** Counties available in MVP — matches scraper coverage list */
+export const MVP_COUNTIES = [
+  { county_name: 'Allen', state: 'OH' },
+  { county_name: 'Ascension Parish', state: 'LA' },
+  { county_name: 'Atlantic', state: 'NJ' },
+  { county_name: 'Bergen', state: 'NJ' },
+  { county_name: 'Burlington', state: 'NJ' },
+  { county_name: 'Camden', state: 'NJ' },
+  { county_name: 'Canyon', state: 'ID' },
+  { county_name: 'Cape May', state: 'NJ' },
+  { county_name: 'Champaign', state: 'IL' },
+  { county_name: 'Cumberland', state: 'NJ' },
+  { county_name: 'Deschutes', state: 'OR' },
+  { county_name: 'Essex', state: 'NJ' },
+  { county_name: 'Gloucester', state: 'NJ' },
+  { county_name: 'Guadalupe', state: 'TX' },
+  { county_name: 'Hudson', state: 'NJ' },
+  { county_name: 'Hunterdon', state: 'NJ' },
+  { county_name: 'Josephine', state: 'OR' },
+  { county_name: 'Kent', state: 'DE' },
+  { county_name: 'Lake', state: 'IL' },
+  { county_name: 'Larimer', state: 'CO' },
+  { county_name: 'Lehigh', state: 'PA' },
+  { county_name: 'Lorain', state: 'OH' },
+  { county_name: 'Maricopa', state: 'AZ' },
+  { county_name: 'McLennan', state: 'TX' },
+  { county_name: 'Medina', state: 'OH' },
+  { county_name: 'Middlesex', state: 'NJ' },
+  { county_name: 'Monmouth', state: 'NJ' },
+  { county_name: 'Montgomery', state: 'PA' },
+  { county_name: 'Morris', state: 'NJ' },
+  { county_name: 'New Castle', state: 'DE' },
+  { county_name: 'Ocean', state: 'NJ' },
+  { county_name: 'Orleans Parish', state: 'LA' },
+  { county_name: 'Palm Beach', state: 'FL' },
+  { county_name: 'Passaic', state: 'NJ' },
+  { county_name: 'Philadelphia', state: 'PA' },
+  { county_name: 'Pottawattamie', state: 'IA' },
+  { county_name: 'Pulaski', state: 'AR' },
+  { county_name: 'Richland', state: 'OH' },
+  { county_name: 'Rockwall', state: 'TX' },
+  { county_name: 'Salem', state: 'NJ' },
+  { county_name: 'Santa Rosa', state: 'FL' },
+  { county_name: 'Scott', state: 'IA' },
+  { county_name: 'Shawnee', state: 'KS' },
+  { county_name: 'Snohomish', state: 'WA' },
+  { county_name: 'Stearns', state: 'MN' },
+  { county_name: 'Story', state: 'IA' },
+  { county_name: 'Sussex', state: 'DE' },
+  { county_name: 'Union', state: 'NJ' },
+];
+
+export function formatCountyLabel(county) {
+  if (!county) return '';
+  const name = typeof county === 'string' ? county : county.county_name;
+  const state = typeof county === 'string' ? '' : county.state;
+  return state ? `${name} County, ${state}` : name;
+}

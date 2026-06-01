@@ -1,0 +1,191 @@
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Gavel,
+  Bookmark,
+  Bell,
+  BarChart2,
+  CreditCard,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/AuthContext';
+
+const navItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: Gavel, label: 'Active Foreclosures', path: '/dashboard/foreclosures' },
+  { icon: Clock, label: 'Pre-Foreclosures', path: '/dashboard/pre-foreclosures', comingSoon: true },
+  { icon: Clock, label: 'Probate', path: '/dashboard/probate', comingSoon: true },
+  { icon: Clock, label: 'Tax Delinquency', path: '/dashboard/tax', comingSoon: true },
+  { icon: Bookmark, label: 'Saved Properties', path: '/dashboard/saved' },
+  { icon: Bell, label: 'Alerts', path: '/dashboard/alerts' },
+  { icon: BarChart2, label: 'Analytics', path: '/analytics' },
+  { icon: CreditCard, label: 'Billing', path: '/dashboard/billing' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
+];
+
+function NavContent({ collapsed, onNavClick }) {
+  const location = useLocation();
+  const { signOut, profile } = useAuth();
+
+  const isActive = (path) => {
+    if (path === '/dashboard') return location.pathname === '/dashboard';
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
+  return (
+    <>
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        {navItems.map(({ icon: Icon, label, path, comingSoon }) => {
+          const active = isActive(path);
+          const content = (
+            <>
+              <Icon className="w-4 h-4 shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">{label}</span>
+                  {comingSoon && (
+                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                      Soon
+                    </span>
+                  )}
+                </>
+              )}
+            </>
+          );
+
+          if (comingSoon) {
+            return (
+              <div
+                key={path}
+                title={collapsed ? label : undefined}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground/60 cursor-not-allowed',
+                  collapsed && 'justify-center'
+                )}
+              >
+                {content}
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={path}
+              to={path}
+              onClick={onNavClick}
+              title={collapsed ? label : undefined}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150',
+                active
+                  ? 'bg-[#4257A7]/10 text-[#4257A7]'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60',
+                collapsed && 'justify-center'
+              )}
+            >
+              {content}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className="px-3 py-4 border-t border-border">
+        {!collapsed && profile && (
+          <p className="text-xs text-muted-foreground truncate px-3 mb-2">{profile.email}</p>
+        )}
+        <button
+          type="button"
+          onClick={() => signOut()}
+          className={cn(
+            'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all',
+            collapsed && 'justify-center'
+          )}
+        >
+          <LogOut className="w-4 h-4 shrink-0" />
+          {!collapsed && <span>Log out</span>}
+        </button>
+      </div>
+    </>
+  );
+}
+
+export default function AppLayout({ children }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <div className="flex h-screen bg-[#f8f9fb] overflow-hidden">
+      {mobileOpen && (
+        <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
+      )}
+
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-border flex flex-col transition-transform duration-300 lg:hidden',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
+        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+            <div className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+              <span className="text-white font-heading font-bold text-xs">FL</span>
+            </div>
+            <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
+          </Link>
+          <button type="button" onClick={() => setMobileOpen(false)} className="p-1.5 rounded-lg hover:bg-muted">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <NavContent collapsed={false} onNavClick={() => setMobileOpen(false)} />
+      </aside>
+
+      <aside
+        className={cn(
+          'hidden lg:flex flex-col bg-white border-r border-border transition-all duration-300 shrink-0 relative',
+          collapsed ? 'w-[72px]' : 'w-60'
+        )}
+      >
+        <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed && 'justify-center')}>
+          {!collapsed ? (
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+                <span className="text-white font-heading font-bold text-xs">FL</span>
+              </div>
+              <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
+            </Link>
+          ) : (
+            <Link to="/" className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+              <span className="text-white font-heading font-bold text-xs">FL</span>
+            </Link>
+          )}
+        </div>
+        <NavContent collapsed={collapsed} />
+        <button
+          type="button"
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-white border border-border shadow-sm flex items-center justify-center hover:bg-muted z-10"
+        >
+          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        </button>
+      </aside>
+
+      <main className="flex-1 overflow-hidden flex flex-col min-w-0">
+        <div className="lg:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-border shrink-0">
+          <button type="button" onClick={() => setMobileOpen(true)} className="p-1.5 rounded-lg hover:bg-muted">
+            <Menu className="w-5 h-5" />
+          </button>
+          <span className="font-heading font-semibold text-foreground">FreshLien</span>
+          <div className="w-8" />
+        </div>
+        {children}
+      </main>
+    </div>
+  );
+}

@@ -1,0 +1,21 @@
+{
+  "name": "SavedSearch",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "User-defined name for the search"
+    },
+    "filter_config": {
+      "type": "string",
+      "description": "JSON string of filter configuration"
+    },
+    "result_count": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "filter_config"
+  ]
+}

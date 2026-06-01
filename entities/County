@@ -1,0 +1,52 @@
+{
+  "name": "County",
+  "type": "object",
+  "properties": {
+    "fips": {
+      "type": "string",
+      "description": "5-digit FIPS code"
+    },
+    "name": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "description": "2-letter state code"
+    },
+    "state_full": {
+      "type": "string"
+    },
+    "judicial": {
+      "type": "boolean",
+      "default": false,
+      "description": "TRUE = Lis Pendens state"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_scraped": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rows_count": {
+      "type": "number",
+      "default": 0
+    },
+    "scraper_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "failed",
+        "inactive"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "fips",
+    "name",
+    "state"
+  ]
+}

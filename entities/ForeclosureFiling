@@ -1,0 +1,164 @@
+{
+  "name": "ForeclosureFiling",
+  "type": "object",
+  "properties": {
+    "property_id": {
+      "type": "string",
+      "description": "Reference to Property entity"
+    },
+    "property_id_raw": {
+      "type": "string",
+      "description": "Court docket/internal ID"
+    },
+    "address_full": {
+      "type": "string"
+    },
+    "address_city": {
+      "type": "string"
+    },
+    "address_state": {
+      "type": "string"
+    },
+    "address_zip": {
+      "type": "string"
+    },
+    "county_fips": {
+      "type": "string"
+    },
+    "county_name": {
+      "type": "string"
+    },
+    "filing_type": {
+      "type": "string",
+      "enum": [
+        "NOD",
+        "LIS_PENDENS",
+        "NTS",
+        "AUCTION",
+        "REO"
+      ],
+      "description": "Type of foreclosure filing"
+    },
+    "filing_stage": {
+      "type": "string",
+      "enum": [
+        "PRE_FORECLOSURE",
+        "ACTIVE",
+        "POST"
+      ],
+      "default": "PRE_FORECLOSURE"
+    },
+    "case_number": {
+      "type": "string"
+    },
+    "filing_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "recording_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "auction_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "judgment_amount": {
+      "type": "number"
+    },
+    "default_amount": {
+      "type": "number"
+    },
+    "lender_name": {
+      "type": "string"
+    },
+    "lender_type": {
+      "type": "string",
+      "enum": [
+        "BANK",
+        "CREDIT_UNION",
+        "PRIVATE",
+        "GOV"
+      ]
+    },
+    "trustee_name": {
+      "type": "string"
+    },
+    "attorney_name": {
+      "type": "string"
+    },
+    "defendant_primary": {
+      "type": "string"
+    },
+    "defendants_raw": {
+      "type": "string",
+      "description": "Semicolon-delimited defendants"
+    },
+    "federal_lien": {
+      "type": "boolean",
+      "default": false
+    },
+    "state_lien": {
+      "type": "boolean",
+      "default": false
+    },
+    "hoa_lien": {
+      "type": "boolean",
+      "default": false
+    },
+    "probate_flag": {
+      "type": "boolean",
+      "default": false
+    },
+    "days_to_auction": {
+      "type": "number"
+    },
+    "days_since_filing": {
+      "type": "number"
+    },
+    "estimated_value": {
+      "type": "number"
+    },
+    "estimated_equity": {
+      "type": "number"
+    },
+    "equity_pct": {
+      "type": "number"
+    },
+    "property_type": {
+      "type": "string"
+    },
+    "bedrooms": {
+      "type": "number"
+    },
+    "bathrooms": {
+      "type": "number"
+    },
+    "sqft": {
+      "type": "number"
+    },
+    "year_built": {
+      "type": "number"
+    },
+    "flood_zone": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_portal": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "filing_type",
+    "filing_date",
+    "address_state"
+  ]
+}
