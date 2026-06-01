@@ -52,7 +52,7 @@ export default function Landing() {
     <div className="min-h-screen bg-white">
       <MarketingNav />
 
-      <div className="pt-14">
+      <div className="pt-14 lg:pt-16">
         <HeroSection />
         <LandingMapExplorer />
         <DataCoverageSection />
