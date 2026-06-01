@@ -1,71 +1,102 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, TrendingUp, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Search, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  canSearchOnLanding,
+  incrementLandingSearch,
+  getRemainingSearches,
+} from '@/lib/landingSearchLimit';
+import ProGateModal from '@/components/landing/ProGateModal';
 
 export default function HeroSection() {
+  const [query, setQuery] = useState('');
+  const [showProGate, setShowProGate] = useState(false);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) {
+      document.getElementById('explorer')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    if (!canSearchOnLanding()) {
+      setShowProGate(true);
+      return;
+    }
+
+    incrementLandingSearch();
+    const el = document.getElementById('explorer');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('freshlien-landing-search', { detail: q }));
+    }
+  };
+
   return (
-    <section className="relative bg-brand-green overflow-hidden min-h-[85vh] flex items-center">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10"
-        style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, #F97316 0%, transparent 50%), radial-gradient(circle at 75% 20%, #22c55e 0%, transparent 40%)' }}
-      />
-      <div className="absolute inset-0"
-        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23F97316\' fill-opacity=\'0.04\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}
-      />
+    <>
+      <section className="relative bg-white pt-8 pb-12 lg:pb-16 overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/[0.04] to-transparent pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-24 w-full">
-        <div className="max-w-3xl">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-orange-500/20 text-orange-300 border border-orange-400/30 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
-            <Zap className="w-3.5 h-3.5" />
-            Same-day foreclosure intelligence — before the crowd
-          </div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/15 rounded-full px-3 py-1 text-xs font-medium mb-5">
+              <Sparkles className="w-3.5 h-3.5" />
+              AI-driven foreclosure intelligence
+            </div>
 
-          {/* Headline */}
-          <h1 className="font-display text-4xl lg:text-5xl font-bold text-white leading-[1.08] tracking-tight mb-5">
-            Find distressed properties{' '}
-            <span className="text-orange-400">30 days before</span>{' '}
-            your competitors
-          </h1>
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-foreground leading-[1.12] tracking-tight mb-4">
+              <span className="relative inline-block">
+                AI-driven foreclosure
+                <span className="absolute bottom-1 left-0 right-0 h-2.5 bg-amber-400/50 -z-10 rounded-sm" />
+              </span>
+              {' '}
+              analysis & deal discovery
+            </h1>
 
-          <p className="text-base text-white/75 leading-relaxed mb-8 max-w-2xl">
-            FreshLien scrapes US county courts directly — delivering same-day NOD, Lis Pendens, 
-            auction, and probate data. While PropStream shows you 60-day-old leads, 
-            you're already closing deals.
-          </p>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-8 max-w-xl">
+              Preferred by real estate investors for efficient lien due diligence and accelerated
+              sheriff-sale acquisitions — same-day county court data, not 30-day-old lists.
+            </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl text-base transition-all hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5"
-            >
-              Start Free Trial <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-4 rounded-xl text-base transition-all border border-white/20"
-            >
-              View Live Demo
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {[
-              { value: '$800B+', label: 'Distressed Asset Market', icon: TrendingUp },
-              { value: 'Same-Day', label: 'Data Freshness', icon: Zap },
-              { value: '30–60 Days', label: 'Competitors\' Lag', icon: Clock },
-              { value: '3,143', label: 'US Counties', icon: null },
-            ].map(({ value, label, icon: Icon }) => (
-              <div key={label} className="text-center sm:text-left">
-                <p className="text-2xl lg:text-3xl font-display font-bold text-orange-400 mb-1">{value}</p>
-                <p className="text-sm text-white/60 leading-tight">{label}</p>
+            <form onSubmit={handleSearch} className="max-w-2xl mb-4">
+              <div className="flex flex-col sm:flex-row gap-0 sm:gap-0 rounded-xl border border-border bg-white shadow-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary">
+                <div className="relative flex-1 flex items-center">
+                  <Search className="absolute left-4 w-5 h-5 text-primary pointer-events-none" />
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Enter an address, neighborhood, city, or ZIP code"
+                    className="w-full h-12 sm:h-14 pl-12 pr-4 text-sm bg-transparent border-0 focus:outline-none"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="h-12 sm:h-14 rounded-none sm:rounded-none px-8 text-sm font-semibold shrink-0"
+                >
+                  Search
+                </Button>
               </div>
-            ))}
+              <p className="text-[11px] text-muted-foreground mt-2">
+                {getRemainingSearches()} free preview searches · then upgrade to Pro
+              </p>
+            </form>
+
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" size="sm" className="h-9 text-xs border-amber-400/60 text-amber-700 hover:bg-amber-50" asChild>
+                <Link to="mailto:sales@freshlien.com">Contact us</Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="h-9 text-xs text-primary" asChild>
+                <Link to="/register">Start free trial</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <ProGateModal open={showProGate} onClose={() => setShowProGate(false)} />
+    </>
   );
 }

@@ -103,6 +103,12 @@ export default function PricingSection() {
             </div>
           ))}
         </div>
+
+        <p className="text-center mt-8">
+          <a href="#compare-plans" className="text-sm font-medium text-primary hover:underline">
+            Compare all plan features ↓
+          </a>
+        </p>
       </div>
     </section>
   );
