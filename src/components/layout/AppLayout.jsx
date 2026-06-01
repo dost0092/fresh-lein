@@ -85,7 +85,7 @@ function NavContent({ collapsed, onNavClick }) {
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150',
                 active
-                  ? 'bg-[#4257A7]/10 text-[#4257A7]'
+                  ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/60',
                 collapsed && 'justify-center'
               )}
@@ -121,7 +121,7 @@ export default function AppLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#f8f9fb] overflow-hidden">
+    <div className="flex h-screen bg-white overflow-hidden">
       {mobileOpen && (
         <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
@@ -134,7 +134,7 @@ export default function AppLayout({ children }) {
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <div className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-heading font-bold text-xs">FL</span>
             </div>
             <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
@@ -155,13 +155,13 @@ export default function AppLayout({ children }) {
         <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed && 'justify-center')}>
           {!collapsed ? (
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+              <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-heading font-bold text-xs">FL</span>
               </div>
               <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
             </Link>
           ) : (
-            <Link to="/" className="w-7 h-7 bg-[#4257A7] rounded-lg flex items-center justify-center">
+            <Link to="/" className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-heading font-bold text-xs">FL</span>
             </Link>
           )}

@@ -52,7 +52,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
               pathOptions={{
                 fillColor: color,
                 fillOpacity: 0.9,
-                color: isSelected ? '#1B3A5C' : 'white',
+                color: isSelected ? '#4257A7' : 'white',
                 weight: isSelected ? 3 : 2,
               }}
               eventHandlers={{
@@ -94,7 +94,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
           { color: '#E63946', label: 'Auction < 7 days' },
           { color: '#F4A261', label: 'Auction 7–30 days' },
           { color: '#FFD166', label: 'Auction 30–90 days' },
-          { color: '#00B4D8', label: 'Pre-foreclosure' },
+          { color: '#4257A7', label: 'Pre-foreclosure / Appraisal' },
           { color: '#7B2D8B', label: 'Probate' },
           { color: '#94A3B8', label: 'REO / Post-auction' },
         ].map(({ color, label }) => (
@@ -106,7 +106,7 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
       </div>
 
       {/* Results count */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-[#0F5132] text-white text-xs font-medium px-4 py-1.5 rounded-full shadow-lg">
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-secondary text-secondary-foreground text-xs font-medium px-4 py-1.5 rounded-full shadow-lg">
         {filings.length} results
         {filings.filter(f => f.latitude && f.longitude).length < filings.length && (
           <span className="text-white/60 ml-1">({filings.filter(f => f.latitude && f.longitude).length} mapped)</span>

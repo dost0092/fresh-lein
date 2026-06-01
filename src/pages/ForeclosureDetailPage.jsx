@@ -1,28 +1,84 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Bookmark } from 'lucide-react';
+import {
+  ArrowLeft,
+  Bookmark,
+  Copy,
+  Calendar,
+  DollarSign,
+  MapPin,
+  Gavel,
+  FileText,
+  Building2,
+  Check,
+} from 'lucide-react';
 import { format } from 'date-fns';
 import AppLayout from '@/components/layout/AppLayout';
 import StatusTimeline from '@/components/dashboard/StatusTimeline';
+import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchForeclosureById } from '@/lib/foreclosureService';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
 
-function DetailCard({ title, children }) {
+function copyText(text, label) {
+  if (!text) return;
+  navigator.clipboard.writeText(text);
+  toast({ title: 'Copied', description: `${label} copied to clipboard.` });
+}
+
+function MetricCard({ icon: Icon, label, value, sub, highlight }) {
   return (
-    <div className="saas-card p-6">
-      <h2 className="font-heading font-semibold text-foreground mb-4">{title}</h2>
-      {children}
+    <div
+      className={cn(
+        'rounded-xl border p-5 bg-white transition-shadow hover:shadow-card-hover',
+        highlight ? 'border-primary/30 bg-primary/[0.03]' : 'border-border shadow-card'
+      )}
+    >
+      <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <Icon className="w-4 h-4" />
+        <span className="text-xs font-medium uppercase tracking-wide">{label}</span>
+      </div>
+      <p className={cn('text-2xl font-display font-bold tracking-tight', highlight && 'text-primary')}>
+        {value}
+      </p>
+      {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
     </div>
   );
 }
 
-function Field({ label, value }) {
+function Section({ title, icon: Icon, children }) {
   return (
-    <div className="py-2 border-b border-border/60 last:border-0">
-      <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</dt>
-      <dd className="text-sm text-foreground mt-0.5">{value || '—'}</dd>
+    <section className="saas-card overflow-hidden">
+      <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center gap-2">
+        <Icon className="w-4 h-4 text-primary" />
+        <h2 className="font-heading font-semibold text-foreground">{title}</h2>
+      </div>
+      <div className="p-6">{children}</div>
+    </section>
+  );
+}
+
+function DataRow({ label, value, mono, onCopy }) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 py-3 border-b border-border/50 last:border-0 group">
+      <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wider sm:w-40 shrink-0">
+        {label}
+      </dt>
+      <dd className={cn('text-sm text-foreground flex-1 flex items-start justify-between gap-2', mono && 'font-mono')}>
+        <span>{value || '—'}</span>
+        {onCopy && value && (
+          <button
+            type="button"
+            onClick={onCopy}
+            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-muted text-muted-foreground transition-opacity shrink-0"
+            title="Copy"
+          >
+            <Copy className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </dd>
     </div>
   );
 }
@@ -45,7 +101,7 @@ export default function ForeclosureDetailPage() {
 
   const formatDate = (d) => {
     try {
-      return d ? format(new Date(d), 'MMMM d, yyyy') : '—';
+      return d ? format(new Date(d), 'EEEE, MMMM d, yyyy') : '—';
     } catch {
       return d || '—';
     }
@@ -54,9 +110,14 @@ export default function ForeclosureDetailPage() {
   if (loading) {
     return (
       <AppLayout>
-        <div className="p-8 max-w-5xl mx-auto space-y-6">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-64 w-full" />
+        <div className="p-8 max-w-6xl mx-auto space-y-6">
+          <Skeleton className="h-10 w-64" />
+          <div className="grid grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-28" />
+            ))}
+          </div>
+          <Skeleton className="h-96" />
         </div>
       </AppLayout>
     );
@@ -65,82 +126,173 @@ export default function ForeclosureDetailPage() {
   if (!record) {
     return (
       <AppLayout>
-        <div className="p-8 text-center">
-          <p className="text-muted-foreground mb-4">Foreclosure record not found.</p>
-          <Button asChild variant="outline">
-            <Link to="/dashboard/foreclosures">Back to list</Link>
+        <div className="p-12 text-center">
+          <p className="text-muted-foreground mb-4">This foreclosure record could not be found.</p>
+          <Button asChild>
+            <Link to="/dashboard/foreclosures">Back to explorer</Link>
           </Button>
         </div>
       </AppLayout>
     );
   }
 
+  const equity = record.estimated_equity;
+  const equityPct = record.equity_pct;
+
   return (
     <AppLayout>
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-5xl mx-auto w-full space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div>
-              <Link
-                to="/dashboard/foreclosures"
-                className="inline-flex items-center gap-1 text-sm text-[#4257A7] hover:underline mb-3"
-              >
-                <ArrowLeft className="w-4 h-4" /> Back to foreclosures
-              </Link>
-              <h1 className="font-display text-2xl font-bold text-foreground">{record.property_address}</h1>
-              <p className="text-muted-foreground mt-1">
-                {record.city}, {record.state} {record.zip_code} · {record.county_name} County
-              </p>
+      <div className="flex-1 overflow-y-auto bg-[#f8f9fb]">
+        {/* Hero */}
+        <div className="bg-white border-b border-border">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+            <Link
+              to="/dashboard/foreclosures"
+              className="inline-flex items-center gap-1.5 text-sm text-primary font-medium hover:underline mb-6"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to explorer
+            </Link>
+
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span
+                    className={cn(
+                      'text-xs font-bold px-2.5 py-1 rounded-md border uppercase tracking-wide',
+                      record.status === 'Scheduled' && 'status-scheduled',
+                      record.status === 'Sold' && 'status-sold',
+                      record.status === 'Cancelled' && 'status-cancelled',
+                      record.status === 'Appraisal' && 'status-appraisal'
+                    )}
+                  >
+                    {record.status}
+                  </span>
+                  {record.days_to_auction != null && record.status === 'Scheduled' && (
+                    <UrgencyBadge daysToAuction={record.days_to_auction} filingType="NTS" />
+                  )}
+                </div>
+                <h1 className="font-display text-3xl lg:text-4xl font-bold text-foreground tracking-tight leading-tight">
+                  {record.property_address}
+                </h1>
+                <p className="text-lg text-muted-foreground mt-2 flex items-center gap-2 flex-wrap">
+                  <MapPin className="w-5 h-5 shrink-0" />
+                  {record.city}, {record.state} {record.zip_code}
+                  <span className="text-border">|</span>
+                  {record.county_name} County
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2 shrink-0">
+                <Button variant="outline" disabled>
+                  <Bookmark className="w-4 h-4 mr-2" /> Save
+                </Button>
+                <Button variant="secondary" asChild>
+                  <Link to="/dashboard/foreclosures?view=map">View on map</Link>
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" className="shrink-0" disabled title="Available after sign-in with Supabase">
-              <Bookmark className="w-4 h-4 mr-2" />
-              Save property
-            </Button>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* Key metrics */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard
+              icon={Calendar}
+              label="Sale date"
+              value={record.sale_date ? format(new Date(record.sale_date), 'MMM d, yyyy') : '—'}
+              sub={formatDate(record.sale_date)}
+              highlight
+            />
+            <MetricCard
+              icon={DollarSign}
+              label="Opening bid"
+              value={formatCurrency(record.starting_bid)}
+              sub="Sheriff sale minimum"
+            />
+            <MetricCard
+              icon={Building2}
+              label="Appraised value"
+              value={formatCurrency(record.appraised_value)}
+              sub="County appraisal"
+            />
+            <MetricCard
+              icon={DollarSign}
+              label="Est. equity"
+              value={equity > 0 ? formatCurrency(equity) : '—'}
+              sub={equityPct ? `${equityPct.toFixed(0)}% spread vs appraisal` : undefined}
+              highlight={equity > 0}
+            />
           </div>
 
-          <span
-            className={cn(
-              'inline-flex text-xs font-semibold px-2.5 py-1 rounded-md border',
-              record.status === 'Scheduled' && 'status-scheduled',
-              record.status === 'Sold' && 'status-sold',
-              record.status === 'Cancelled' && 'status-cancelled',
-              record.status === 'Appraisal' && 'status-appraisal'
-            )}
-          >
-            {record.status}
-          </span>
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <Section title="Property" icon={MapPin}>
+                <dl>
+                  <DataRow
+                    label="Street address"
+                    value={record.property_address}
+                    onCopy={() => copyText(record.property_address, 'Address')}
+                  />
+                  <DataRow label="City" value={record.city} />
+                  <DataRow label="State" value={record.state} />
+                  <DataRow label="ZIP" value={record.zip_code} />
+                  <DataRow
+                    label="Parcel number"
+                    value={record.parcel_number}
+                    mono
+                    onCopy={() => copyText(record.parcel_number, 'Parcel')}
+                  />
+                  <DataRow label="County" value={`${record.county_name} County, ${record.state}`} />
+                </dl>
+              </Section>
 
-          <div className="grid lg:grid-cols-2 gap-6">
-            <DetailCard title="Property Information">
-              <dl>
-                <Field label="Address" value={`${record.property_address}, ${record.city}, ${record.state} ${record.zip_code}`} />
-                <Field label="Parcel Number" value={record.parcel_number} />
-                <Field label="County" value={`${record.county_name} County`} />
-                <Field label="State" value={record.state} />
-              </dl>
-            </DetailCard>
+              <Section title="Case & parties" icon={Gavel}>
+                <dl>
+                  <DataRow
+                    label="Sheriff number"
+                    value={record.sheriff_number}
+                    mono
+                    onCopy={() => copyText(record.sheriff_number, 'Sheriff #')}
+                  />
+                  <DataRow
+                    label="Court case #"
+                    value={record.court_case_number}
+                    mono
+                    onCopy={() => copyText(record.court_case_number, 'Case #')}
+                  />
+                  <DataRow label="Plaintiff" value={record.plaintiff} />
+                  <DataRow label="Defendant" value={record.defendant} />
+                  <DataRow label="Attorney" value={record.attorney_name} />
+                </dl>
+              </Section>
 
-            <DetailCard title="Case Information">
-              <dl>
-                <Field label="Sheriff Number" value={record.sheriff_number} />
-                <Field label="Court Case Number" value={record.court_case_number} />
-                <Field label="Plaintiff" value={record.plaintiff} />
-                <Field label="Defendant" value={record.defendant} />
-                <Field label="Attorney" value={record.attorney_name} />
-              </dl>
-            </DetailCard>
+              <Section title="Auction" icon={FileText}>
+                <dl>
+                  <DataRow label="Sale date" value={formatDate(record.sale_date)} />
+                  <DataRow label="Starting bid" value={formatCurrency(record.starting_bid)} />
+                  <DataRow label="Appraised value" value={formatCurrency(record.appraised_value)} />
+                  {record.days_to_auction != null && record.status === 'Scheduled' && (
+                    <DataRow label="Days until sale" value={`${record.days_to_auction} days`} />
+                  )}
+                </dl>
+              </Section>
+            </div>
 
-            <DetailCard title="Auction Information">
-              <dl>
-                <Field label="Sale Date" value={formatDate(record.sale_date)} />
-                <Field label="Starting Bid" value={formatCurrency(record.starting_bid)} />
-                <Field label="Appraised Value" value={formatCurrency(record.appraised_value)} />
-              </dl>
-            </DetailCard>
+            <div className="space-y-6">
+              <section className="saas-card p-6 sticky top-6">
+                <h2 className="font-heading font-semibold text-foreground mb-6 flex items-center gap-2">
+                  <Check className="w-4 h-4 text-primary" /> Status timeline
+                </h2>
+                <StatusTimeline history={record.status_history} currentStatus={record.status} />
+              </section>
 
-            <DetailCard title="Status Timeline">
-              <StatusTimeline history={record.status_history} currentStatus={record.status} />
-            </DetailCard>
+              <div className="rounded-xl border border-border bg-white p-5 text-sm text-muted-foreground">
+                <p className="font-medium text-foreground mb-2">Investor note</p>
+                <p>
+                  Full docket fields (liens, probate flags, skip trace) will populate when county scrapers sync to
+                  Supabase. This record uses MVP sample data for demonstration.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

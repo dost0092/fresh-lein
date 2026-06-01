@@ -52,7 +52,7 @@ export default function PricingSection() {
     <section id="pricing" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-[#4257A7]/10 text-[#4257A7] border border-[#4257A7]/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
             <Zap className="w-3.5 h-3.5" /> Pricing
           </div>
           <h2 className="font-display text-4xl lg:text-5xl font-bold text-foreground mb-4">
@@ -70,13 +70,13 @@ export default function PricingSection() {
               className={cn(
                 'relative rounded-2xl border-2 p-8 flex flex-col transition-shadow hover:shadow-card-hover',
                 plan.popular
-                  ? 'border-[#4257A7] bg-white shadow-xl scale-[1.02]'
+                  ? 'border-primary bg-white shadow-xl scale-[1.02]'
                   : 'border-border bg-white shadow-card'
               )}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-[#4257A7] text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide shadow-lg">
+                  <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide shadow-lg">
                     Most Popular
                   </span>
                 </div>
@@ -111,8 +111,8 @@ export default function PricingSection() {
                 className={cn(
                   'block text-center font-semibold py-3 px-6 rounded-xl text-sm transition-all',
                   plan.popular
-                    ? 'bg-[#4257A7] hover:bg-[#364a8f] text-white shadow-lg'
-                    : 'bg-foreground hover:bg-foreground/90 text-white'
+                    ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg'
+                    : 'bg-secondary hover:bg-secondary/90 text-secondary-foreground'
                 )}
               >
                 {plan.cta}

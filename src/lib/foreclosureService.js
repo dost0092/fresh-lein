@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { SAMPLE_FORECLOSURES, getDashboardStats } from '@/data/sampleForeclosures';
+import { enrichForeclosure } from '@/lib/foreclosureUtils';
 
 function mapRow(row) {
   if (!row) return null;
@@ -29,7 +30,7 @@ function mapRow(row) {
 
 export async function fetchForeclosures() {
   if (!isSupabaseConfigured) {
-    return SAMPLE_FORECLOSURES;
+    return SAMPLE_FORECLOSURES.map(enrichForeclosure);
   }
 
   const { data, error } = await supabase
@@ -43,23 +44,25 @@ export async function fetchForeclosures() {
 
   if (error || !data?.length) {
     console.warn('Supabase foreclosures:', error?.message || 'empty — using sample data');
-    return SAMPLE_FORECLOSURES;
+    return SAMPLE_FORECLOSURES.map(enrichForeclosure);
   }
 
   return data.map((row) =>
+    enrichForeclosure(
     mapRow({
       ...row,
       county_name: row.counties?.county_name,
       status_history: (row.foreclosure_status_history || [])
         .sort((a, b) => new Date(a.status_date) - new Date(b.status_date))
         .map((h) => ({ status: h.status, status_date: h.status_date })),
-    })
+    }))
   );
 }
 
 export async function fetchForeclosureById(id) {
   if (!isSupabaseConfigured || String(id).startsWith('sample-')) {
-    return SAMPLE_FORECLOSURES.find((c) => c.id === id) || null;
+    const found = SAMPLE_FORECLOSURES.find((c) => c.id === id);
+    return found ? enrichForeclosure(found) : null;
   }
 
   const { data, error } = await supabase
@@ -73,16 +76,17 @@ export async function fetchForeclosureById(id) {
     .single();
 
   if (error || !data) {
-    return SAMPLE_FORECLOSURES.find((c) => c.id === id) || null;
+    const found = SAMPLE_FORECLOSURES.find((c) => c.id === id);
+    return found ? enrichForeclosure(found) : null;
   }
 
-  return mapRow({
+  return enrichForeclosure(mapRow({
     ...data,
     county_name: data.counties?.county_name,
     status_history: (data.foreclosure_status_history || [])
       .sort((a, b) => new Date(a.status_date) - new Date(b.status_date))
       .map((h) => ({ status: h.status, status_date: h.status_date })),
-  });
+  }));
 }
 
 export async function fetchDashboardStats() {
