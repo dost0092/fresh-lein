@@ -19,15 +19,18 @@ const features = [
   { icon: Shield, title: 'Lien intelligence' },
 ];
 
-export default function LandingPageContent({ topSlot = null }) {
+export default function LandingPageContent({ topSlot = null, mapFirst = false }) {
   const { isAuthenticated } = useAuth();
   const [pricingType, setPricingType] = useState('platform');
+
+  const mapSection = <LandingMapExplorer key="map" />;
+  const heroSection = <HeroSection key="hero" />;
 
   return (
     <>
       {topSlot}
-      <HeroSection />
-      <LandingMapExplorer />
+      {mapFirst ? mapSection : heroSection}
+      {mapFirst ? heroSection : mapSection}
       <DataCoverageSection />
 
       <section id="features" className="py-11 lg:py-14">

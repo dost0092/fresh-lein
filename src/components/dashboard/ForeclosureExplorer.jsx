@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Download, Map, List, SlidersHorizontal, RotateCcw } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
-import MapView from '@/components/dashboard/MapView';
+import InteractiveMapExplorer from '@/components/dashboard/InteractiveMapExplorer';
+import { sortByUpcomingSale } from '@/lib/foreclosureUtils';
 import ForeclosureListCompact from '@/components/dashboard/ForeclosureListCompact';
 import ForeclosurePreviewDrawer from '@/components/dashboard/ForeclosurePreviewDrawer';
 import EmptyState from '@/components/dashboard/EmptyState';
@@ -319,13 +320,26 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
               />
             </div>
           ) : view === 'map' ? (
-            <div className="flex-1 relative min-h-[calc(100vh-200px)]">
+            <div className="flex-1 relative min-h-[calc(100vh-200px)] p-3 sm:p-4">
               {mapLoading && (
-                <div className="absolute top-3 right-3 z-10 rounded-md bg-white/90 border border-border px-2 py-1 text-xs text-muted-foreground shadow-sm">
+                <div className="absolute top-6 right-6 z-[1002] rounded-md border border-border bg-white/95 px-2 py-1 text-xs text-muted-foreground shadow-sm">
                   Loading map pins…
                 </div>
               )}
-              <MapView filings={mapData} onSelectFiling={setSelected} selectedId={selected?.id} />
+              <InteractiveMapExplorer
+                listings={sortByUpcomingSale(mapData)}
+                loading={mapLoading}
+                query={search}
+                onQueryChange={setSearch}
+                selected={selected}
+                onSelect={setSelected}
+                listLimit={25}
+                heightClass="h-full min-h-[calc(100vh-220px)]"
+                leftPanelHeader={{
+                  title: 'Active foreclosures',
+                  description: 'Upcoming auctions first — tomorrow and nearest sale dates at the top.',
+                }}
+              />
             </div>
           ) : (
             <div className="flex-1 overflow-auto py-3">
@@ -360,7 +374,9 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
           )}
         </div>
 
-        {selected && <ForeclosurePreviewDrawer record={selected} onClose={() => setSelected(null)} />}
+        {view === 'list' && selected && (
+          <ForeclosurePreviewDrawer record={selected} onClose={() => setSelected(null)} />
+        )}
       </div>
     </AppLayout>
   );

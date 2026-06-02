@@ -9,7 +9,7 @@ function DashboardHomeContent() {
     <div className="min-h-screen bg-white">
       <MarketingNav />
       <div className="pt-14 lg:pt-16">
-        <LandingPageContent topSlot={<LoggedInDashboardStrip />} />
+        <LandingPageContent topSlot={<LoggedInDashboardStrip />} mapFirst />
       </div>
     </div>
   );

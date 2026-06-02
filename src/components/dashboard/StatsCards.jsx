@@ -1,5 +1,6 @@
 import { Gavel, MapPin, Calendar, Sparkles } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatCountiesDisplay } from '@/data/marketingStats';
 
 const cards = [
   { key: 'activeForeclosures', label: 'Active', icon: Gavel },
@@ -31,7 +32,7 @@ export default function StatsCards({ stats, loading }) {
             <Icon className="w-3.5 h-3.5 text-primary/70" />
           </div>
           <p className="text-2xl font-display font-semibold text-foreground tracking-tight">
-            {stats?.[key]?.toLocaleString() ?? '—'}
+            {key === 'countiesCovered' ? formatCountiesDisplay() : (stats?.[key]?.toLocaleString() ?? '—')}
           </p>
         </div>
       ))}

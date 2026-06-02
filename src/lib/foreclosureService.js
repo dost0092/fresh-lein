@@ -1,5 +1,5 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
-import { enrichForeclosure, getDashboardStats } from '@/lib/foreclosureUtils';
+import { enrichForeclosure, getDashboardStats, sortByUpcomingSale } from '@/lib/foreclosureUtils';
 
 const SUPABASE_PAGE_SIZE = 1000;
 const QUERY_TIMEOUT_MS = 20000;
@@ -175,55 +175,121 @@ export async function fetchForeclosureFilterOptions() {
   return { counties, states, statuses };
 }
 
-/** Server-side paginated list — loads 20 rows at a time (fast). */
+/** Server-side paginated list — upcoming sale dates first, oldest at end. */
 export async function fetchForeclosuresPage({ page = 1, pageSize = 20, filters = {} } = {}) {
   assertSupabase();
   const countyMap = await getCountiesMap();
+  const today = new Date().toISOString().split('T')[0];
+  const offset = (page - 1) * pageSize;
 
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const dataBase = () =>
+    applyListFilters(
+      supabase.from('foreclosure_cases').select(LIST_SELECT_PLAIN),
+      filters,
+      countyMap
+    );
 
-  let query = supabase
-    .from('foreclosure_cases')
-    .select(LIST_SELECT_PLAIN, { count: 'exact' })
-    .order('sale_date', { ascending: true, nullsFirst: false });
+  const countBase = () =>
+    applyListFilters(
+      supabase.from('foreclosure_cases').select('id', { count: 'exact', head: true }),
+      filters,
+      countyMap
+    );
 
-  query = applyListFilters(query, filters, countyMap);
+  const [upRes, pastRes, nullRes] = await Promise.all([
+    withQueryTimeout(countBase().gte('sale_date', today)),
+    withQueryTimeout(countBase().lt('sale_date', today)),
+    withQueryTimeout(countBase().is('sale_date', null)),
+  ]);
 
-  const { data, error, count } = await withQueryTimeout(query.range(from, to));
-  if (error) {
-    const hint =
-      error.code === 'PGRST301' || error.message?.includes('permission')
-        ? ' Check Supabase RLS policies (run migration 006).'
-        : '';
-    throw new Error(`${error.message}${hint}`);
+  if (upRes.error) throw new Error(upRes.error.message);
+  if (pastRes.error) throw new Error(pastRes.error.message);
+  if (nullRes.error) throw new Error(nullRes.error.message);
+
+  const upcomingTotal = upRes.count ?? 0;
+  const pastTotal = pastRes.count ?? 0;
+  const nullTotal = nullRes.count ?? 0;
+  const total = upcomingTotal + pastTotal + nullTotal;
+
+  const rows = [];
+  let need = pageSize;
+  let pos = offset;
+
+  if (pos < upcomingTotal && need > 0) {
+    const from = pos;
+    const to = Math.min(pos + need - 1, upcomingTotal - 1);
+    const { data, error } = await withQueryTimeout(
+      dataBase().gte('sale_date', today).order('sale_date', { ascending: true }).range(from, to)
+    );
+    if (error) throw new Error(error.message);
+    rows.push(...(data ?? []));
+    need -= to - from + 1;
+    pos = 0;
+  } else {
+    pos -= upcomingTotal;
+  }
+
+  if (need > 0 && pos < pastTotal) {
+    const from = pos;
+    const to = Math.min(pos + need - 1, pastTotal - 1);
+    const { data, error } = await withQueryTimeout(
+      dataBase().lt('sale_date', today).order('sale_date', { ascending: true }).range(from, to)
+    );
+    if (error) throw new Error(error.message);
+    rows.push(...(data ?? []));
+    need -= to - from + 1;
+    pos = 0;
+  } else if (pos > 0) {
+    pos -= pastTotal;
+  }
+
+  if (need > 0 && pos < nullTotal) {
+    const from = pos;
+    const to = Math.min(pos + need - 1, nullTotal - 1);
+    const { data, error } = await withQueryTimeout(
+      dataBase().is('sale_date', null).order('created_at', { ascending: false }).range(from, to)
+    );
+    if (error) throw new Error(error.message);
+    rows.push(...(data ?? []));
   }
 
   return {
-    rows: mapListRows(data ?? [], countyMap),
-    total: count ?? 0,
+    rows: mapListRows(rows, countyMap),
+    total,
   };
 }
 
-/** Map markers — capped batch with coordinates only. */
+/** Map markers — upcoming first, capped batch with coordinates. */
 export async function fetchForeclosuresForMap({ filters = {}, limit = 800 } = {}) {
   assertSupabase();
   const countyMap = await getCountiesMap();
+  const today = new Date().toISOString().split('T')[0];
 
-  let query = supabase
-    .from('foreclosure_cases')
-    .select(LIST_SELECT_PLAIN)
-    .not('latitude', 'is', null)
-    .not('longitude', 'is', null)
-    .order('sale_date', { ascending: true, nullsFirst: false })
-    .limit(limit);
+  const base = () =>
+    applyListFilters(
+      supabase.from('foreclosure_cases').select(LIST_SELECT_PLAIN).not('latitude', 'is', null).not('longitude', 'is', null),
+      filters,
+      countyMap
+    );
 
-  query = applyListFilters(query, filters, countyMap);
+  const upcomingLimit = Math.min(limit, 600);
+  const [upcomingRes, pastRes] = await Promise.all([
+    withQueryTimeout(
+      base().gte('sale_date', today).order('sale_date', { ascending: true }).limit(upcomingLimit)
+    ),
+    withQueryTimeout(
+      base()
+        .lt('sale_date', today)
+        .order('sale_date', { ascending: true })
+        .limit(Math.max(0, limit - upcomingLimit))
+    ),
+  ]);
 
-  const { data, error } = await withQueryTimeout(query);
-  if (error) throw new Error(error.message);
+  if (upcomingRes.error) throw new Error(upcomingRes.error.message);
+  if (pastRes.error) throw new Error(pastRes.error.message);
 
-  return mapListRows(data ?? [], countyMap);
+  const combined = [...(upcomingRes.data ?? []), ...(pastRes.data ?? [])];
+  return sortByUpcomingSale(mapListRows(combined, countyMap));
 }
 
 /** Export all rows matching filters (paginated server fetch). */
@@ -250,7 +316,7 @@ export async function fetchForeclosuresForExport(filters = {}) {
     from += SUPABASE_PAGE_SIZE;
   }
 
-  return all;
+  return sortByUpcomingSale(all);
 }
 
 export async function fetchForeclosures() {
@@ -354,14 +420,15 @@ export async function fetchDashboardStats() {
   };
 }
 
-/** Recent scheduled auctions for dashboard list (small query). */
+/** Recent upcoming auctions for dashboard (soonest sale dates first). */
 export async function fetchRecentForeclosures(limit = 5) {
   assertSupabase();
+  const today = new Date().toISOString().split('T')[0];
 
   const { data, error } = await supabase
     .from('foreclosure_cases')
     .select(LIST_SELECT)
-    .not('sale_date', 'is', null)
+    .gte('sale_date', today)
     .order('sale_date', { ascending: true, nullsFirst: false })
     .limit(limit);
 
@@ -369,12 +436,14 @@ export async function fetchRecentForeclosures(limit = 5) {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map((row) =>
-    enrichForeclosure(
-      mapRow({
-        ...row,
-        county_name: row.counties?.county_name,
-      })
+  return sortByUpcomingSale(
+    (data ?? []).map((row) =>
+      enrichForeclosure(
+        mapRow({
+          ...row,
+          county_name: row.counties?.county_name,
+        })
+      )
     )
   );
 }

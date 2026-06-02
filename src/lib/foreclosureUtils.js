@@ -1,5 +1,45 @@
-import { differenceInDays, parseISO } from 'date-fns';
+import { differenceInDays, parseISO, startOfDay } from 'date-fns';
 import { getCountyCentroid } from '@/data/countyCentroids';
+
+export function getTodayStartMs() {
+  return startOfDay(new Date()).getTime();
+}
+
+function saleDateMs(saleDate) {
+  if (!saleDate) return null;
+  try {
+    return startOfDay(parseISO(saleDate)).getTime();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Upcoming auctions first (tomorrow at top), then past dates (oldest at end), then no date.
+ */
+export function sortByUpcomingSale(rows) {
+  const today = getTodayStartMs();
+
+  const bucket = (ms) => {
+    if (ms == null) return 2;
+    if (ms >= today) return 0;
+    return 1;
+  };
+
+  return [...rows].sort((a, b) => {
+    const da = saleDateMs(a.sale_date);
+    const db = saleDateMs(b.sale_date);
+    const ba = bucket(da);
+    const bb = bucket(db);
+    if (ba !== bb) return ba - bb;
+    if (ba === 0) return da - db; // upcoming: soonest first
+    if (ba === 1) return da - db; // past: ascending → oldest at end of list
+    return (a.property_address || '').localeCompare(b.property_address || '');
+  });
+}
+
+/** @deprecated Use sortByUpcomingSale */
+export const sortBySoonestSale = sortByUpcomingSale;
 
 export function daysToSale(saleDate) {
   if (!saleDate) return null;

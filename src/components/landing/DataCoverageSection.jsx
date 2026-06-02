@@ -1,8 +1,9 @@
 import { LandingContainer, LandingEyebrow, highlightMarkStyle } from '@/components/landing/LandingLayout';
+import { MARKETING_COVERAGE } from '@/data/marketingStats';
 
 const metrics = [
-  { value: '48+', label: 'Counties live' },
-  { value: '12K+', label: 'Foreclosure records' },
+  { value: MARKETING_COVERAGE.counties, label: 'Counties live' },
+  { value: MARKETING_COVERAGE.foreclosureRecords, label: 'Foreclosure records' },
   { value: 'Same-day', label: 'Court data refresh' },
 ];
 

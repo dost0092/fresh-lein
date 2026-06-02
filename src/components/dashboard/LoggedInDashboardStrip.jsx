@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { fetchDashboardStats } from '@/lib/foreclosureService';
 import StatsCards from '@/components/dashboard/StatsCards';
 import { LandingContainer } from '@/components/landing/LandingLayout';
+import { MARKETING_COVERAGE } from '@/data/marketingStats';
 
 const quickLinks = [
   { icon: Gavel, label: 'Foreclosures', href: '/dashboard/foreclosures' },
@@ -43,7 +44,7 @@ export default function LoggedInDashboardStrip() {
             <p className="mt-1 text-sm text-muted-foreground">
               {isTrialActive
                 ? `${trialDaysLeft} day(s) left in your free trial · full platform access`
-                : 'Search live foreclosure data across 48+ counties'}
+                : `Search live foreclosure data across ${MARKETING_COVERAGE.counties} counties`}
             </p>
           </div>
           <Link

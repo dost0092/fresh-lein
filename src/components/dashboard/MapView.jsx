@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { format } from 'date-fns';
 import { getUrgency, getMarkerColor } from './UrgencyBadge';
 import { getMappableFilings } from '@/lib/foreclosureUtils';
+import { cn } from '@/lib/utils';
 
 function FitBounds({ points }) {
   const map = useMap();
@@ -24,6 +25,21 @@ function FitBounds({ points }) {
   return null;
 }
 
+function FlyToSelected({ filings, selectedId }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!selectedId) return;
+    const f = filings.find((x) => x.id === selectedId);
+    const lat = Number(f?.latitude);
+    const lng = Number(f?.longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    map.flyTo([lat, lng], Math.max(map.getZoom(), 13), { duration: 0.7 });
+  }, [map, filings, selectedId]);
+
+  return null;
+}
+
 function formatPopupDate(d) {
   try {
     return d ? format(new Date(d), 'MMM d, yyyy') : '—';
@@ -32,7 +48,15 @@ function formatPopupDate(d) {
   }
 }
 
-export default function MapView({ filings, onSelectFiling, selectedId }) {
+export default function MapView({
+  filings,
+  onSelectFiling,
+  selectedId,
+  hidePopups = false,
+  flyToSelected = false,
+  legendVariant = 'light',
+  legendClassName,
+}) {
   const mappable = useMemo(() => getMappableFilings(filings), [filings]);
 
   const points = useMemo(
@@ -74,6 +98,9 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
         />
 
         {points.length > 0 && <FitBounds points={points} />}
+        {flyToSelected && selectedId && (
+          <FlyToSelected filings={mappable} selectedId={selectedId} />
+        )}
 
         {Object.entries(grouped).map(([key, group]) => {
           const [lat, lng] = key.split(',').map(Number);
@@ -95,9 +122,10 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
                 weight: isSelected ? 3 : 2,
               }}
               eventHandlers={{
-                click: () => onSelectFiling(f),
+                click: () => onSelectFiling?.(f),
               }}
             >
+              {!hidePopups && (
               <Popup>
                 <div className="min-w-[220px] max-w-[280px]">
                   {group.slice(0, 4).map((filing, i) => (
@@ -138,35 +166,58 @@ export default function MapView({ filings, onSelectFiling, selectedId }) {
                   )}
                 </div>
               </Popup>
+              )}
             </CircleMarker>
           );
         })}
       </MapContainer>
 
-      <div className="absolute bottom-6 left-4 z-[1000] bg-white rounded-xl shadow-card border border-border p-3 text-xs pointer-events-none">
-        <p className="font-semibold text-foreground mb-2 text-[11px] uppercase tracking-wide">Auction urgency</p>
+      <div
+        className={cn(
+          'absolute bottom-6 z-[1000] rounded-xl border p-3 text-xs pointer-events-none',
+          legendVariant === 'dark'
+            ? 'border-white/10 bg-[#1a2744]/95 text-white shadow-xl backdrop-blur-sm'
+            : 'border-border bg-white shadow-card',
+          legendVariant === 'dark'
+            ? legendClassName || 'left-[min(380px,calc(100%-200px))]'
+            : 'left-4',
+          legendClassName
+        )}
+      >
+        <p
+          className={cn(
+            'mb-2 text-[11px] font-bold uppercase tracking-wide',
+            legendVariant === 'dark' ? 'text-white/90' : 'text-foreground'
+          )}
+        >
+          Auction urgency
+        </p>
         {[
           { color: '#E63946', label: '< 7 days' },
           { color: '#F4A261', label: '7–30 days' },
           { color: '#FFD166', label: '30–90 days' },
           { color: '#135133', label: 'Appraisal / no date' },
         ].map(({ color, label }) => (
-          <div key={label} className="flex items-center gap-2 mb-1 last:mb-0">
-            <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: color }} />
-            <span className="text-muted-foreground">{label}</span>
+          <div key={label} className="mb-1 flex items-center gap-2 last:mb-0">
+            <div className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+            <span className={legendVariant === 'dark' ? 'text-white/75' : 'text-muted-foreground'}>
+              {label}
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-secondary text-secondary-foreground text-xs font-medium px-4 py-1.5 rounded-full shadow-lg pointer-events-none">
+      {!hidePopups && (
+      <div className="absolute top-4 left-1/2 z-[1000] -translate-x-1/2 rounded-full bg-secondary px-4 py-1.5 text-xs font-medium text-secondary-foreground shadow-lg pointer-events-none">
         {mappable.length} on map
         {filings.length !== mappable.length && (
-          <span className="opacity-70 ml-1">/ {filings.length} total</span>
+          <span className="ml-1 opacity-70">/ {filings.length} total</span>
         )}
         {unmappedCount > 0 && (
-          <span className="opacity-70 ml-1">· {unmappedCount} need coordinates</span>
+          <span className="ml-1 opacity-70">· {unmappedCount} need coordinates</span>
         )}
       </div>
+      )}
     </div>
   );
 }

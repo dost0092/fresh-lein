@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Lock, MapPin, ChevronRight, ArrowRight } from 'lucide-react';
-import MapView from '@/components/dashboard/MapView';
+import { Lock, ArrowRight } from 'lucide-react';
+import InteractiveMapExplorer from '@/components/dashboard/InteractiveMapExplorer';
+import { sortByUpcomingSale } from '@/lib/foreclosureUtils';
 import { fetchForeclosuresForMap } from '@/lib/foreclosureService';
 import { filterForeclosures } from '@/lib/foreclosureUtils';
 import {
@@ -13,8 +14,6 @@ import {
 import ProGateModal from '@/components/landing/ProGateModal';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 import { useAuth } from '@/lib/AuthContext';
 
 const PREVIEW_RESULT_LIMIT = 4;
@@ -23,17 +22,32 @@ export default function LandingMapExplorer() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [allRows, setAllRows] = useState([]);
+  const [mapLoading, setMapLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [activeQuery, setActiveQuery] = useState('');
   const [selected, setSelected] = useState(null);
   const [showProGate, setShowProGate] = useState(false);
   const [remaining, setRemaining] = useState(getRemainingSearches());
-  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+    setMapLoading(true);
+
     fetchForeclosuresForMap({ limit: isAuthenticated ? 800 : 200 })
-      .then(setAllRows)
-      .catch(() => setAllRows([]));
+      .then((data) => {
+        if (!cancelled) setAllRows(sortByUpcomingSale(data));
+      })
+      .catch((err) => {
+        console.warn('map data:', err.message);
+        if (!cancelled) setAllRows([]);
+      })
+      .finally(() => {
+        if (!cancelled) setMapLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -42,29 +56,29 @@ export default function LandingMapExplorer() {
       if (!q) return;
       setQuery(q);
       setActiveQuery(q);
-      setHasSearched(true);
       setRemaining(getRemainingSearches());
     };
     window.addEventListener('freshlien-landing-search', onHeroSearch);
     return () => window.removeEventListener('freshlien-landing-search', onHeroSearch);
   }, []);
 
-  const previewLimit = isAuthenticated ? 12 : PREVIEW_RESULT_LIMIT;
-  const results = useMemo(() => {
-    if (!activeQuery.trim()) return allRows.slice(0, previewLimit);
-    return filterForeclosures(allRows, { search: activeQuery });
-  }, [allRows, activeQuery, previewLimit]);
+  const previewLimit = isAuthenticated ? 20 : PREVIEW_RESULT_LIMIT;
+  const displayRows = useMemo(() => {
+    const base = sortByUpcomingSale(allRows);
+    if (!activeQuery.trim()) return base;
+    return sortByUpcomingSale(filterForeclosures(base, { search: activeQuery }));
+  }, [allRows, activeQuery]);
 
-  const previewResults = results.slice(0, previewLimit);
-  const lockedCount = isAuthenticated ? 0 : Math.max(0, results.length - PREVIEW_RESULT_LIMIT);
+  const lockedCount = isAuthenticated
+    ? 0
+    : Math.max(0, (activeQuery.trim() ? displayRows.length : allRows.length) - PREVIEW_RESULT_LIMIT);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const q = query.trim();
-    if (!q) return;
+  const handleSearch = (q) => {
+    const trimmed = q.trim();
+    if (!trimmed) return;
 
     if (isAuthenticated) {
-      navigate(q ? `/dashboard/foreclosures?q=${encodeURIComponent(q)}` : '/dashboard/foreclosures');
+      navigate(`/dashboard/foreclosures?q=${encodeURIComponent(trimmed)}`);
       return;
     }
 
@@ -75,19 +89,8 @@ export default function LandingMapExplorer() {
 
     incrementLandingSearch();
     setRemaining(getRemainingSearches());
-    setActiveQuery(q);
-    setHasSearched(true);
+    setActiveQuery(trimmed);
     setSelected(null);
-
-    document.getElementById('explorer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const formatDate = (d) => {
-    try {
-      return d ? format(new Date(d), 'MMM d, yyyy') : '—';
-    } catch {
-      return '—';
-    }
   };
 
   return (
@@ -99,7 +102,7 @@ export default function LandingMapExplorer() {
             title="Foreclosure coverage map"
             description={
               isAuthenticated ? (
-                <>Full platform access · open the explorer for filters, export, and all {allRows.length}+ map pins</>
+                <>Click any pin or listing — soonest sale dates first · {allRows.length}+ properties on map</>
               ) : remaining > 0 ? (
                 <>
                   {LANDING_FREE_SEARCH_LIMIT} free searches ·{' '}
@@ -121,120 +124,32 @@ export default function LandingMapExplorer() {
             </div>
           )}
 
-          <div className="flex h-[520px] flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm lg:h-[560px] lg:flex-row">
-            {/* Sidebar */}
-            <div className="w-full lg:w-[340px] shrink-0 border-b lg:border-b-0 lg:border-r border-border flex flex-col bg-white">
-              <div className="p-4 border-b border-border">
-                <p className="text-xs font-semibold text-foreground mb-2">Search by address</p>
-                <form onSubmit={handleSearch} className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Address, city, or ZIP code"
-                    className="w-full h-10 pl-10 pr-3 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  />
-                </form>
-                <Button type="submit" onClick={handleSearch} className="w-full mt-2 h-9 text-xs">
-                  Search foreclosures
-                </Button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-3 space-y-2">
-                {!hasSearched && (
-                  <p className="text-xs text-muted-foreground px-1 py-2">
-                    Sample listings shown. Enter an address to search.
+          <InteractiveMapExplorer
+            listings={mapLoading ? [] : displayRows}
+            loading={mapLoading}
+            query={query}
+            onQueryChange={setQuery}
+            onSearch={handleSearch}
+            selected={selected}
+            onSelect={setSelected}
+            listLimit={previewLimit}
+            lockedCount={lockedCount}
+            showPaywallOverlay={!isAuthenticated && !canSearchOnLanding()}
+            paywallContent={
+              <div className="absolute inset-0 z-[1002] flex items-center justify-center bg-white/60 p-6 backdrop-blur-[2px]">
+                <div className="max-w-sm rounded-xl border border-border bg-white p-6 text-center shadow-xl">
+                  <Lock className="mx-auto mb-3 h-8 w-8 text-primary" />
+                  <h3 className="mb-2 text-sm font-semibold">Preview limit reached</h3>
+                  <p className="mb-4 text-xs text-muted-foreground">
+                    Sign up for Pro to keep searching and unlock the full map.
                   </p>
-                )}
-                {previewResults.map((row) => (
-                  <button
-                    key={row.id}
-                    type="button"
-                    onClick={() => setSelected(row)}
-                    className={cn(
-                      'w-full text-left p-3 rounded-lg border transition-all',
-                      selected?.id === row.id
-                        ? 'border-primary bg-primary/5 shadow-sm'
-                        : 'border-border hover:border-primary/30 hover:bg-muted/30'
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-xs font-semibold text-foreground leading-snug line-clamp-2">
-                        {row.property_address}
-                      </p>
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-primary/10 text-primary shrink-0">
-                        {row.status}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      {row.city}, {row.state}
-                    </p>
-                    <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
-                      <span>Sale {formatDate(row.sale_date)}</span>
-                      <span className="font-medium text-foreground">
-                        ${Number(row.starting_bid || 0).toLocaleString()}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-
-                {lockedCount > 0 && !isAuthenticated && (
-                  <div className="relative rounded-lg border border-dashed border-primary/40 bg-primary/[0.04] p-4 text-center">
-                    <Lock className="w-5 h-5 text-primary mx-auto mb-2" />
-                    <p className="text-xs font-semibold text-foreground mb-1">
-                      +{lockedCount} more results
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mb-3">
-                      Unlock full search & map with Pro
-                    </p>
-                    <Button asChild size="sm" className="h-8 text-xs w-full">
-                      <Link to="/register">Upgrade to Pro</Link>
-                    </Button>
-                  </div>
-                )}
-
-                {hasSearched && results.length === 0 && (
-                  <p className="text-xs text-muted-foreground text-center py-6">No matches. Try another address.</p>
-                )}
+                  <Button asChild size="sm" className="w-full">
+                    <Link to="/register">Get Pro access</Link>
+                  </Button>
+                </div>
               </div>
-
-              {selected && (
-                <div className="p-3 border-t border-border bg-muted/20">
-                  <Link
-                    to={`/dashboard/foreclosures/${selected.id}`}
-                    className="flex items-center justify-center gap-1 text-xs font-medium text-primary hover:underline"
-                  >
-                    View full record <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {/* Map */}
-            <div className="flex-1 relative min-h-[280px] bg-slate-100">
-              <MapView
-                filings={hasSearched ? results : previewResults}
-                onSelectFiling={setSelected}
-                selectedId={selected?.id}
-              />
-              {!isAuthenticated && !canSearchOnLanding() && (
-                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-[500] flex items-center justify-center p-6">
-                  <div className="bg-white rounded-xl border border-border shadow-xl p-6 max-w-sm text-center">
-                    <Lock className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <h3 className="font-semibold text-sm mb-2">Preview limit reached</h3>
-                    <p className="text-xs text-muted-foreground mb-4">
-                      Sign up for Pro to keep searching addresses and unlock the full map.
-                    </p>
-                    <Button asChild size="sm" className="w-full">
-                      <Link to="/register">Get Pro access</Link>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+            }
+          />
         </LandingContainer>
       </section>
 
