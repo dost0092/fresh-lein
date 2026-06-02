@@ -1,0 +1,11 @@
+# Supabase local / deploy config (minimal)
+project_id = "mhodxzrbcaammqobvcnu"
+
+[functions.stripe-create-checkout-session]
+verify_jwt = true
+
+[functions.stripe-create-portal-session]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false

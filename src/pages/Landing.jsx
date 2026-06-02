@@ -1,102 +1,12 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import HeroSection from '@/components/landing/HeroSection';
-import LandingMapExplorer from '@/components/landing/LandingMapExplorer';
-import DataCoverageSection from '@/components/landing/DataCoverageSection';
-import PricingSection from '@/components/landing/PricingSection';
-import PricingCompareTable from '@/components/landing/PricingCompareTable';
-import CompetitorTable from '@/components/landing/CompetitorTable';
 import MarketingNav from '@/components/layout/MarketingNav';
-import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
-import { ArrowRight, MapPin, Bell, Download, Zap, BarChart2, Shield } from 'lucide-react';
-
-const features = [
-  { icon: Zap, title: 'Same-day court data' },
-  { icon: MapPin, title: 'Map & urgency pins' },
-  { icon: Bell, title: 'County alerts' },
-  { icon: Download, title: 'CSV export' },
-  { icon: BarChart2, title: 'Market analytics' },
-  { icon: Shield, title: 'Lien intelligence' },
-];
+import LandingPageContent from '@/components/landing/LandingPageContent';
 
 export default function Landing() {
-  const [pricingType, setPricingType] = useState('platform');
-
   return (
     <div className="min-h-screen bg-white">
       <MarketingNav />
-
       <div className="pt-14 lg:pt-16">
-        <HeroSection />
-        <LandingMapExplorer />
-        <DataCoverageSection />
-
-        <section id="features" className="py-11 lg:py-14">
-          <LandingContainer>
-            <LandingSectionHeader
-              eyebrow="Platform"
-              title="Built for real estate investors"
-            />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {features.map(({ icon: Icon, title }) => (
-                <div
-                  key={title}
-                  className="flex flex-col items-center rounded-lg border border-border/60 bg-white px-3 py-5 text-center transition-colors hover:border-primary/20 hover:bg-primary/[0.02]"
-                >
-                  <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <p className="text-xs font-semibold leading-snug text-foreground sm:text-sm">
-                    {title}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </LandingContainer>
-        </section>
-
-        <CompetitorTable />
-        <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
-        <PricingCompareTable pricingType={pricingType} />
-
-        <section className="bg-primary py-11 lg:py-14">
-          <LandingContainer innerClassName="text-center">
-            <h2 className="font-display text-xl font-semibold text-white sm:text-2xl">
-              Find deals before the crowd
-            </h2>
-            <p className="mx-auto mt-2 mb-6 max-w-md text-sm text-white/85 sm:text-base">
-              AI-driven foreclosure intelligence
-            </p>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-2.5 text-sm font-semibold text-primary hover:bg-white/95"
-            >
-              Start free trial <ArrowRight className="h-4 w-4" />
-            </Link>
-          </LandingContainer>
-        </section>
-
-        <footer className="bg-navy-dark py-6">
-          <LandingContainer>
-            <div className="flex flex-col items-center justify-between gap-3 text-sm md:flex-row">
-              <div className="flex items-center gap-2 text-white">
-                <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-[10px] font-bold">
-                  FL
-                </div>
-                <span className="font-semibold">FreshLien</span>
-                <span className="text-xs text-white/40">© 2026</span>
-              </div>
-              <div className="flex gap-5 text-xs text-white/50">
-                <a href="#" className="hover:text-white">
-                  Privacy
-                </a>
-                <a href="#" className="hover:text-white">
-                  Terms
-                </a>
-              </div>
-            </div>
-          </LandingContainer>
-        </footer>
+        <LandingPageContent />
       </div>
     </div>
   );

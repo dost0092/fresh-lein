@@ -1,7 +1,15 @@
 import AppLayout from '@/components/layout/AppLayout';
-import { Settings, User, CreditCard, Bell, Shield, ChevronRight, Check } from 'lucide-react';
+import { User, CreditCard, Shield, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
+import { getStripePaymentLink } from '@/lib/checkoutPlans';
+import { createStripePortalUrl, isStripeTestMode } from '@/lib/billing';
+import { isCheckoutPlanId } from '@/lib/checkoutPlans';
+import { startPlanCheckout } from '@/lib/startPlanCheckout';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function PlanMeter({ label, used, total, color }) {
   const pct = total === null ? 0 : Math.min(100, (used / total) * 100);
@@ -23,6 +31,73 @@ function PlanMeter({ label, used, total, color }) {
 }
 
 export default function SettingsPage() {
+  const { rawProfile, subscription, isTrialActive, trialEndsAt, requiresPayment, isSuperAdmin, refreshBilling } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [billingError, setBillingError] = useState('');
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [checkoutNotice, setCheckoutNotice] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('starter');
+  const stripeTestMode = isStripeTestMode();
+
+  const trialDaysLeft = useMemo(() => {
+    if (!trialEndsAt) return null;
+    const ms = trialEndsAt.getTime() - Date.now();
+    return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+  }, [trialEndsAt]);
+
+  useEffect(() => {
+    refreshBilling?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const checkout = searchParams.get('checkout');
+    const plan = searchParams.get('plan');
+    if (plan && isCheckoutPlanId(plan)) setSelectedPlan(plan);
+
+    if (checkout === 'success') {
+      setCheckoutNotice('Payment received. Your subscription will activate in a few seconds.');
+      refreshBilling?.();
+      setSearchParams({}, { replace: true });
+    } else if (checkout === 'cancel') {
+      setCheckoutNotice('Checkout was cancelled. You can try again anytime.');
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, refreshBilling, setSearchParams]);
+
+  // Do not auto-start checkout on page load (causes endless spinner if Edge Function missing).
+  // User clicks "Pay with Stripe" or sets Payment Link env vars.
+
+  const subStatus = subscription?.status || 'inactive';
+  const isActive = ['active', 'trialing'].includes(subStatus);
+
+  const startCheckout = async (planId = selectedPlan) => {
+    setBillingError('');
+    setBillingLoading(true);
+    try {
+      await startPlanCheckout(planId);
+      // Redirecting to Stripe — page may unload; reset spinner if redirect blocked
+      setTimeout(() => setBillingLoading(false), 3000);
+    } catch (err) {
+      setBillingError(err.message || 'Failed to start checkout');
+    } finally {
+      setBillingLoading(false);
+    }
+  };
+
+  const openPortal = async () => {
+    setBillingError('');
+    setBillingLoading(true);
+    try {
+      const url = await createStripePortalUrl();
+      window.location.href = url;
+    } catch (err) {
+      setBillingError(err.message || 'Failed to open billing portal');
+    } finally {
+      setBillingLoading(false);
+    }
+  };
+
   return (
     <AppLayout>
       <div className="flex-1 overflow-auto bg-[#F8FAFC] p-8">
@@ -41,11 +116,11 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Full Name</label>
-                <input className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan" defaultValue="Waqas Dost" />
+                <input className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" defaultValue={rawProfile?.full_name || ''} />
               </div>
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Email</label>
-                <input className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan bg-muted/30" defaultValue="waqas@freshlien.com" readOnly />
+                <input className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-muted/30" defaultValue={rawProfile?.email || ''} readOnly />
               </div>
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Company</label>
@@ -62,7 +137,7 @@ export default function SettingsPage() {
                   <option>Hedge Fund / PE</option>
                 </select>
               </div>
-              <Button className="bg-secondary text-white hover:bg-navy-dark">Save Changes</Button>
+              <Button>Save Changes</Button>
             </div>
           </div>
 
@@ -73,16 +148,119 @@ export default function SettingsPage() {
               <h2 className="font-heading font-semibold text-foreground">Subscription</h2>
             </div>
 
-            <div className="flex items-start justify-between mb-5 p-4 bg-green-50 rounded-xl border border-green-100">
+            {checkoutNotice && (
+              <div className="mb-4 p-3 rounded-lg bg-primary/10 text-foreground text-sm">{checkoutNotice}</div>
+            )}
+
+            {billingError && (
+              <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{billingError}</div>
+            )}
+
+            {stripeTestMode && (
+              <div className="mb-4 p-4 rounded-xl border border-blue-100 bg-blue-50/80 text-sm">
+                <p className="font-semibold text-foreground mb-1">Stripe test mode</p>
+                <p className="text-muted-foreground text-xs mb-2">
+                  Use test card <span className="font-mono">4242 4242 4242 4242</span>, any future expiry, any CVC.
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Quick fix: create a Payment Link in Stripe Dashboard, then add to <code className="text-[11px]">.env.local</code>:
+                  <br />
+                  <code className="text-[11px]">VITE_STRIPE_PAYMENT_LINK_STARTER=https://buy.stripe.com/...</code>
+                </p>
+              </div>
+            )}
+
+            {isSuperAdmin && (
+              <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-sm text-emerald-900">
+                Super admin account — full access without payment.{' '}
+                <Link to="/dashboard" className="font-medium underline">
+                  Go to dashboard
+                </Link>
+              </div>
+            )}
+
+            {requiresPayment && !isSuperAdmin && (
+              <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-100 text-sm">
+                <p className="font-medium text-foreground mb-1">Trial ended</p>
+                <p className="text-muted-foreground text-xs">
+                  Subscribe below to unlock the dashboard. Super admins and active trials have full access.
+                </p>
+              </div>
+            )}
+
+            {getStripePaymentLink('starter') && (
+              <p className="mb-3 text-xs text-emerald-700">
+                Payment Link configured — checkout will open Stripe directly (no Edge Function required).
+              </p>
+            )}
+
+            <div
+              className={cn(
+                'flex items-start justify-between mb-5 p-4 rounded-xl border',
+                isActive ? 'bg-emerald-50 border-emerald-100' : 'bg-amber-50 border-amber-100'
+              )}
+            >
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-heading font-bold text-secondary text-lg">Pro Plan</span>
-                  <span className="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2 py-0.5 rounded-full">Active</span>
+                  <span className="font-heading font-bold text-foreground text-lg">
+                    {isActive ? (subscription?.plan_name || 'Active plan') : 'Free trial'}
+                  </span>
+                  <span
+                    className={cn(
+                      'text-xs font-semibold px-2 py-0.5 rounded-full',
+                      isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                    )}
+                  >
+                    {isActive ? 'Active' : isTrialActive ? 'Trial' : 'Expired'}
+                  </span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-0.5">$199/month · Renews Jul 1, 2026</p>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {isActive
+                    ? 'Your subscription is active.'
+                    : isTrialActive
+                      ? `${trialDaysLeft ?? 0} day(s) left in your 13-day trial.`
+                      : 'Your trial ended. Please subscribe to continue.'}
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="text-xs border-border">Change Plan</Button>
+              <div className="flex flex-col gap-3 w-full sm:w-auto">
+                {!isActive && (
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={selectedPlan === 'starter' ? 'default' : 'outline'}
+                      className="text-xs flex-1"
+                      onClick={() => setSelectedPlan('starter')}
+                    >
+                      Starter $15/mo
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={selectedPlan === 'pro' ? 'default' : 'outline'}
+                      className="text-xs flex-1"
+                      onClick={() => setSelectedPlan('pro')}
+                    >
+                      Pro $25/mo
+                    </Button>
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  {isActive ? (
+                    <Button variant="outline" size="sm" className="text-xs border-border" disabled={billingLoading} onClick={openPortal}>
+                      Manage billing
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      className="text-xs"
+                      disabled={billingLoading}
+                      onClick={() => startCheckout(selectedPlan)}
+                    >
+                      {billingLoading ? 'Opening Stripe…' : requiresPayment ? 'Subscribe with Stripe' : 'Pay with Stripe'}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
 

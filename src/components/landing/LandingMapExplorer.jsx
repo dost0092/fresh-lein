@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Lock, MapPin, ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, Lock, MapPin, ChevronRight, ArrowRight } from 'lucide-react';
 import MapView from '@/components/dashboard/MapView';
-import { fetchForeclosures } from '@/lib/foreclosureService';
+import { fetchForeclosuresForMap } from '@/lib/foreclosureService';
 import { filterForeclosures } from '@/lib/foreclosureUtils';
 import {
   canSearchOnLanding,
@@ -15,10 +15,13 @@ import { LandingContainer, LandingSectionHeader } from '@/components/landing/Lan
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { useAuth } from '@/lib/AuthContext';
 
 const PREVIEW_RESULT_LIMIT = 4;
 
 export default function LandingMapExplorer() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [allRows, setAllRows] = useState([]);
   const [query, setQuery] = useState('');
   const [activeQuery, setActiveQuery] = useState('');
@@ -28,10 +31,10 @@ export default function LandingMapExplorer() {
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
-    fetchForeclosures()
+    fetchForeclosuresForMap({ limit: isAuthenticated ? 800 : 200 })
       .then(setAllRows)
       .catch(() => setAllRows([]));
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const onHeroSearch = (e) => {
@@ -46,18 +49,24 @@ export default function LandingMapExplorer() {
     return () => window.removeEventListener('freshlien-landing-search', onHeroSearch);
   }, []);
 
+  const previewLimit = isAuthenticated ? 12 : PREVIEW_RESULT_LIMIT;
   const results = useMemo(() => {
-    if (!activeQuery.trim()) return allRows.slice(0, PREVIEW_RESULT_LIMIT);
+    if (!activeQuery.trim()) return allRows.slice(0, previewLimit);
     return filterForeclosures(allRows, { search: activeQuery });
-  }, [allRows, activeQuery]);
+  }, [allRows, activeQuery, previewLimit]);
 
-  const previewResults = results.slice(0, PREVIEW_RESULT_LIMIT);
-  const lockedCount = Math.max(0, results.length - PREVIEW_RESULT_LIMIT);
+  const previewResults = results.slice(0, previewLimit);
+  const lockedCount = isAuthenticated ? 0 : Math.max(0, results.length - PREVIEW_RESULT_LIMIT);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
+
+    if (isAuthenticated) {
+      navigate(q ? `/dashboard/foreclosures?q=${encodeURIComponent(q)}` : '/dashboard/foreclosures');
+      return;
+    }
 
     if (!canSearchOnLanding()) {
       setShowProGate(true);
@@ -89,7 +98,9 @@ export default function LandingMapExplorer() {
             eyebrow="Live explorer"
             title="Foreclosure coverage map"
             description={
-              remaining > 0 ? (
+              isAuthenticated ? (
+                <>Full platform access · open the explorer for filters, export, and all {allRows.length}+ map pins</>
+              ) : remaining > 0 ? (
                 <>
                   {LANDING_FREE_SEARCH_LIMIT} free searches ·{' '}
                   <span className="font-medium text-primary">{remaining} left</span>
@@ -99,6 +110,16 @@ export default function LandingMapExplorer() {
               )
             }
           />
+
+          {isAuthenticated && (
+            <div className="mb-4 flex justify-end">
+              <Button asChild size="sm" variant="outline" className="h-8 text-xs">
+                <Link to="/dashboard/foreclosures">
+                  Open full explorer <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </div>
+          )}
 
           <div className="flex h-[520px] flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm lg:h-[560px] lg:flex-row">
             {/* Sidebar */}
@@ -159,7 +180,7 @@ export default function LandingMapExplorer() {
                   </button>
                 ))}
 
-                {lockedCount > 0 && (
+                {lockedCount > 0 && !isAuthenticated && (
                   <div className="relative rounded-lg border border-dashed border-primary/40 bg-primary/[0.04] p-4 text-center">
                     <Lock className="w-5 h-5 text-primary mx-auto mb-2" />
                     <p className="text-xs font-semibold text-foreground mb-1">
@@ -198,7 +219,7 @@ export default function LandingMapExplorer() {
                 onSelectFiling={setSelected}
                 selectedId={selected?.id}
               />
-              {!canSearchOnLanding() && (
+              {!isAuthenticated && !canSearchOnLanding() && (
                 <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-[500] flex items-center justify-center p-6">
                   <div className="bg-white rounded-xl border border-border shadow-xl p-6 max-w-sm text-center">
                     <Lock className="w-8 h-8 text-primary mx-auto mb-3" />

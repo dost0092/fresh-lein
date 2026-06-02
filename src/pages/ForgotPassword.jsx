@@ -11,13 +11,13 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const { resetPassword, isDemoMode } = useAuth();
+  const { resetPassword } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (!isDemoMode) await resetPassword(email);
+      await resetPassword(email);
     } catch {
       // Always show success for privacy
     } finally {
@@ -32,7 +32,7 @@ export default function ForgotPassword() {
       title="Reset password"
       subtitle="We'll email you a reset link"
       footer={
-        <Link to="/login" className="text-[#4257A7] font-medium hover:underline inline-flex items-center gap-1">
+        <Link to="/login" className="text-primary font-medium hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="w-3 h-3" /> Back to log in
         </Link>
       }
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full h-11 bg-[#4257A7] hover:bg-[#364a8f]" disabled={loading}>
+          <Button type="submit" className="w-full h-11" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

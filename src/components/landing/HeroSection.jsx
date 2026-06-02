@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, ArrowRight, Gavel, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   canSearchOnLanding,
@@ -9,16 +9,23 @@ import {
 } from '@/lib/landingSearchLimit';
 import ProGateModal from '@/components/landing/ProGateModal';
 import { LandingContainer, LandingEyebrow, highlightMarkStyle } from '@/components/landing/LandingLayout';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function HeroSection() {
   const [query, setQuery] = useState('');
   const [showProGate, setShowProGate] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) {
       document.getElementById('explorer')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (isAuthenticated) {
+      navigate(q ? `/dashboard/foreclosures?q=${encodeURIComponent(q)}` : '/dashboard/foreclosures');
       return;
     }
     if (!canSearchOnLanding()) {
@@ -83,21 +90,46 @@ export default function HeroSection() {
                   </Button>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
-                  {getRemainingSearches()} free preview searches
+                  {isAuthenticated
+                    ? 'Signed in — search opens the full foreclosure explorer'
+                    : `${getRemainingSearches()} free preview searches`}
                 </p>
               </form>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  variant="outline"
-                  className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
-                  asChild
-                >
-                  <Link to="mailto:sales@freshlien.com">Contact us</Link>
-                </Button>
-                <Button variant="ghost" className="h-10 font-semibold text-primary" asChild>
-                  <Link to="/register">Start free trial →</Link>
-                </Button>
+                {isAuthenticated ? (
+                  <>
+                    <Button className="h-10 px-5 font-semibold" asChild>
+                      <Link to="/dashboard/foreclosures">
+                        <Gavel className="mr-2 h-4 w-4" /> Browse foreclosures
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
+                      asChild
+                    >
+                      <Link to="/dashboard/foreclosures?view=map">
+                        <Map className="mr-2 h-4 w-4" /> Map view
+                      </Link>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
+                      asChild
+                    >
+                      <Link to="mailto:sales@freshlien.com">Contact us</Link>
+                    </Button>
+                    <Button variant="ghost" className="h-10 font-semibold text-primary" asChild>
+                      <Link to="/register">
+                        Start free trial <ArrowRight className="ml-1 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
 

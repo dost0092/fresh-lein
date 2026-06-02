@@ -1,100 +1,30 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Bell, Bot, ChevronDown, Code2, Menu } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowRight, Bell, Bot, ChevronDown, LogOut, Menu, Settings, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useScrollHeader } from '@/hooks/useScrollHeader';
 import { LANDING_MAX, LANDING_PAD } from '@/components/landing/LandingLayout';
+import ProductsMegaMenu, { ProductsMegaMenuPanel } from '@/components/layout/ProductsMegaMenu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
-const platformProducts = [
-  { label: 'Foreclosures', href: '/dashboard/foreclosures', soon: false },
-  { label: 'Pre-Foreclosures', href: '/dashboard/pre-foreclosures', soon: true },
-  { label: 'Probate', href: '/dashboard/probate', soon: true },
-  { label: 'Tax Delinquency', href: '/dashboard/tax', soon: true },
-];
-
-function SoonBadge() {
-  return (
-    <span className="ml-auto shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-      Soon
-    </span>
-  );
-}
+import { useAuth } from '@/lib/AuthContext';
 
 const navLinkClass =
   'py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground';
 
-function PlatformProductItems({ mobile, onNavigate }) {
-  return platformProducts.map(({ label, href, soon }) =>
-    soon ? (
-      <div
-        key={label}
-        className={
-          mobile
-            ? 'flex items-center justify-between px-3 py-2.5 text-sm text-muted-foreground'
-            : 'flex text-sm opacity-60'
-        }
-      >
-        {label}
-        <SoonBadge />
-      </div>
-    ) : mobile ? (
-      <Link key={label} to={href} onClick={onNavigate} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
-        {label}
-      </Link>
-    ) : (
-      <DropdownMenuItem key={label} asChild>
-        <Link to={href} className="cursor-pointer text-sm">
-          {label}
-        </Link>
-      </DropdownMenuItem>
-    )
-  );
-}
-
-function ProductsDropdown() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          navLinkClass,
-          'flex items-center gap-1 rounded-md px-1 outline-none focus-visible:ring-2 focus-visible:ring-primary/30'
-        )}
-      >
-        Products
-        <ChevronDown className="h-4 w-4 opacity-60" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="w-56">
-        <DropdownMenuLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Platform
-        </DropdownMenuLabel>
-        <PlatformProductItems />
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          API
-        </DropdownMenuLabel>
-        <DropdownMenuItem asChild>
-          <Link to="/#pricing-api" className="flex cursor-pointer items-center gap-2 text-sm">
-            <Code2 className="h-3.5 w-3.5 text-primary/70" />
-            REST API
-          </Link>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 function FreshLienAiNavItem({ mobile }) {
+  const badge = (
+    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+      Soon
+    </span>
+  );
+
   if (mobile) {
     return (
       <div className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm text-muted-foreground">
@@ -102,7 +32,7 @@ function FreshLienAiNavItem({ mobile }) {
           <Bot className="h-4 w-4 text-primary/70" />
           FreshLien AI
         </span>
-        <SoonBadge />
+        {badge}
       </div>
     );
   }
@@ -114,15 +44,66 @@ function FreshLienAiNavItem({ mobile }) {
     >
       <Bot className="h-4 w-4 text-primary/60" />
       FreshLien AI
-      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-        Soon
-      </span>
+      {badge}
     </span>
+  );
+}
+
+function UserMenu() {
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login', { replace: true });
+  };
+
+  const initial = (profile?.full_name || profile?.email || 'U').charAt(0).toUpperCase();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border px-2 py-1.5 text-sm font-medium outline-none hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary/30">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+          {initial}
+        </span>
+        <span className="hidden max-w-[120px] truncate sm:inline">{profile?.email}</span>
+        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuItem asChild>
+          <Link to="/dashboard" className="cursor-pointer">
+            <User className="mr-2 h-4 w-4" /> Home
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/dashboard/foreclosures" className="cursor-pointer">
+            Foreclosures
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/settings" className="cursor-pointer">
+            <Settings className="mr-2 h-4 w-4" /> Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
+          <LogOut className="mr-2 h-4 w-4" /> Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
 function MobileNav({ open, onOpenChange }) {
   const close = () => onOpenChange(false);
+  const { isAuthenticated, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    close();
+    await signOut();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -135,30 +116,14 @@ function MobileNav({ open, onOpenChange }) {
           <Menu className="h-5 w-5" />
         </button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[min(100vw,320px)]">
+      <SheetContent side="right" className="w-[min(100vw,360px)] overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-left text-base">Menu</SheetTitle>
         </SheetHeader>
-        <nav className="mt-6 flex flex-col gap-0.5">
-          <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Platform
-          </p>
-          <PlatformProductItems mobile onNavigate={close} />
-
-          <p className="mb-1 mt-3 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            API
-          </p>
-          <Link
-            to="/#pricing-api"
-            onClick={close}
-            className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted"
-          >
-            <Code2 className="h-4 w-4 text-primary/70" />
-            REST API
-          </Link>
-
-          <div className="my-3 h-px bg-border" />
-
+        <div className="mt-4 border-t border-border pt-4">
+          <ProductsMegaMenuPanel onNavigate={close} className="grid-cols-1 gap-6 p-0" />
+        </div>
+        <nav className="mt-6 flex flex-col gap-0.5 border-t border-border pt-4">
           <Link to="/dashboard" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Dashboard
           </Link>
@@ -166,27 +131,37 @@ function MobileNav({ open, onOpenChange }) {
           <Link to="/#pricing" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Pricing
           </Link>
-
-          <div className="my-3 h-px bg-border" />
-
-          <Link
-            to="/dashboard/alerts"
-            onClick={close}
-            className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted"
-          >
-            <Bell className="h-4 w-4" />
-            Alerts
-          </Link>
-          <Link to="/login" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
-            Login
-          </Link>
-          <Link
-            to="/register"
-            onClick={close}
-            className="mx-3 mt-3 rounded-lg bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground"
-          >
-            Sign Up
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/dashboard/alerts"
+                onClick={close}
+                className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted"
+              >
+                <Bell className="h-4 w-4" /> Alerts
+              </Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="mt-2 rounded-md px-3 py-2.5 text-left text-sm font-medium text-destructive hover:bg-destructive/5"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+                Login
+              </Link>
+              <Link
+                to="/register"
+                onClick={close}
+                className="mx-0 mt-2 rounded-lg bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </nav>
       </SheetContent>
     </Sheet>
@@ -195,14 +170,16 @@ function MobileNav({ open, onOpenChange }) {
 
 export default function MarketingNav() {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const headerVisible = useScrollHeader();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const homeHref = isAuthenticated ? '/dashboard' : '/';
   const pricingActive =
     location.hash === '#pricing' ||
     location.hash === '#pricing-api' ||
     location.pathname.includes('pricing');
-  const dashboardActive = location.pathname.startsWith('/dashboard');
+  const dashboardActive = location.pathname === '/dashboard' || location.pathname.startsWith('/dashboard/');
 
   return (
     <header
@@ -214,7 +191,7 @@ export default function MarketingNav() {
     >
       <div className={cn('w-full', LANDING_PAD)}>
         <div className={cn('mx-auto flex h-14 items-center justify-between gap-4 lg:h-16', LANDING_MAX)}>
-          <Link to="/" className="flex shrink-0 items-center gap-2.5">
+          <Link to={homeHref} className="flex shrink-0 items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary lg:h-9 lg:w-9">
               <span className="font-heading text-xs font-bold text-primary-foreground lg:text-sm">FL</span>
             </div>
@@ -224,12 +201,12 @@ export default function MarketingNav() {
           </Link>
 
           <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex xl:gap-10">
-            <ProductsDropdown />
-            <Link to="/dashboard" className={cn(navLinkClass, dashboardActive && 'text-primary')}>
+            <ProductsMegaMenu />
+            <Link to="/dashboard" className={cn(navLinkClass, dashboardActive && 'text-primary font-semibold')}>
               Dashboard
             </Link>
             <FreshLienAiNavItem />
-            <Link to="/#pricing" className={cn(navLinkClass, pricingActive && 'text-primary')}>
+            <Link to={isAuthenticated ? '/dashboard#pricing' : '/#pricing'} className={cn(navLinkClass, pricingActive && 'text-primary')}>
               Pricing
             </Link>
           </nav>
@@ -243,18 +220,35 @@ export default function MarketingNav() {
             >
               <Bell className="h-5 w-5" />
             </Link>
-            <Link
-              to="/login"
-              className="hidden px-2 py-2 text-sm font-medium text-foreground/80 hover:text-primary sm:inline-flex lg:px-3"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="hidden items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:inline-flex lg:py-2.5"
-            >
-              Sign Up <ArrowRight className="h-4 w-4" />
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/dashboard/foreclosures"
+                  className="hidden items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:inline-flex lg:py-2.5"
+                >
+                  Dashboard <ArrowRight className="h-4 w-4" />
+                </Link>
+                <div className="hidden sm:block">
+                  <UserMenu />
+                </div>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden px-2 py-2 text-sm font-medium text-foreground/80 hover:text-primary sm:inline-flex lg:px-3"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="hidden items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:inline-flex lg:py-2.5"
+                >
+                  Sign Up <ArrowRight className="h-4 w-4" />
+                </Link>
+              </>
+            )}
             <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
           </div>
         </div>

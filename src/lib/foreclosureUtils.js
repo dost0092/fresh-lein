@@ -1,22 +1,6 @@
 import { differenceInDays, parseISO } from 'date-fns';
 import { getCountyCentroid } from '@/data/countyCentroids';
 
-/** Per-record coordinates (property-level) for sample MVP data */
-const SAMPLE_PROPERTY_COORDS = {
-  'sample-1': { latitude: 40.7357, longitude: -74.1724 },
-  'sample-2': { latitude: 26.7153, longitude: -80.0534 },
-  'sample-3': { latitude: 33.5092, longitude: -112.034 },
-  'sample-4': { latitude: 40.5853, longitude: -105.0844 },
-  'sample-5': { latitude: 40.744, longitude: -74.0324 },
-  'sample-6': { latitude: 39.9526, longitude: -75.1652 },
-  'sample-7': { latitude: 42.3636, longitude: -87.8448 },
-  'sample-8': { latitude: 31.5493, longitude: -97.1467 },
-  'sample-9': { latitude: 39.3643, longitude: -74.4229 },
-  'sample-10': { latitude: 41.1384, longitude: -81.8637 },
-  'sample-11': { latitude: 33.5022, longitude: -112.039 },
-  'sample-12': { latitude: 40.0712, longitude: -74.8649 },
-};
-
 export function daysToSale(saleDate) {
   if (!saleDate) return null;
   try {
@@ -32,18 +16,13 @@ function parseCoord(value) {
   return Number.isFinite(n) ? n : null;
 }
 
-/** Resolve lat/lng from record fields, sample lookup, or county centroid */
+/** Resolve lat/lng from record fields or county centroid */
 export function resolveCoordinates(row) {
-  let lat = parseCoord(row.latitude);
-  let lng = parseCoord(row.longitude);
+  const lat = parseCoord(row.latitude);
+  const lng = parseCoord(row.longitude);
 
   if (lat != null && lng != null) {
     return { latitude: lat, longitude: lng };
-  }
-
-  const sample = SAMPLE_PROPERTY_COORDS[row.id];
-  if (sample) {
-    return { latitude: sample.latitude, longitude: sample.longitude };
   }
 
   const county = getCountyCentroid(row.county_name, row.state);
@@ -54,7 +33,25 @@ export function resolveCoordinates(row) {
   return { latitude: null, longitude: null };
 }
 
-/** Normalize API/sample rows for map, list, and drawer */
+export function getDashboardStats(cases = []) {
+  const today = new Date().toISOString().split('T')[0];
+  const scheduled = cases.filter((c) => c.status === 'Scheduled');
+  const counties = new Set(cases.map((c) => `${c.county_name}-${c.state}`));
+  const upcoming = scheduled.filter((c) => c.sale_date >= today);
+  const newToday = cases.filter((c) => {
+    const created = c.created_at?.split('T')[0];
+    return created === today;
+  });
+
+  return {
+    activeForeclosures: scheduled.length,
+    countiesCovered: counties.size,
+    upcomingAuctions: upcoming.length,
+    newListingsToday: newToday.length,
+  };
+}
+
+/** Normalize API rows for map, list, and drawer */
 export function enrichForeclosure(row) {
   if (!row) return null;
   const days = daysToSale(row.sale_date);

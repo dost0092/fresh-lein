@@ -1,21 +1,34 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UserPlus, Mail, Lock, User, Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/AuthLayout';
+import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
+import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
 
-export default function Register() {
+function RegisterForm() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signUp, enterDemoMode, isDemoMode } = useAuth();
+  const { signUp, signInWithGoogle, isSupabaseConfigured } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const plan = searchParams.get('plan');
+  const checkoutPlan = isCheckoutPlanId(plan) ? plan : null;
+
+  const goAfterAuth = async () => {
+    if (checkoutPlan) {
+      navigate(`/dashboard/billing?plan=${checkoutPlan}`, { replace: true });
+      return;
+    }
+    navigate('/dashboard', { replace: true });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +36,14 @@ export default function Register() {
     setLoading(true);
     try {
       const data = await signUp({ email, password, fullName });
-      if (data?.user && !data.user.email_confirmed_at) {
+      if (data?.user && !data.user.email_confirmed_at && !data.session) {
         setSuccess(true);
+        setLoading(false);
       } else {
-        navigate('/dashboard');
+        await goAfterAuth();
       }
     } catch (err) {
       setError(err.message || 'Registration failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -40,10 +53,13 @@ export default function Register() {
       <AuthLayout icon={Mail} title="Check your email" subtitle={`We sent a confirmation link to ${email}`}>
         <p className="text-sm text-center text-muted-foreground">
           Click the link in your email to activate your account, then{' '}
-          <Link to="/login" className="text-[#4257A7] font-medium hover:underline">
+          <Link
+            to={checkoutPlan ? `/login?plan=${checkoutPlan}` : '/login'}
+            className="text-primary font-medium hover:underline"
+          >
             log in
           </Link>
-          .
+          {checkoutPlan ? ' to complete payment.' : '.'}
         </p>
       </AuthLayout>
     );
@@ -53,26 +69,59 @@ export default function Register() {
     <AuthLayout
       icon={UserPlus}
       title="Create your account"
-      subtitle="Start exploring foreclosure intelligence"
+      subtitle={
+        checkoutPlan
+          ? `Sign up for ${CHECKOUT_PLAN_LABELS[checkoutPlan]}`
+          : 'Start exploring foreclosure intelligence'
+      }
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/login" className="text-[#4257A7] font-medium hover:underline">
+          <Link
+            to={checkoutPlan ? `/login?plan=${checkoutPlan}` : '/login'}
+            className="text-primary font-medium hover:underline"
+          >
             Log in
           </Link>
         </>
       }
     >
-      {isDemoMode && (
-        <div className="mb-4 p-3 rounded-lg bg-[#4257A7]/10 text-sm">
-          <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => { enterDemoMode(); navigate('/dashboard'); }}>
-            Explore dashboard without signup (demo)
-          </Button>
+      {!isSupabaseConfigured && (
+        <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-900">
+          Configure Supabase in <code className="text-xs">.env.local</code> before signing up.
+        </div>
+      )}
+
+      {checkoutPlan && (
+        <div className="mb-4 p-3 rounded-lg bg-primary/10 text-sm text-foreground">
+          After signup you&apos;ll go to <strong>Stripe</strong> to pay (13-day trial still applies if enabled).
         </div>
       )}
 
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>
+      )}
+
+      {isSupabaseConfigured && (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full h-11 mb-4"
+          disabled={loading}
+          onClick={async () => {
+            setError('');
+            try {
+              const redirectTo = checkoutPlan
+                ? `${window.location.origin}/dashboard/billing?plan=${checkoutPlan}`
+                : `${window.location.origin}/dashboard`;
+              await signInWithGoogle(redirectTo);
+            } catch (err) {
+              setError(err.message || 'Google signup failed');
+            }
+          }}
+        >
+          Continue with Google
+        </Button>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -124,17 +173,25 @@ export default function Register() {
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-11 bg-[#4257A7] hover:bg-[#364a8f]" disabled={loading}>
+        <Button type="submit" className="w-full h-11" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Creating account...
+              {checkoutPlan ? 'Continuing…' : 'Creating account...'}
             </>
           ) : (
-            'Sign up'
+            checkoutPlan ? 'Sign up & pay' : 'Sign up'
           )}
         </Button>
       </form>
     </AuthLayout>
+  );
+}
+
+export default function Register() {
+  return (
+    <RedirectIfAuthed>
+      <RegisterForm />
+    </RedirectIfAuthed>
   );
 }

@@ -29,12 +29,12 @@ export default function StatusTimeline({ history = [], currentStatus }) {
           <div key={status} className="flex gap-4">
             <div className="flex flex-col items-center">
               {isPast ? (
-                <CheckCircle2 className={cn('w-5 h-5 shrink-0', isCurrent ? 'text-[#4257A7]' : 'text-emerald-500')} />
+                <CheckCircle2 className={cn('w-5 h-5 shrink-0', isCurrent ? 'text-primary' : 'text-emerald-500')} />
               ) : (
                 <Circle className="w-5 h-5 shrink-0 text-muted-foreground/30" />
               )}
               {idx < STATUS_ORDER.length - 1 && (
-                <div className={cn('w-px flex-1 min-h-[2rem] my-1', isPast ? 'bg-[#4257A7]/30' : 'bg-border')} />
+                <div className={cn('w-px flex-1 min-h-[2rem] my-1', isPast ? 'bg-primary/30' : 'bg-border')} />
               )}
             </div>
             <div className="pb-8 flex-1">
@@ -48,7 +48,7 @@ export default function StatusTimeline({ history = [], currentStatus }) {
                   {status}
                 </span>
                 {isCurrent && (
-                  <span className="text-[10px] font-medium uppercase tracking-wide text-[#4257A7]">Current</span>
+                  <span className="text-[10px] font-medium uppercase tracking-wide text-primary">Current</span>
                 )}
               </div>
               {event?.status_date && (

@@ -19,6 +19,8 @@ import UrgencyBadge from '@/components/dashboard/UrgencyBadge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { fetchForeclosureById } from '@/lib/foreclosureService';
+import { isPropertySaved, saveProperty, unsaveProperty } from '@/lib/savedPropertiesService';
+import { useAuth } from '@/lib/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 
@@ -85,8 +87,11 @@ function DataRow({ label, value, mono, onCopy }) {
 
 export default function ForeclosureDetailPage() {
   const { id } = useParams();
+  const { isAuthenticated, isSupabaseConfigured } = useAuth();
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -97,6 +102,14 @@ export default function ForeclosureDetailPage() {
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    if (!id || !isAuthenticated || !isSupabaseConfigured) {
+      setSaved(false);
+      return;
+    }
+    isPropertySaved(id).then(setSaved).catch(() => setSaved(false));
+  }, [id, isAuthenticated, isSupabaseConfigured]);
 
   const formatCurrency = (v) =>
     v != null ? `$${Number(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '—';
@@ -182,8 +195,36 @@ export default function ForeclosureDetailPage() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
-                <Button variant="outline" size="sm" className="h-8 text-xs" disabled>
-                  <Bookmark className="w-3.5 h-3.5 mr-1" /> Save
+                <Button
+                  variant={saved ? 'default' : 'outline'}
+                  size="sm"
+                  className="h-8 text-xs"
+                  disabled={!isAuthenticated || saveLoading}
+                  onClick={async () => {
+                    setSaveLoading(true);
+                    try {
+                      if (saved) {
+                        await unsaveProperty(id);
+                        setSaved(false);
+                        toast({ title: 'Removed', description: 'Property removed from saved list.' });
+                      } else {
+                        await saveProperty(id);
+                        setSaved(true);
+                        toast({ title: 'Saved', description: 'Property added to your watchlist.' });
+                      }
+                    } catch (err) {
+                      toast({
+                        title: 'Could not save',
+                        description: err.message,
+                        variant: 'destructive',
+                      });
+                    } finally {
+                      setSaveLoading(false);
+                    }
+                  }}
+                >
+                  <Bookmark className={cn('w-3.5 h-3.5 mr-1', saved && 'fill-current')} />
+                  {saved ? 'Saved' : 'Save'}
                 </Button>
                 <Button variant="secondary" size="sm" className="h-8 text-xs" asChild>
                   <Link to="/dashboard/foreclosures?view=map">Map</Link>
@@ -288,8 +329,8 @@ export default function ForeclosureDetailPage() {
               <div className="rounded-xl border border-border bg-white p-5 text-sm text-muted-foreground">
                 <p className="font-medium text-foreground mb-2">Investor note</p>
                 <p>
-                  Full docket fields (liens, probate flags, skip trace) will populate when county scrapers sync to
-                  Supabase. This record uses MVP sample data for demonstration.
+                  Data is sourced from county scrapers. Additional fields (liens, probate flags, skip trace) may be
+                  added as integrations expand.
                 </p>
               </div>
             </div>

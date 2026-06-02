@@ -60,7 +60,7 @@ export default function ForeclosuresTable({ rows, loading }) {
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id} className="group hover:bg-[#4257A7]/[0.03]">
+            <TableRow key={row.id} className="group hover:bg-primary/[0.03]">
               <TableCell className="font-mono text-xs whitespace-nowrap">{row.sheriff_number}</TableCell>
               <TableCell className="whitespace-nowrap text-sm">{formatDate(row.sale_date)}</TableCell>
               <TableCell className="max-w-[140px] truncate text-sm" title={row.plaintiff}>
@@ -96,7 +96,7 @@ export default function ForeclosuresTable({ rows, loading }) {
               <TableCell className="text-right">
                 <Link
                   to={`/dashboard/foreclosures/${row.id}`}
-                  className="inline-flex items-center gap-1 text-sm font-medium text-[#4257A7] hover:underline"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                 >
                   View <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </Link>

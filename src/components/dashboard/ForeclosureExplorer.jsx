@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Download, Map, List, SlidersHorizontal, X, RotateCcw } from 'lucide-react';
+import { Search, Download, Map, List, SlidersHorizontal, RotateCcw } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import MapView from '@/components/dashboard/MapView';
 import ForeclosureListCompact from '@/components/dashboard/ForeclosureListCompact';
@@ -16,19 +16,30 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { fetchForeclosures, exportForeclosuresCsv, isUsingLiveData } from '@/lib/foreclosureService';
-import { filterForeclosures } from '@/lib/foreclosureUtils';
+import {
+  fetchForeclosureFilterOptions,
+  fetchForeclosuresForExport,
+  fetchForeclosuresForMap,
+  fetchForeclosuresPage,
+  exportForeclosuresCsv,
+  isUsingLiveData,
+} from '@/lib/foreclosureService';
 import { cn } from '@/lib/utils';
 
 const PAGE_SIZE = 20;
 
 export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [allRows, setAllRows] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [mapRows, setMapRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mapLoading, setMapLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const initialView = searchParams.get('view') === 'map' ? 'map' : 'list';
   const [view, setView] = useState(initialView);
   const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get('q') || '');
   const [county, setCounty] = useState('all');
   const [state, setState] = useState('all');
   const [status, setStatus] = useState('all');
@@ -37,18 +48,22 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState(null);
+  const [filterOptions, setFilterOptions] = useState({ counties: [], states: [], statuses: [] });
+
+  const filters = useMemo(
+    () => ({ search: debouncedSearch, county, state, status, dateFrom, dateTo }),
+    [debouncedSearch, county, state, status, dateFrom, dateTo]
+  );
 
   useEffect(() => {
-    fetchForeclosures()
-      .then((data) => {
-        setAllRows(data);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message || 'Could not load foreclosure data.');
-        setAllRows([]);
-      })
-      .finally(() => setLoading(false));
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  useEffect(() => {
+    fetchForeclosureFilterOptions()
+      .then(setFilterOptions)
+      .catch((err) => console.warn('filter options:', err.message));
   }, []);
 
   useEffect(() => {
@@ -56,20 +71,59 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
     if (q) setSearch(q);
   }, [searchParams]);
 
-  const states = useMemo(() => [...new Set(allRows.map((r) => r.state))].sort(), [allRows]);
-  const statuses = useMemo(() => [...new Set(allRows.map((r) => r.status))].sort(), [allRows]);
-
-  const filtered = useMemo(
-    () => filterForeclosures(allRows, { search, county, state, status, dateFrom, dateTo }),
-    [allRows, search, county, state, status, dateFrom, dateTo]
-  );
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
   useEffect(() => {
     setPage(1);
-  }, [search, county, state, status, dateFrom, dateTo]);
+  }, [debouncedSearch, county, state, status, dateFrom, dateTo]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    fetchForeclosuresPage({ page, pageSize: PAGE_SIZE, filters })
+      .then(({ rows: data, total }) => {
+        if (cancelled) return;
+        setRows(data);
+        setTotalCount(total);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err.message || 'Could not load foreclosure data.');
+        setRows([]);
+        setTotalCount(0);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page, filters]);
+
+  useEffect(() => {
+    if (view !== 'map') return;
+
+    let cancelled = false;
+    setMapLoading(true);
+
+    fetchForeclosuresForMap({ filters })
+      .then((data) => {
+        if (!cancelled) setMapRows(data);
+      })
+      .catch((err) => {
+        if (!cancelled) console.warn('map data:', err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setMapLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [view, filters]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const clearFilters = () => {
     setSearch('');
@@ -81,7 +135,20 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
     setSearchParams({});
   };
 
-  const hasFilters = county !== 'all' || state !== 'all' || status !== 'all' || dateFrom || dateTo || search.trim();
+  const hasFilters =
+    county !== 'all' || state !== 'all' || status !== 'all' || dateFrom || dateTo || search.trim();
+
+  const handleExport = useCallback(async () => {
+    setExporting(true);
+    try {
+      const data = await fetchForeclosuresForExport(filters);
+      exportForeclosuresCsv(data);
+    } catch (err) {
+      setError(err.message || 'Export failed.');
+    } finally {
+      setExporting(false);
+    }
+  }, [filters]);
 
   const filterControls = (
     <>
@@ -91,8 +158,10 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All counties</SelectItem>
-          {[...new Set(allRows.map((r) => r.county_name))].sort().map((c) => (
-            <SelectItem key={c} value={c}>{c}</SelectItem>
+          {filterOptions.counties.map((c) => (
+            <SelectItem key={c} value={c}>
+              {c}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
@@ -102,8 +171,10 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
-          {states.map((s) => (
-            <SelectItem key={s} value={s}>{s}</SelectItem>
+          {filterOptions.states.map((s) => (
+            <SelectItem key={s} value={s}>
+              {s}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
@@ -113,15 +184,30 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All statuses</SelectItem>
-          {statuses.map((s) => (
-            <SelectItem key={s} value={s}>{s}</SelectItem>
+          {filterOptions.statuses.map((s) => (
+            <SelectItem key={s} value={s}>
+              {s}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="filter-chip w-[130px]" />
-      <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="filter-chip w-[130px]" />
+      <Input
+        type="date"
+        value={dateFrom}
+        onChange={(e) => setDateFrom(e.target.value)}
+        className="filter-chip w-[130px]"
+      />
+      <Input
+        type="date"
+        value={dateTo}
+        onChange={(e) => setDateTo(e.target.value)}
+        className="filter-chip w-[130px]"
+      />
     </>
   );
+
+  const showEmpty = !loading && !error && totalCount === 0;
+  const mapData = mapRows.length ? mapRows : rows;
 
   return (
     <AppLayout>
@@ -131,9 +217,9 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
             <div>
               <h1 className="page-title">{title}</h1>
               <p className="page-subtitle">
-                {filtered.length} of {allRows.length} listings
+                {totalCount.toLocaleString()} listings
                 {hasFilters && ' · filtered'}
-                {isUsingLiveData() && allRows.length > 0 && ' · live data'}
+                {isUsingLiveData() && totalCount > 0 && ' · live data'}
               </p>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
@@ -163,10 +249,10 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                 variant="secondary"
                 size="sm"
                 className="h-8 text-xs"
-                onClick={() => exportForeclosuresCsv(filtered)}
-                disabled={!filtered.length}
+                onClick={handleExport}
+                disabled={exporting || totalCount === 0}
               >
-                <Download className="w-3.5 h-3.5 mr-1" /> Export
+                <Download className="w-3.5 h-3.5 mr-1" /> {exporting ? 'Exporting…' : 'Export'}
               </Button>
             </div>
           </div>
@@ -201,7 +287,12 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
               </SheetContent>
             </Sheet>
             {hasFilters && (
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-xs text-muted-foreground">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="h-8 text-xs text-muted-foreground"
+              >
                 <RotateCcw className="w-3 h-3 mr-1" /> Reset
               </Button>
             )}
@@ -210,17 +301,15 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
 
         <div className="flex-1 overflow-hidden flex flex-col min-h-0 bg-muted/30">
           {loading ? (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex flex-col items-center justify-center gap-2">
               <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin" />
+              <p className="text-xs text-muted-foreground">Loading foreclosures…</p>
             </div>
           ) : error ? (
             <div className="flex-1 flex items-center justify-center p-6">
-              <EmptyState
-                title="Could not load data"
-                description={error}
-              />
+              <EmptyState title="Could not load data" description={error} />
             </div>
-          ) : filtered.length === 0 ? (
+          ) : showEmpty ? (
             <div className="flex-1 flex items-center justify-center p-6">
               <EmptyState
                 title="No matches"
@@ -231,24 +320,38 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
             </div>
           ) : view === 'map' ? (
             <div className="flex-1 relative min-h-[calc(100vh-200px)]">
-              <MapView filings={filtered} onSelectFiling={setSelected} selectedId={selected?.id} />
+              {mapLoading && (
+                <div className="absolute top-3 right-3 z-10 rounded-md bg-white/90 border border-border px-2 py-1 text-xs text-muted-foreground shadow-sm">
+                  Loading map pins…
+                </div>
+              )}
+              <MapView filings={mapData} onSelectFiling={setSelected} selectedId={selected?.id} />
             </div>
           ) : (
             <div className="flex-1 overflow-auto py-3">
-              <ForeclosureListCompact
-                rows={paginated}
-                selectedId={selected?.id}
-                onSelect={setSelected}
-              />
+              <ForeclosureListCompact rows={rows} selectedId={selected?.id} onSelect={setSelected} />
               <div className="flex items-center justify-between px-5 py-2.5 mx-4 sm:mx-5 bg-white border border-border rounded-lg text-xs text-muted-foreground">
                 <span>
-                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, totalCount)} of{' '}
+                  {totalCount.toLocaleString()}
                 </span>
                 <div className="flex gap-1.5">
-                  <Button variant="outline" size="sm" className="h-7 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                  >
                     Prev
                   </Button>
-                  <Button variant="outline" size="sm" className="h-7 text-xs" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                  >
                     Next
                   </Button>
                 </div>

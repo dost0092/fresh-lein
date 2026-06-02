@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Gavel,
@@ -33,7 +33,18 @@ const navItems = [
 
 function NavContent({ collapsed, onNavClick }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { signOut, profile } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      onNavClick?.();
+      navigate('/login', { replace: true });
+    } catch (err) {
+      console.warn('Log out failed:', err);
+    }
+  };
 
   const isActive = (path) => {
     if (path === '/dashboard') return location.pathname === '/dashboard';
@@ -102,7 +113,7 @@ function NavContent({ collapsed, onNavClick }) {
         )}
         <button
           type="button"
-          onClick={() => signOut()}
+          onClick={handleSignOut}
           className={cn(
             'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all',
             collapsed && 'justify-center'
@@ -133,7 +144,7 @@ export default function AppLayout({ children }) {
         )}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-          <Link to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+          <Link to="/dashboard" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
             <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-heading font-bold text-xs">FL</span>
             </div>
@@ -154,14 +165,14 @@ export default function AppLayout({ children }) {
       >
         <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed && 'justify-center')}>
           {!collapsed ? (
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/dashboard" className="flex items-center gap-2">
               <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-heading font-bold text-xs">FL</span>
               </div>
               <span className="font-heading font-semibold text-foreground text-sm">FreshLien</span>
             </Link>
           ) : (
-            <Link to="/" className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+            <Link to="/dashboard" className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-heading font-bold text-xs">FL</span>
             </Link>
           )}

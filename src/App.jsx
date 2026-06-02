@@ -18,6 +18,8 @@ import AlertsPage from './pages/AlertsPage';
 import SavedSearchesPage from './pages/SavedSearchesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
+import RequireAuth from '@/components/RequireAuth';
+import RequireEntitlement from '@/components/RequireEntitlement';
 
 function AppRoutes() {
   return (
@@ -30,17 +32,88 @@ function AppRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route path="/dashboard" element={<DashboardHome />} />
-        <Route path="/dashboard/foreclosures" element={<ForeclosuresPage />} />
-        <Route path="/dashboard/foreclosures/:id" element={<ForeclosureDetailPage />} />
-        <Route path="/dashboard/alerts" element={<AlertsPage />} />
-        <Route path="/dashboard/saved" element={<SavedSearchesPage />} />
-        <Route path="/dashboard/billing" element={<SettingsPage />} />
-        <Route path="/analytics" element={<AnalyticsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route
+          path="/dashboard"
+          element={<DashboardHome />}
+        />
+        <Route
+          path="/dashboard/foreclosures"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <ForeclosuresPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/foreclosures/:id"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <ForeclosureDetailPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/alerts"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <AlertsPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/saved"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <SavedSearchesPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/billing"
+          element={
+            <RequireAuth>
+              <SettingsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <AnalyticsPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <RequireAuth>
+              <SettingsPage />
+            </RequireAuth>
+          }
+        />
 
         {/* Legacy redirects */}
-        <Route path="/dashboard/list" element={<ForeclosuresPage />} />
+        <Route
+          path="/dashboard/list"
+          element={
+            <RequireAuth>
+              <RequireEntitlement>
+                <ForeclosuresPage />
+              </RequireEntitlement>
+            </RequireAuth>
+          }
+        />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>

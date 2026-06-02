@@ -53,7 +53,7 @@ export default function ResetPassword() {
     return (
       <AuthLayout icon={Lock} title="Reset password" subtitle="Configure Supabase to enable password reset">
         <p className="text-sm text-center text-muted-foreground">
-          <Link to="/forgot-password" className="text-[#4257A7] hover:underline">
+          <Link to="/forgot-password" className="text-primary hover:underline">
             Request a new link
           </Link>{' '}
           after connecting your project.
@@ -101,7 +101,7 @@ export default function ResetPassword() {
             required
           />
         </div>
-        <Button type="submit" className="w-full h-11 bg-[#4257A7] hover:bg-[#364a8f]" disabled={loading}>
+        <Button type="submit" className="w-full h-11" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
