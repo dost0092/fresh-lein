@@ -90,10 +90,12 @@ export default function ForeclosureDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    fetchForeclosureById(id).then((data) => {
-      setRecord(data);
-      setLoading(false);
-    });
+    setLoading(true);
+    fetchForeclosureById(id)
+      .then((data) => {
+        setRecord(data);
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   const formatCurrency = (v) =>

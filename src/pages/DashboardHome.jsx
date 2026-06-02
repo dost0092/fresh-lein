@@ -11,20 +11,26 @@ export default function DashboardHome() {
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([fetchDashboardStats(), fetchForeclosures()]).then(([s, cases]) => {
-      setStats(s);
-      setRecent(
-        cases
-          .filter((c) => c.status === 'Scheduled')
-          .sort((a, b) => new Date(a.sale_date) - new Date(b.sale_date))
-          .slice(0, 5)
-      );
-      setLoading(false);
-    });
+    Promise.all([fetchDashboardStats(), fetchForeclosures()])
+      .then(([s, cases]) => {
+        setStats(s);
+        setRecent(
+          cases
+            .filter((c) => c.status === 'Scheduled')
+            .sort((a, b) => new Date(a.sale_date) - new Date(b.sale_date))
+            .slice(0, 5)
+        );
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message || 'Could not load dashboard data.');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleSearch = (e) => {
@@ -73,6 +79,11 @@ export default function DashboardHome() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+          {error && (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
           <StatsCards stats={stats} loading={loading} />
 
           <div className="saas-card overflow-hidden">

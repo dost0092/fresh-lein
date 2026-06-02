@@ -16,12 +16,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { fetchForeclosures, exportForeclosuresCsv } from '@/lib/foreclosureService';
+import { fetchForeclosures, exportForeclosuresCsv, isUsingLiveData } from '@/lib/foreclosureService';
 import { filterForeclosures } from '@/lib/foreclosureUtils';
-import { MVP_COUNTIES } from '@/data/counties';
 import { cn } from '@/lib/utils';
 
-const STATUSES = ['Appraisal', 'Scheduled', 'Sold', 'Cancelled'];
 const PAGE_SIZE = 20;
 
 export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
@@ -38,12 +36,19 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchForeclosures().then((data) => {
-      setAllRows(data);
-      setLoading(false);
-    });
+    fetchForeclosures()
+      .then((data) => {
+        setAllRows(data);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message || 'Could not load foreclosure data.');
+        setAllRows([]);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -51,7 +56,8 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
     if (q) setSearch(q);
   }, [searchParams]);
 
-  const states = useMemo(() => [...new Set(MVP_COUNTIES.map((c) => c.state))].sort(), []);
+  const states = useMemo(() => [...new Set(allRows.map((r) => r.state))].sort(), [allRows]);
+  const statuses = useMemo(() => [...new Set(allRows.map((r) => r.status))].sort(), [allRows]);
 
   const filtered = useMemo(
     () => filterForeclosures(allRows, { search, county, state, status, dateFrom, dateTo }),
@@ -107,7 +113,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All statuses</SelectItem>
-          {STATUSES.map((s) => (
+          {statuses.map((s) => (
             <SelectItem key={s} value={s}>{s}</SelectItem>
           ))}
         </SelectContent>
@@ -127,6 +133,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
               <p className="page-subtitle">
                 {filtered.length} of {allRows.length} listings
                 {hasFilters && ' · filtered'}
+                {isUsingLiveData() && allRows.length > 0 && ' · live data'}
               </p>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
@@ -205,6 +212,13 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
           {loading ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin" />
+            </div>
+          ) : error ? (
+            <div className="flex-1 flex items-center justify-center p-6">
+              <EmptyState
+                title="Could not load data"
+                description={error}
+              />
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex-1 flex items-center justify-center p-6">

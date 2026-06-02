@@ -28,7 +28,9 @@ export default function LandingMapExplorer() {
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
-    fetchForeclosures().then(setAllRows);
+    fetchForeclosures()
+      .then(setAllRows)
+      .catch(() => setAllRows([]));
   }, []);
 
   useEffect(() => {

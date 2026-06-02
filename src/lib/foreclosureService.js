@@ -2,6 +2,19 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { SAMPLE_FORECLOSURES, getDashboardStats } from '@/data/sampleForeclosures';
 import { enrichForeclosure } from '@/lib/foreclosureUtils';
 
+const SUPABASE_PAGE_SIZE = 1000;
+
+const LIST_SELECT = `
+  *,
+  counties ( county_name, state )
+`;
+
+const DETAIL_SELECT = `
+  *,
+  counties ( county_name, state ),
+  foreclosure_status_history ( status, status_date, created_at )
+`;
+
 function mapRow(row) {
   if (!row) return null;
   const county = row.counties || row.county;
@@ -31,34 +44,55 @@ function mapRow(row) {
   };
 }
 
+function mapStatusHistory(rows = []) {
+  return rows
+    .sort((a, b) => new Date(a.status_date) - new Date(b.status_date))
+    .map((h) => ({ status: h.status, status_date: h.status_date }));
+}
+
+async function fetchAllForeclosureRows() {
+  const all = [];
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('foreclosure_cases')
+      .select(LIST_SELECT)
+      .order('sale_date', { ascending: true })
+      .range(from, from + SUPABASE_PAGE_SIZE - 1);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!data?.length) break;
+
+    all.push(...data);
+    if (data.length < SUPABASE_PAGE_SIZE) break;
+    from += SUPABASE_PAGE_SIZE;
+  }
+
+  return all;
+}
+
+export function isUsingLiveData() {
+  return isSupabaseConfigured;
+}
+
 export async function fetchForeclosures() {
   if (!isSupabaseConfigured) {
     return SAMPLE_FORECLOSURES.map(enrichForeclosure);
   }
 
-  const { data, error } = await supabase
-    .from('foreclosure_cases')
-    .select(`
-      *,
-      counties ( county_name, state ),
-      foreclosure_status_history ( status, status_date, created_at )
-    `)
-    .order('sale_date', { ascending: true });
-
-  if (error || !data?.length) {
-    console.warn('Supabase foreclosures:', error?.message || 'empty — using sample data');
-    return SAMPLE_FORECLOSURES.map(enrichForeclosure);
-  }
+  const data = await fetchAllForeclosureRows();
 
   return data.map((row) =>
     enrichForeclosure(
-    mapRow({
-      ...row,
-      county_name: row.counties?.county_name,
-      status_history: (row.foreclosure_status_history || [])
-        .sort((a, b) => new Date(a.status_date) - new Date(b.status_date))
-        .map((h) => ({ status: h.status, status_date: h.status_date })),
-    }))
+      mapRow({
+        ...row,
+        county_name: row.counties?.county_name,
+      })
+    )
   );
 }
 
@@ -70,26 +104,23 @@ export async function fetchForeclosureById(id) {
 
   const { data, error } = await supabase
     .from('foreclosure_cases')
-    .select(`
-      *,
-      counties ( county_name, state ),
-      foreclosure_status_history ( status, status_date, created_at )
-    `)
+    .select(DETAIL_SELECT)
     .eq('id', id)
     .single();
 
-  if (error || !data) {
-    const found = SAMPLE_FORECLOSURES.find((c) => c.id === id);
-    return found ? enrichForeclosure(found) : null;
+  if (error) {
+    throw new Error(error.message);
   }
 
-  return enrichForeclosure(mapRow({
-    ...data,
-    county_name: data.counties?.county_name,
-    status_history: (data.foreclosure_status_history || [])
-      .sort((a, b) => new Date(a.status_date) - new Date(b.status_date))
-      .map((h) => ({ status: h.status, status_date: h.status_date })),
-  }));
+  if (!data) return null;
+
+  return enrichForeclosure(
+    mapRow({
+      ...data,
+      county_name: data.counties?.county_name,
+      status_history: mapStatusHistory(data.foreclosure_status_history),
+    })
+  );
 }
 
 export async function fetchDashboardStats() {
