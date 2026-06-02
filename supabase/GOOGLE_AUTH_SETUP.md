@@ -92,13 +92,52 @@ This means **Google is not enabled in Supabase yet**. Follow every step below.
 | `redirect_uri_mismatch` | Redirect URI in Google must be exactly `https://mhodxzrbcaammqobvcnu.supabase.co/auth/v1/callback` |
 | `Access blocked: app not verified` | Add your email under OAuth consent screen → Test users (while app is in Testing) |
 | Redirects to wrong page | Check Site URL + Redirect URLs in Supabase (Part 3) |
+| **Redirects to `localhost:3000` after Google login on Vercel** | **Site URL is still localhost.** Set Site URL to your Vercel URL and add `https://YOUR-APP.vercel.app/**` to Redirect URLs (see Production below) |
+| User lands on URL with `#access_token=...` but not logged in | Add production URL to Redirect URLs; redeploy; hard refresh. FreshLien includes `AuthCallbackHandler` to finish login automatically. |
 | User has no trial/profile | Run migration `005_trials_and_stripe_billing.sql` (creates profile on signup) |
 
 ---
 
-## Production checklist
+## Production checklist (Vercel)
 
-When you deploy FreshLien to a live domain:
+When you deploy FreshLien to Vercel (e.g. `https://fresh-lein.vercel.app`):
+
+1. **Supabase → Auth → URL Configuration**
+   - **Site URL:** `https://fresh-lein.vercel.app` (your exact Vercel URL or custom domain)
+   - **Redirect URLs** — add:
+     ```
+     https://fresh-lein.vercel.app/**
+     https://fresh-lein.vercel.app/dashboard
+     http://localhost:5173/**
+     http://localhost:3000/**
+     ```
+
+2. **Google Cloud Console → OAuth client**
+   - **Authorized JavaScript origins** — add:
+     ```
+     https://fresh-lein.vercel.app
+     ```
+   - Keep redirect URI as Supabase callback (unchanged):
+     ```
+     https://mhodxzrbcaammqobvcnu.supabase.co/auth/v1/callback
+     ```
+
+3. **Vercel → Environment variables** (must match local `.env.local`):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_STRIPE_PUBLISHABLE_KEY`
+
+4. Redeploy Vercel after env changes
+
+5. Publish OAuth consent screen in Google when ready for public users
+
+**Symptom:** Google login on Vercel sends you to `http://localhost:3000/#access_token=...`  
+**Cause:** Supabase **Site URL** is still `http://localhost:3000` or your Vercel URL is missing from **Redirect URLs**.  
+**Fix:** Update Part 3 above in Supabase dashboard (takes effect immediately — no redeploy needed for Supabase).
+
+---
+
+## Production checklist (legacy)
 
 1. Google Cloud → add production origin + keep Supabase callback URL
 2. Supabase Site URL → `https://yourdomain.com`

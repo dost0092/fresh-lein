@@ -20,7 +20,7 @@ const PRODUCTS = [
     icon: Code2,
     title: 'The Foreclosure APIs',
     description: 'REST endpoints for programmatic access to lien and auction data.',
-    href: '/#pricing-api',
+    href: '/pricing#pricing-api',
   },
   {
     icon: Bell,

@@ -7,6 +7,7 @@ import { UserPlus, Mail, Lock, User, Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/AuthLayout';
 import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
 
 function RegisterForm() {
@@ -16,6 +17,8 @@ function RegisterForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
   const { signUp, signInWithGoogle, isSupabaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -49,18 +52,72 @@ function RegisterForm() {
   };
 
   if (success) {
+    const handleResend = async () => {
+      if (!isSupabaseConfigured) return;
+      setResendLoading(true);
+      setResendMessage('');
+      try {
+        const { error: resendError } = await supabase.auth.resend({
+          type: 'signup',
+          email,
+          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+        });
+        if (resendError) throw resendError;
+        setResendMessage('Confirmation email sent again. Check your inbox and spam folder.');
+      } catch (err) {
+        setResendMessage(err.message || 'Could not resend email. Try Google sign-in or contact support.');
+      } finally {
+        setResendLoading(false);
+      }
+    };
+
     return (
       <AuthLayout icon={Mail} title="Check your email" subtitle={`We sent a confirmation link to ${email}`}>
-        <p className="text-sm text-center text-muted-foreground">
-          Click the link in your email to activate your account, then{' '}
-          <Link
-            to={checkoutPlan ? `/login?plan=${checkoutPlan}` : '/login'}
-            className="text-primary font-medium hover:underline"
+        <div className="space-y-4 text-sm text-muted-foreground">
+          <p className="text-center">
+            Click the link in your email to activate your account, then{' '}
+            <Link
+              to={checkoutPlan ? `/login?plan=${checkoutPlan}` : '/login'}
+              className="font-medium text-primary hover:underline"
+            >
+              log in
+            </Link>
+            {checkoutPlan ? ' to complete payment.' : '.'}
+          </p>
+
+          <div className="rounded-lg border border-border bg-muted/30 p-4 text-left text-xs leading-relaxed">
+            <p className="font-semibold text-foreground">Email not arriving?</p>
+            <ul className="mt-2 list-disc space-y-1 pl-4">
+              <li>Check spam, promotions, and junk folders</li>
+              <li>Supabase sends ~2 emails/hour on the free plan until you add custom SMTP</li>
+              <li>If you used Google before, sign in with Google instead — same email works</li>
+            </ul>
+            <p className="mt-2">
+              Setup guide: <code className="text-[11px]">supabase/EMAIL_AUTH_SETUP.md</code>
+            </p>
+          </div>
+
+          {resendMessage && (
+            <p className="text-center text-xs text-foreground">{resendMessage}</p>
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-10"
+            disabled={resendLoading}
+            onClick={handleResend}
           >
-            log in
-          </Link>
-          {checkoutPlan ? ' to complete payment.' : '.'}
-        </p>
+            {resendLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending…
+              </>
+            ) : (
+              'Resend confirmation email'
+            )}
+          </Button>
+        </div>
       </AuthLayout>
     );
   }

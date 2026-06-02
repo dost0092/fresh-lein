@@ -178,6 +178,12 @@ export const AuthProvider = ({ children }) => {
     if (!isSupabaseConfigured) {
       throw new Error('Configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local');
     }
+    try {
+      const url = new URL(redirectTo, window.location.origin);
+      sessionStorage.setItem('auth_redirect', `${url.pathname}${url.search}` || '/dashboard');
+    } catch {
+      sessionStorage.setItem('auth_redirect', '/dashboard');
+    }
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo },

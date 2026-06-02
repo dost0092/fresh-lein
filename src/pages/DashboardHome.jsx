@@ -1,6 +1,5 @@
 import MarketingNav from '@/components/layout/MarketingNav';
-import LandingPageContent from '@/components/landing/LandingPageContent';
-import LoggedInDashboardStrip from '@/components/dashboard/LoggedInDashboardStrip';
+import LoggedInDashboard from '@/components/dashboard/LoggedInDashboard';
 import RequireAuth from '@/components/RequireAuth';
 import RequireEntitlement from '@/components/RequireEntitlement';
 
@@ -9,7 +8,7 @@ function DashboardHomeContent() {
     <div className="min-h-screen bg-white">
       <MarketingNav />
       <div className="pt-14 lg:pt-16">
-        <LandingPageContent topSlot={<LoggedInDashboardStrip />} mapFirst />
+        <LoggedInDashboard />
       </div>
     </div>
   );

@@ -81,6 +81,11 @@ function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
+          <Link to="/pricing" className="cursor-pointer">
+            Pricing
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link to="/settings" className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" /> Settings
           </Link>
@@ -128,7 +133,7 @@ function MobileNav({ open, onOpenChange }) {
             Dashboard
           </Link>
           <FreshLienAiNavItem mobile />
-          <Link to="/#pricing" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+          <Link to="/pricing" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Pricing
           </Link>
           {isAuthenticated ? (
@@ -176,9 +181,9 @@ export default function MarketingNav() {
 
   const homeHref = isAuthenticated ? '/dashboard' : '/';
   const pricingActive =
+    location.pathname === '/pricing' ||
     location.hash === '#pricing' ||
-    location.hash === '#pricing-api' ||
-    location.pathname.includes('pricing');
+    location.hash === '#pricing-api';
   const dashboardActive = location.pathname === '/dashboard' || location.pathname.startsWith('/dashboard/');
 
   return (
@@ -206,7 +211,7 @@ export default function MarketingNav() {
               Dashboard
             </Link>
             <FreshLienAiNavItem />
-            <Link to={isAuthenticated ? '/dashboard#pricing' : '/#pricing'} className={cn(navLinkClass, pricingActive && 'text-primary')}>
+            <Link to="/pricing" className={cn(navLinkClass, pricingActive && 'text-primary font-semibold')}>
               Pricing
             </Link>
           </nav>

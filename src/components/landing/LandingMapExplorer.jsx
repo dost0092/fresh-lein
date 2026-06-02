@@ -99,10 +99,14 @@ export default function LandingMapExplorer() {
         <LandingContainer>
           <LandingSectionHeader
             eyebrow="Live explorer"
-            title="Foreclosure coverage map"
+            title="Foreclosure coverage"
+            titleHighlight="map"
             description={
               isAuthenticated ? (
-                <>Click any pin or listing — soonest sale dates first · {allRows.length}+ properties on map</>
+                <>
+                  {allRows.length.toLocaleString()}+ geocoded properties · urgency-colored pins · click any
+                  marker for sale date, bid, and county details
+                </>
               ) : remaining > 0 ? (
                 <>
                   {LANDING_FREE_SEARCH_LIMIT} free searches ·{' '}

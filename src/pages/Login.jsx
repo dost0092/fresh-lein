@@ -20,6 +20,7 @@ function LoginForm() {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get('plan');
   const checkoutPlan = isCheckoutPlanId(plan) ? plan : null;
+  const authErrorFromRedirect = location.state?.authError;
 
   const goAfterAuth = async () => {
     if (checkoutPlan) {
@@ -79,6 +80,12 @@ function LoginForm() {
 
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>
+      )}
+
+      {!error && authErrorFromRedirect && (
+        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+          {authErrorFromRedirect}
+        </div>
       )}
 
       {isSupabaseConfigured && (

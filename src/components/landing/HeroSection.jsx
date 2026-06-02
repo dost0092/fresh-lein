@@ -9,6 +9,7 @@ import {
 } from '@/lib/landingSearchLimit';
 import ProGateModal from '@/components/landing/ProGateModal';
 import { LandingContainer, LandingEyebrow, highlightMarkStyle } from '@/components/landing/LandingLayout';
+import { MARKETING_COVERAGE } from '@/data/marketingStats';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function HeroSection() {
@@ -91,7 +92,7 @@ export default function HeroSection() {
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
                   {isAuthenticated
-                    ? 'Signed in — search opens the full foreclosure explorer'
+                    ? `${MARKETING_COVERAGE.foreclosureRecords} live records · search opens the full explorer with filters & export`
                     : `${getRemainingSearches()} free preview searches`}
                 </p>
               </form>
