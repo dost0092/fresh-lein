@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, ArrowRight } from 'lucide-react';
+import { Lock, ArrowRight, RefreshCw } from 'lucide-react';
 import InteractiveMapExplorer from '@/components/dashboard/InteractiveMapExplorer';
 import { sortByUpcomingSale } from '@/lib/foreclosureUtils';
-import { fetchForeclosuresForMap } from '@/lib/foreclosureService';
+import { fetchLandingMapPreview } from '@/lib/foreclosureService';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { filterForeclosures } from '@/lib/foreclosureUtils';
 import {
   canSearchOnLanding,
@@ -17,38 +18,48 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/AuthContext';
 
 const PREVIEW_RESULT_LIMIT = 4;
+const GUEST_MAP_LIMIT = 60;
+const AUTH_MAP_LIMIT = 200;
 
 export default function LandingMapExplorer() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [allRows, setAllRows] = useState([]);
   const [mapLoading, setMapLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [query, setQuery] = useState('');
   const [activeQuery, setActiveQuery] = useState('');
   const [selected, setSelected] = useState(null);
   const [showProGate, setShowProGate] = useState(false);
   const [remaining, setRemaining] = useState(getRemainingSearches());
 
-  useEffect(() => {
-    let cancelled = false;
+  const loadMapData = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      setLoadError('Database not connected. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY on your host.');
+      setAllRows([]);
+      setMapLoading(false);
+      return;
+    }
+
     setMapLoading(true);
+    setLoadError(null);
 
-    fetchForeclosuresForMap({ limit: isAuthenticated ? 800 : 200 })
-      .then((data) => {
-        if (!cancelled) setAllRows(sortByUpcomingSale(data));
-      })
-      .catch((err) => {
-        console.warn('map data:', err.message);
-        if (!cancelled) setAllRows([]);
-      })
-      .finally(() => {
-        if (!cancelled) setMapLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
+    try {
+      const limit = isAuthenticated ? AUTH_MAP_LIMIT : GUEST_MAP_LIMIT;
+      const data = await fetchLandingMapPreview({ limit });
+      setAllRows(sortByUpcomingSale(data));
+    } catch (err) {
+      console.warn('Landing map data:', err.message);
+      setLoadError(err.message || 'Could not load foreclosure records.');
+      setAllRows([]);
+    } finally {
+      setMapLoading(false);
+    }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    loadMapData();
+  }, [loadMapData]);
 
   useEffect(() => {
     const onHeroSearch = (e) => {
@@ -102,10 +113,12 @@ export default function LandingMapExplorer() {
             title="Foreclosure coverage"
             titleHighlight="map"
             description={
-              isAuthenticated ? (
+              loadError ? (
+                <span className="text-destructive">Could not load live data — try again below.</span>
+              ) : isAuthenticated ? (
                 <>
-                  {allRows.length.toLocaleString()}+ geocoded properties · urgency-colored pins · click any
-                  marker for sale date, bid, and county details
+                  {mapLoading ? 'Loading live records…' : `${allRows.length.toLocaleString()}+ properties`} ·
+                  urgency-colored pins · click any marker for sale date, bid, and county details
                 </>
               ) : remaining > 0 ? (
                 <>
@@ -118,6 +131,15 @@ export default function LandingMapExplorer() {
             }
           />
 
+          {loadError && (
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              <span>{loadError}</span>
+              <Button type="button" size="sm" variant="outline" className="h-8 gap-1.5" onClick={loadMapData}>
+                <RefreshCw className="h-3.5 w-3.5" /> Retry
+              </Button>
+            </div>
+          )}
+
           {isAuthenticated && (
             <div className="mb-4 flex justify-end">
               <Button asChild size="sm" variant="outline" className="h-8 text-xs">
@@ -129,7 +151,7 @@ export default function LandingMapExplorer() {
           )}
 
           <InteractiveMapExplorer
-            listings={mapLoading ? [] : displayRows}
+            listings={displayRows}
             loading={mapLoading}
             query={query}
             onQueryChange={setQuery}
