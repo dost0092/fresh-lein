@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 export const LOGO_SRC = '/freshlien-logo.png';
 
 const SIZES = {
-  nav: 'h-9 w-auto sm:h-10',
-  footer: 'h-8 w-auto sm:h-9',
-  auth: 'h-10 w-auto sm:h-11',
-  sidebar: 'h-8 w-auto max-w-[152px]',
-  mobile: 'h-8 w-auto max-w-[136px]',
+  nav: 'h-11 w-auto sm:h-12 lg:h-[3.25rem]',
+  footer: 'h-9 w-auto sm:h-10',
+  auth: 'h-11 w-auto sm:h-12',
+  sidebar: 'h-9 w-auto max-w-[172px]',
+  mobile: 'h-9 w-auto max-w-[156px]',
 };
 
 function LogoMark({ className, imgClassName }) {
@@ -49,7 +49,9 @@ export default function FreshLienLogo({
   );
 
   const wrapped = onDark ? (
-    <span className="inline-flex rounded-lg bg-white px-3 py-1.5 shadow-sm">{img}</span>
+    <span className="inline-flex rounded-lg bg-white/95 px-3 py-2 shadow-sm ring-1 ring-white/10">
+      {img}
+    </span>
   ) : (
     img
   );

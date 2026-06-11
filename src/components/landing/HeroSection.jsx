@@ -40,7 +40,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border/50 bg-white">
+      <section className="relative overflow-hidden border-b border-border/50 bg-[#f6f9f7]">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden

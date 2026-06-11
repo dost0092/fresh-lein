@@ -7,7 +7,7 @@ function DashboardHomeContent() {
   return (
     <div className="min-h-screen bg-white">
       <MarketingNav />
-      <div className="pt-14 lg:pt-16">
+      <div className="pt-[3.75rem] lg:pt-[4.25rem]">
         <LoggedInDashboard />
       </div>
     </div>

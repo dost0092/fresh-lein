@@ -201,13 +201,13 @@ export default function MarketingNav() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 border-b border-border bg-white/95 shadow-sm backdrop-blur-md',
+        'fixed left-0 right-0 top-0 z-50 border-b border-primary/10 bg-[#f6f9f7]/95 shadow-sm backdrop-blur-md',
         'transition-transform duration-300 ease-out will-change-transform',
         headerVisible ? 'translate-y-0' : '-translate-y-full'
       )}
     >
       <div className={cn('w-full', LANDING_PAD)}>
-        <div className={cn('mx-auto flex h-14 items-center justify-between gap-4 lg:h-16', LANDING_MAX)}>
+        <div className={cn('mx-auto flex h-[3.75rem] items-center justify-between gap-4 lg:h-[4.25rem]', LANDING_MAX)}>
           <FreshLienLogo to={homeHref} variant="nav" />
 
           <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex xl:gap-10">
