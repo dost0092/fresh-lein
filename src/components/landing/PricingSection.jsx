@@ -70,9 +70,9 @@ function PlanCards({ plans }) {
         )}
       >
         {plans.map((plan) => {
-          const isLoading = loadingPlan === plan.stripePlanId;
           const isSales = plan.cta === 'Contact Sales';
           const isFree = plan.isFree || plan.price === 0;
+          const isLoading = !isFree && Boolean(plan.stripePlanId) && loadingPlan === plan.stripePlanId;
 
           return (
             <div
@@ -124,7 +124,17 @@ function PlanCards({ plans }) {
                 ))}
               </ul>
 
-              {isSales ? (
+              {isFree ? (
+                <Link
+                  to={isAuthenticated ? '/dashboard' : '/register'}
+                  className={cn(
+                    'block w-full rounded-lg px-4 py-2.5 text-center text-xs font-medium transition-colors',
+                    'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                  )}
+                >
+                  {plan.cta}
+                </Link>
+              ) : isSales ? (
                 <a
                   href={CONTACT_MAILTO_SUBJECT('FreshLien pricing inquiry')}
                   className={cn(
