@@ -12,7 +12,8 @@ import { startPlanCheckout } from '@/lib/startPlanCheckout';
 const COPY = {
   platform: {
     eyebrow: 'Plans',
-    title: 'Simple, transparent pricing',
+    title: 'Start free, upgrade when you grow',
+    description: 'Every account begins on Free. Upgrade anytime for more counties, exports, and alerts.',
   },
   api: {
     eyebrow: 'API',
@@ -28,6 +29,11 @@ function PlanCards({ plans }) {
 
   const handlePlanClick = async (plan) => {
     if (plan.cta === 'Contact Sales') return;
+
+    if (plan.isFree || plan.price === 0) {
+      navigate(isAuthenticated ? '/dashboard' : '/register');
+      return;
+    }
 
     const planId = plan.stripePlanId;
     if (!planId) {
@@ -57,10 +63,16 @@ function PlanCards({ plans }) {
       {error && (
         <p className="mb-4 text-center text-sm text-destructive">{error}</p>
       )}
-      <div className="grid items-stretch gap-4 md:grid-cols-3 lg:gap-5">
+      <div
+        className={cn(
+          'grid items-stretch gap-4 lg:gap-5',
+          plans.length >= 4 ? 'md:grid-cols-2 xl:grid-cols-4' : 'md:grid-cols-3'
+        )}
+      >
         {plans.map((plan) => {
           const isLoading = loadingPlan === plan.stripePlanId;
           const isSales = plan.cta === 'Contact Sales';
+          const isFree = plan.isFree || plan.price === 0;
 
           return (
             <div
@@ -77,6 +89,13 @@ function PlanCards({ plans }) {
                   </span>
                 </div>
               )}
+              {isFree && !plan.popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="rounded-md border border-primary/20 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
+                    Free forever
+                  </span>
+                </div>
+              )}
 
               <div className="mb-5">
                 <h3 className="mb-1 font-display text-lg font-semibold text-foreground">{plan.name}</h3>
@@ -88,6 +107,9 @@ function PlanCards({ plans }) {
                     </>
                   ) : (
                     <span className="font-display text-xl font-bold">Contact Sales</span>
+                  )}
+                  {isFree && (
+                    <span className="ml-1 text-xs font-medium text-primary">No card required</span>
                   )}
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{plan.description}</p>
@@ -137,10 +159,21 @@ function PlanCards({ plans }) {
 
               {!isSales && !isAuthenticated && (
                 <p className="mt-2 text-center text-[11px] text-muted-foreground">
-                  <Link to={`/login?plan=${plan.stripePlanId}`} className="text-primary hover:underline">
-                    Log in
-                  </Link>{' '}
-                  if you already have an account
+                  {isFree ? (
+                    <>
+                      Already have an account?{' '}
+                      <Link to="/login" className="text-primary hover:underline">
+                        Log in
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link to={`/login?plan=${plan.stripePlanId}`} className="text-primary hover:underline">
+                        Log in
+                      </Link>{' '}
+                      if you already have an account
+                    </>
+                  )}
                 </p>
               )}
             </div>

@@ -64,6 +64,9 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
                       {plan.price != null ? (
                         <p className="mt-0.5 text-xs text-muted-foreground">
                           <span className="text-lg font-bold text-foreground">${plan.price}</span>/mo
+                          {plan.price === 0 && (
+                            <span className="ml-1 text-[10px] font-semibold text-primary">Free</span>
+                          )}
                         </p>
                       ) : (
                         <p className="mt-0.5 text-xs text-muted-foreground">Custom</p>
@@ -77,7 +80,7 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
                   <Fragment key={group.category}>
                     <tr className="bg-muted/30">
                       <td
-                        colSpan={4}
+                        colSpan={plans.length + 1}
                         className="px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
                       >
                         {group.category}
@@ -86,15 +89,14 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
                     {group.items.map((item) => (
                       <tr key={item.label} className="border-t border-border/60 hover:bg-muted/20">
                         <td className="px-4 py-3 text-xs text-foreground">{item.label}</td>
-                        <td className="px-4 py-3 text-center">
-                          <CellValue value={item.starter} />
-                        </td>
-                        <td className="px-4 py-3 bg-primary/[0.03] text-center">
-                          <CellValue value={item.pro} />
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <CellValue value={item.enterprise} />
-                        </td>
+                        {plans.map((plan) => (
+                          <td
+                            key={plan.id}
+                            className={cn('px-4 py-3 text-center', plan.popular && 'bg-primary/[0.03]')}
+                          >
+                            <CellValue value={item[plan.id]} />
+                          </td>
+                        ))}
                       </tr>
                     ))}
                   </Fragment>

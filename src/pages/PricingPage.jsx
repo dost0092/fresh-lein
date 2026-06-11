@@ -28,7 +28,7 @@ function PricingPageHeader() {
               Choose the right plan for your team
             </h1>
             <p className="mt-1 max-w-xl text-sm text-muted-foreground">
-              Compare platform and API tiers below. Upgrade anytime — your 13-day trial applies to paid plans.
+              Start on Free, then upgrade anytime. Paid plans include a 13-day trial when you subscribe.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

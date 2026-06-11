@@ -12,12 +12,16 @@ export const FAQ_ITEMS = [
     a: 'We currently cover 90+ counties across 15+ states with 2,300+ foreclosure records, and we add new counties regularly. Check the data coverage section on our homepage for the latest numbers.',
   },
   {
-    q: 'Is there a free trial?',
-    a: 'Yes. New accounts get a 13-day Pro trial with full access to map search, case details, alerts, and exports. No credit card required to start.',
+    q: 'Is there a free plan?',
+    a: 'Yes. Every account starts on our Free plan — map search, list view, and basic filters in one county with no credit card required. Upgrade to Starter or Pro when you need more counties, exports, and alerts.',
+  },
+  {
+    q: 'Is there a free trial on paid plans?',
+    a: 'Yes. When you upgrade to Starter or Pro, you get a 13-day trial with full paid features before your first charge.',
   },
   {
     q: 'What plans do you offer?',
-    a: 'We offer Starter and Pro platform plans for individual investors and teams, plus API tiers for developers who want foreclosure data in their own apps. See our Pricing page for details.',
+    a: 'We offer Free, Starter, and Pro platform plans for investors, plus API tiers for developers. See our Pricing page for details.',
   },
   {
     q: 'Can I export foreclosure data?',

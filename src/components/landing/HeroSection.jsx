@@ -126,7 +126,7 @@ export default function HeroSection() {
                     </Button>
                     <Button variant="ghost" className="h-10 font-semibold text-primary" asChild>
                       <Link to="/register">
-                        Start free trial <ArrowRight className="ml-1 h-4 w-4" />
+                        Get started free <ArrowRight className="ml-1 h-4 w-4" />
                       </Link>
                     </Button>
                   </>
