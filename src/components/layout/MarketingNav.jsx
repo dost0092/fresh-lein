@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/lib/AuthContext';
+import FreshLienLogo from '@/components/brand/FreshLienLogo';
 
 const navLinkClass =
   'py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground';
@@ -207,14 +208,7 @@ export default function MarketingNav() {
     >
       <div className={cn('w-full', LANDING_PAD)}>
         <div className={cn('mx-auto flex h-14 items-center justify-between gap-4 lg:h-16', LANDING_MAX)}>
-          <Link to={homeHref} className="flex shrink-0 items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary lg:h-9 lg:w-9">
-              <span className="font-heading text-xs font-bold text-primary-foreground lg:text-sm">FL</span>
-            </div>
-            <span className="hidden font-heading text-base font-semibold tracking-tight text-foreground sm:inline lg:text-lg">
-              FreshLien
-            </span>
-          </Link>
+          <FreshLienLogo to={homeHref} variant="nav" />
 
           <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex xl:gap-10">
             <ProductsMegaMenu />

@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
 import FeedbackDialog from '@/components/FeedbackDialog';
+import FreshLienLogo from '@/components/brand/FreshLienLogo';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
@@ -161,12 +162,7 @@ export default function AppLayout({ children }) {
         )}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-          <Link to="/dashboard" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-xs">FL</span>
-            </div>
-            <span className="font-heading font-bold text-foreground text-lg">FreshLien</span>
-          </Link>
+          <FreshLienLogo to="/dashboard" variant="sidebar" onClick={() => setMobileOpen(false)} />
           <button type="button" onClick={() => setMobileOpen(false)} className="p-1.5 rounded-lg hover:bg-muted">
             <X className="w-5 h-5" />
           </button>
@@ -181,18 +177,11 @@ export default function AppLayout({ children }) {
         )}
       >
         <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed && 'justify-center')}>
-          {!collapsed ? (
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-heading font-bold text-xs">FL</span>
-              </div>
-              <span className="font-heading font-semibold text-foreground text-sm">FreshLien</span>
-            </Link>
-          ) : (
-            <Link to="/dashboard" className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-xs">FL</span>
-            </Link>
-          )}
+          <FreshLienLogo
+            to="/dashboard"
+            variant={collapsed ? 'icon' : 'sidebar'}
+            className={collapsed ? 'mx-auto' : undefined}
+          />
         </div>
         <NavContent collapsed={collapsed} />
         <button
@@ -209,7 +198,7 @@ export default function AppLayout({ children }) {
           <button type="button" onClick={() => setMobileOpen(true)} className="p-1.5 rounded-lg hover:bg-muted">
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-heading font-semibold text-foreground">FreshLien</span>
+          <FreshLienLogo to="/dashboard" variant="mobile" />
           <div className="w-8" />
         </div>
         {children}

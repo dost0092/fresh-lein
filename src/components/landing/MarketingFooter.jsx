@@ -3,6 +3,7 @@ import { Mail } from 'lucide-react';
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
+import FreshLienLogo from '@/components/brand/FreshLienLogo';
 
 const productLinks = [
   { label: 'Platform', to: '/dashboard/foreclosures' },
@@ -29,12 +30,7 @@ export default function MarketingFooter() {
       <LandingContainer className="py-12 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 text-white">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-bold">
-                FL
-              </div>
-              <span className="font-heading text-base font-semibold">{COMPANY.name}</span>
-            </div>
+            <FreshLienLogo to="/" variant="footer" />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">{COMPANY.tagline}</p>
             <a
               href={CONTACT_MAILTO}
