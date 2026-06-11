@@ -212,17 +212,17 @@ export default function MarketingNav() {
 
           <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex xl:gap-10">
             <ProductsMegaMenu />
-            <Link to="/dashboard" className={cn(navLinkClass, dashboardActive && 'text-primary font-semibold')}>
+            <Link to="/dashboard" className={cn(navLinkClass, dashboardActive && 'font-semibold text-primary')}>
               Dashboard
             </Link>
             <FreshLienAiNavItem />
-            <Link to="/pricing" className={cn(navLinkClass, pricingActive && 'text-primary font-semibold')}>
+            <Link to="/pricing" className={cn(navLinkClass, pricingActive && 'font-semibold text-primary')}>
               Pricing
             </Link>
-            <Link to="/about" className={cn(navLinkClass, aboutActive && 'text-primary font-semibold')}>
+            <Link to="/about" className={cn(navLinkClass, aboutActive && 'font-semibold text-primary')}>
               About
             </Link>
-            <Link to="/contact" className={cn(navLinkClass, contactActive && 'text-primary font-semibold')}>
+            <Link to="/contact" className={cn(navLinkClass, contactActive && 'font-semibold text-primary')}>
               Contact
             </Link>
           </nav>

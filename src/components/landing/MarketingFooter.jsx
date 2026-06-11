@@ -30,7 +30,7 @@ export default function MarketingFooter() {
       <LandingContainer className="py-12 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
-            <FreshLienLogo to="/" variant="footer" />
+            <FreshLienLogo to="/" variant="footer" onDark />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">{COMPANY.tagline}</p>
             <a
               href={CONTACT_MAILTO}

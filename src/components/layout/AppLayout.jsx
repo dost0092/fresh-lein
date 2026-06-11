@@ -161,10 +161,10 @@ export default function AppLayout({ children }) {
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+        <div className="flex h-16 items-center justify-between border-b border-border px-4">
           <FreshLienLogo to="/dashboard" variant="sidebar" onClick={() => setMobileOpen(false)} />
-          <button type="button" onClick={() => setMobileOpen(false)} className="p-1.5 rounded-lg hover:bg-muted">
-            <X className="w-5 h-5" />
+          <button type="button" onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 hover:bg-muted">
+            <X className="h-5 w-5" />
           </button>
         </div>
         <NavContent collapsed={false} onNavClick={() => setMobileOpen(false)} />
@@ -176,7 +176,12 @@ export default function AppLayout({ children }) {
           collapsed ? 'w-[72px]' : 'w-60'
         )}
       >
-        <div className={cn('flex items-center h-16 px-4 border-b border-border', collapsed && 'justify-center')}>
+        <div
+          className={cn(
+            'flex h-16 items-center border-b border-border',
+            collapsed ? 'justify-center px-2' : 'px-4'
+          )}
+        >
           <FreshLienLogo
             to="/dashboard"
             variant={collapsed ? 'icon' : 'sidebar'}
@@ -194,9 +199,9 @@ export default function AppLayout({ children }) {
       </aside>
 
       <main className="flex-1 overflow-hidden flex flex-col min-w-0">
-        <div className="lg:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-border shrink-0">
-          <button type="button" onClick={() => setMobileOpen(true)} className="p-1.5 rounded-lg hover:bg-muted">
-            <Menu className="w-5 h-5" />
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-white px-4 lg:hidden">
+          <button type="button" onClick={() => setMobileOpen(true)} className="rounded-lg p-1.5 hover:bg-muted">
+            <Menu className="h-5 w-5" />
           </button>
           <FreshLienLogo to="/dashboard" variant="mobile" />
           <div className="w-8" />
