@@ -14,9 +14,11 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  MessageSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
+import FeedbackDialog from '@/components/FeedbackDialog';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
@@ -107,10 +109,25 @@ function NavContent({ collapsed, onNavClick }) {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-border">
+      <div className="px-3 py-4 border-t border-border space-y-1">
         {!collapsed && profile && (
           <p className="text-xs text-muted-foreground truncate px-3 mb-2">{profile.email}</p>
         )}
+        <FeedbackDialog
+          trigger={
+            <button
+              type="button"
+              className={cn(
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all',
+                collapsed && 'justify-center'
+              )}
+            >
+              <MessageSquare className="w-4 h-4 shrink-0" />
+              {!collapsed && <span>Feedback</span>}
+            </button>
+          }
+          showIcon={false}
+        />
         <button
           type="button"
           onClick={handleSignOut}

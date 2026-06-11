@@ -6,6 +6,7 @@ import DataCoverageSection from '@/components/landing/DataCoverageSection';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import DashboardUpcomingSection from '@/components/dashboard/DashboardUpcomingSection';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
+import MarketingFooter from '@/components/landing/MarketingFooter';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
 
 const platformFeatures = [
@@ -101,30 +102,7 @@ export default function LoggedInDashboard() {
         </LandingContainer>
       </section>
 
-      <footer className="bg-navy-dark py-6">
-        <LandingContainer>
-          <div className="flex flex-col items-center justify-between gap-3 text-sm md:flex-row">
-            <div className="flex items-center gap-2 text-white">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-[10px] font-bold">
-                FL
-              </div>
-              <span className="font-semibold">FreshLien</span>
-              <span className="text-xs text-white/40">© 2026</span>
-            </div>
-            <div className="flex gap-5 text-xs text-white/50">
-              <Link to="/pricing" className="hover:text-white">
-                Pricing
-              </Link>
-              <Link to="/settings" className="hover:text-white">
-                Settings
-              </Link>
-              <Link to="/dashboard/foreclosures" className="hover:text-white">
-                Foreclosures
-              </Link>
-            </div>
-          </div>
-        </LandingContainer>
-      </footer>
+      <MarketingFooter />
     </>
   );
 }

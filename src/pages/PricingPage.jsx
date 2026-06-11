@@ -5,6 +5,7 @@ import PricingSection from '@/components/landing/PricingSection';
 import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import CompetitorTable from '@/components/landing/CompetitorTable';
 import { LandingContainer } from '@/components/landing/LandingLayout';
+import MarketingFooter from '@/components/landing/MarketingFooter';
 import { useAuth } from '@/lib/AuthContext';
 
 function PricingPageHeader() {
@@ -71,27 +72,7 @@ export default function PricingPage() {
         <PricingCompareTable pricingType={pricingType} />
         <CompetitorTable />
 
-        <footer className="border-t border-border bg-navy-dark py-6">
-          <LandingContainer>
-            <div className="flex flex-col items-center justify-between gap-3 text-sm md:flex-row">
-              <div className="flex items-center gap-2 text-white">
-                <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-[10px] font-bold">
-                  FL
-                </div>
-                <span className="font-semibold">FreshLien</span>
-                <span className="text-xs text-white/40">© 2026</span>
-              </div>
-              <div className="flex gap-5 text-xs text-white/50">
-                <Link to="/dashboard" className="hover:text-white">
-                  Dashboard
-                </Link>
-                <Link to="/settings" className="hover:text-white">
-                  Settings
-                </Link>
-              </div>
-            </div>
-          </LandingContainer>
-        </footer>
+        <MarketingFooter />
       </div>
     </div>
   );

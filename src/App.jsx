@@ -9,6 +9,12 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 import Landing from './pages/Landing';
 import PricingPage from './pages/PricingPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import FaqPage from './pages/FaqPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import SecurityPage from './pages/SecurityPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -23,15 +29,23 @@ import SettingsPage from './pages/SettingsPage';
 import RequireAuth from '@/components/RequireAuth';
 import RequireEntitlement from '@/components/RequireEntitlement';
 import AuthCallbackHandler from '@/components/AuthCallbackHandler';
+import FeedbackThankYou from '@/components/FeedbackThankYou';
 
 function AppRoutes() {
   return (
     <>
       <AuthCallbackHandler />
+      <FeedbackThankYou />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/faq" element={<FaqPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/security" element={<SecurityPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

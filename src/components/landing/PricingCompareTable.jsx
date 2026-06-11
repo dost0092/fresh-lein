@@ -118,7 +118,7 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
               </p>
               <p className="my-4 text-2xl font-bold">Custom pricing</p>
               <Link
-                to="mailto:sales@freshlien.com?subject=FreshLien%20Enterprise"
+                to="/contact"
                 className="block rounded-lg bg-primary py-2.5 text-center text-xs font-semibold text-white transition-colors hover:bg-primary/90"
               >
                 Talk to our team

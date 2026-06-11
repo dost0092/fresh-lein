@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Check, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CONTACT_MAILTO_SUBJECT } from '@/data/company';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import PricingTypeToggle from '@/components/landing/PricingTypeToggle';
 import { API_PLANS, PLATFORM_PLANS } from '@/data/pricingPlans';
@@ -103,7 +104,7 @@ function PlanCards({ plans }) {
 
               {isSales ? (
                 <a
-                  href="mailto:sales@freshlien.com?subject=FreshLien%20Pricing"
+                  href={CONTACT_MAILTO_SUBJECT('FreshLien pricing inquiry')}
                   className={cn(
                     'block rounded-lg px-4 py-2.5 text-center text-xs font-medium transition-colors',
                     'bg-primary text-white hover:bg-primary/90'

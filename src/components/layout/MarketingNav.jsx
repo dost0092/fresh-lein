@@ -136,6 +136,15 @@ function MobileNav({ open, onOpenChange }) {
           <Link to="/pricing" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
             Pricing
           </Link>
+          <Link to="/about" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+            About
+          </Link>
+          <Link to="/contact" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+            Contact
+          </Link>
+          <Link to="/faq" onClick={close} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-muted">
+            FAQ
+          </Link>
           {isAuthenticated ? (
             <>
               <Link
@@ -184,6 +193,8 @@ export default function MarketingNav() {
     location.pathname === '/pricing' ||
     location.hash === '#pricing' ||
     location.hash === '#pricing-api';
+  const aboutActive = location.pathname === '/about';
+  const contactActive = location.pathname === '/contact';
   const dashboardActive = location.pathname === '/dashboard' || location.pathname.startsWith('/dashboard/');
 
   return (
@@ -213,6 +224,12 @@ export default function MarketingNav() {
             <FreshLienAiNavItem />
             <Link to="/pricing" className={cn(navLinkClass, pricingActive && 'text-primary font-semibold')}>
               Pricing
+            </Link>
+            <Link to="/about" className={cn(navLinkClass, aboutActive && 'text-primary font-semibold')}>
+              About
+            </Link>
+            <Link to="/contact" className={cn(navLinkClass, contactActive && 'text-primary font-semibold')}>
+              Contact
             </Link>
           </nav>
 

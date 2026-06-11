@@ -122,7 +122,7 @@ export default function HeroSection() {
                       className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
                       asChild
                     >
-                      <Link to="mailto:sales@freshlien.com">Contact us</Link>
+                      <Link to="/contact">Contact us</Link>
                     </Button>
                     <Button variant="ghost" className="h-10 font-semibold text-primary" asChild>
                       <Link to="/register">

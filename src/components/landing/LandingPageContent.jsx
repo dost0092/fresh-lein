@@ -9,6 +9,7 @@ import CompetitorTable from '@/components/landing/CompetitorTable';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import { ArrowRight, MapPin, Bell, Download, Zap, BarChart2, Shield } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
+import MarketingFooter from '@/components/landing/MarketingFooter';
 
 const features = [
   { icon: Zap, title: 'Same-day court data' },
@@ -82,27 +83,7 @@ export default function LandingPageContent({ topSlot = null, mapFirst = false })
         </LandingContainer>
       </section>
 
-      <footer className="bg-navy-dark py-6">
-        <LandingContainer>
-          <div className="flex flex-col items-center justify-between gap-3 text-sm md:flex-row">
-            <div className="flex items-center gap-2 text-white">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-[10px] font-bold">
-                FL
-              </div>
-              <span className="font-semibold">FreshLien</span>
-              <span className="text-xs text-white/40">© 2026</span>
-            </div>
-            <div className="flex gap-5 text-xs text-white/50">
-              <a href="#" className="hover:text-white">
-                Privacy
-              </a>
-              <a href="#" className="hover:text-white">
-                Terms
-              </a>
-            </div>
-          </div>
-        </LandingContainer>
-      </footer>
+      <MarketingFooter />
     </>
   );
 }
