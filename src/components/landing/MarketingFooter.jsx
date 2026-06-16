@@ -8,7 +8,7 @@ import FreshLienLogo from '@/components/brand/FreshLienLogo';
 const productLinks = [
   { label: 'Platform', to: '/dashboard/foreclosures' },
   { label: 'Pricing', to: '/pricing' },
-  { label: 'API', to: '/pricing#pricing-api' },
+  { label: 'API', to: '/api' },
   { label: 'County alerts', to: '/dashboard/alerts' },
 ];
 
