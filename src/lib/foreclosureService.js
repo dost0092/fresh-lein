@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { enrichForeclosure, getDashboardStats, sortByUpcomingSale } from '@/lib/foreclosureUtils';
+import { inferCountyFromCoordinates } from '@/data/countyCentroids';
 
 const SUPABASE_PAGE_SIZE = 1000;
 const QUERY_TIMEOUT_MS = 20000;
@@ -82,9 +83,13 @@ async function getCountiesMap() {
 
 function attachCounty(row, countyMap) {
   const county = row.counties || countyMap?.get(row.county_id);
+  let county_name = county?.county_name ?? row.county_name;
+  if (!county_name) {
+    county_name = inferCountyFromCoordinates(row.latitude, row.longitude, row.state);
+  }
   return mapRow({
     ...row,
-    county_name: county?.county_name ?? row.county_name,
+    county_name,
   });
 }
 
@@ -262,22 +267,26 @@ export async function fetchForeclosuresPage({ page = 1, pageSize = 20, filters =
 const LANDING_PREVIEW_COLUMNS =
   'id, property_address, city, state, zip_code, sale_date, starting_bid, appraised_value, status, latitude, longitude, defendant, plaintiff, sheriff_number, parcel_number, attorney_name, county_id, created_at, updated_at';
 
-/** Fast landing-page preview — one query, upcoming sales first, no county lookup. */
+/** Fast landing-page preview — one query + cached county lookup for card labels. */
 export async function fetchLandingMapPreview({ limit = 60 } = {}) {
   assertSupabase();
   const today = new Date().toISOString().split('T')[0];
 
   const run = (query) => withQueryTimeout(query, 12000);
 
-  let { data, error } = await run(
-    supabase
-      .from('foreclosure_cases')
-      .select(LANDING_PREVIEW_COLUMNS)
-      .gte('sale_date', today)
-      .order('sale_date', { ascending: true })
-      .limit(limit)
-  );
+  const [countyMap, primaryRes] = await Promise.all([
+    getCountiesMap(),
+    run(
+      supabase
+        .from('foreclosure_cases')
+        .select(LANDING_PREVIEW_COLUMNS)
+        .gte('sale_date', today)
+        .order('sale_date', { ascending: true })
+        .limit(limit)
+    ),
+  ]);
 
+  let { data, error } = primaryRes;
   if (error) throw new Error(error.message);
 
   if (!data?.length) {
@@ -292,7 +301,7 @@ export async function fetchLandingMapPreview({ limit = 60 } = {}) {
     data = fallback.data;
   }
 
-  return sortByUpcomingSale((data ?? []).map((row) => enrichForeclosure(mapRow(row))));
+  return sortByUpcomingSale(mapListRows(data ?? [], countyMap));
 }
 
 /** Map markers — upcoming first, capped batch (county lookup runs in parallel). */

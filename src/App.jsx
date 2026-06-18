@@ -28,6 +28,7 @@ import SavedSearchesPage from './pages/SavedSearchesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
 import RequireAuth from '@/components/RequireAuth';
+import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
 import RequireEntitlement from '@/components/RequireEntitlement';
 import AuthCallbackHandler from '@/components/AuthCallbackHandler';
 import FeedbackThankYou from '@/components/FeedbackThankYou';
@@ -60,21 +61,21 @@ function AppRoutes() {
         <Route
           path="/dashboard/foreclosures"
           element={
-            <RequireAuth>
+            <RequireAuthOrGuest>
               <RequireEntitlement>
                 <ForeclosuresPage />
               </RequireEntitlement>
-            </RequireAuth>
+            </RequireAuthOrGuest>
           }
         />
         <Route
           path="/dashboard/foreclosures/:id"
           element={
-            <RequireAuth>
+            <RequireAuthOrGuest>
               <RequireEntitlement>
                 <ForeclosureDetailPage />
               </RequireEntitlement>
-            </RequireAuth>
+            </RequireAuthOrGuest>
           }
         />
         <Route
@@ -108,11 +109,11 @@ function AppRoutes() {
         <Route
           path="/analytics"
           element={
-            <RequireAuth>
+            <RequireAuthOrGuest>
               <RequireEntitlement>
                 <AnalyticsPage />
               </RequireEntitlement>
-            </RequireAuth>
+            </RequireAuthOrGuest>
           }
         />
         <Route
@@ -128,11 +129,11 @@ function AppRoutes() {
         <Route
           path="/dashboard/list"
           element={
-            <RequireAuth>
+            <RequireAuthOrGuest>
               <RequireEntitlement>
                 <ForeclosuresPage />
               </RequireEntitlement>
-            </RequireAuth>
+            </RequireAuthOrGuest>
           }
         />
 

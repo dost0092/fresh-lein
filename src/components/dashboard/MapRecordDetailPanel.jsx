@@ -47,8 +47,10 @@ export default function MapRecordDetailPanel({ record, onClose, className }) {
               {record.property_address || 'Foreclosure record'}
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              {record.city}, {record.state}
-              {record.county_name ? ` · ${record.county_name} Co.` : ''}
+              {[record.city, record.state].filter(Boolean).join(', ')}
+            </p>
+            <p className="mt-1 text-sm font-semibold text-primary">
+              {record.county_name ? `${record.county_name} County` : 'County unavailable'}
             </p>
           </div>
           <button

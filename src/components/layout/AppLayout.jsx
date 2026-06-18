@@ -15,11 +15,14 @@ import {
   ChevronRight,
   Clock,
   MessageSquare,
+  LogIn,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import FreshLienLogo from '@/components/brand/FreshLienLogo';
+import GuestAccessBanner from '@/components/dashboard/GuestAccessBanner';
+import { getGuestDaysRemaining } from '@/lib/guestAccess';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
@@ -37,7 +40,8 @@ const navItems = [
 function NavContent({ collapsed, onNavClick }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, profile } = useAuth();
+  const { signOut, profile, isAuthenticated } = useAuth();
+  const guestDaysLeft = getGuestDaysRemaining();
 
   const handleSignOut = async () => {
     try {
@@ -111,8 +115,13 @@ function NavContent({ collapsed, onNavClick }) {
       </nav>
 
       <div className="px-3 py-4 border-t border-border space-y-1">
-        {!collapsed && profile && (
+        {!collapsed && isAuthenticated && profile && (
           <p className="text-xs text-muted-foreground truncate px-3 mb-2">{profile.email}</p>
+        )}
+        {!collapsed && !isAuthenticated && (
+          <p className="mb-2 px-3 text-xs text-muted-foreground">
+            Guest preview · {guestDaysLeft} day{guestDaysLeft === 1 ? '' : 's'} left
+          </p>
         )}
         <FeedbackDialog
           trigger={
@@ -129,17 +138,31 @@ function NavContent({ collapsed, onNavClick }) {
           }
           showIcon={false}
         />
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className={cn(
-            'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all',
-            collapsed && 'justify-center'
-          )}
-        >
-          <LogOut className="w-4 h-4 shrink-0" />
-          {!collapsed && <span>Log out</span>}
-        </button>
+        {isAuthenticated ? (
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className={cn(
+              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all',
+              collapsed && 'justify-center'
+            )}
+          >
+            <LogOut className="w-4 h-4 shrink-0" />
+            {!collapsed && <span>Log out</span>}
+          </button>
+        ) : (
+          <Link
+            to="/login"
+            onClick={onNavClick}
+            className={cn(
+              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/5 transition-all',
+              collapsed && 'justify-center'
+            )}
+          >
+            <LogIn className="w-4 h-4 shrink-0" />
+            {!collapsed && <span>Log in / Sign up</span>}
+          </Link>
+        )}
       </div>
     </>
   );
@@ -206,6 +229,7 @@ export default function AppLayout({ children }) {
           <FreshLienLogo to="/dashboard" variant="mobile" />
           <div className="w-8" />
         </div>
+        <GuestAccessBanner />
         {children}
       </main>
     </div>

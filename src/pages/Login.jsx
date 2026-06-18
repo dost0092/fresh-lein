@@ -8,6 +8,7 @@ import AuthLayout from '@/components/AuthLayout';
 import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
 import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
+import { GUEST_ACCESS_DAYS } from '@/lib/guestAccess';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ function LoginForm() {
   const plan = searchParams.get('plan');
   const checkoutPlan = isCheckoutPlanId(plan) ? plan : null;
   const authErrorFromRedirect = location.state?.authError;
+  const guestExpired = location.state?.guestExpired;
 
   const goAfterAuth = async () => {
     if (checkoutPlan) {
@@ -69,6 +71,13 @@ function LoginForm() {
         <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-900">
           Add <code className="text-xs">VITE_SUPABASE_URL</code> and <code className="text-xs">VITE_SUPABASE_ANON_KEY</code> to{' '}
           <code className="text-xs">.env.local</code> to enable login.
+        </div>
+      )}
+
+      {guestExpired && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+          Your {GUEST_ACCESS_DAYS}-day guest preview has ended. Log in or create a free account to keep using
+          FreshLien.
         </div>
       )}
 

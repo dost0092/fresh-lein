@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/lib/AuthContext';
 import FreshLienLogo from '@/components/brand/FreshLienLogo';
+import { getGuestStartedAt } from '@/lib/guestAccess';
 
 const navLinkClass =
   'py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground';
@@ -189,7 +190,8 @@ export default function MarketingNav() {
   const headerVisible = useScrollHeader();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const homeHref = isAuthenticated ? '/dashboard' : '/';
+  const hasGuestSession = Boolean(getGuestStartedAt());
+  const homeHref = isAuthenticated || hasGuestSession ? '/dashboard' : '/';
   const pricingActive =
     location.pathname === '/pricing' ||
     location.hash === '#pricing' ||
@@ -251,6 +253,12 @@ export default function MarketingNav() {
               </>
             ) : (
               <>
+                <Link
+                  to="/dashboard/foreclosures"
+                  className="hidden items-center gap-1.5 rounded-lg border border-primary/25 px-3 py-2 text-sm font-medium text-primary hover:bg-primary/5 sm:inline-flex lg:py-2.5"
+                >
+                  Try dashboard
+                </Link>
                 <Link
                   to="/login"
                   className="hidden px-2 py-2 text-sm font-medium text-foreground/80 hover:text-primary sm:inline-flex lg:px-3"

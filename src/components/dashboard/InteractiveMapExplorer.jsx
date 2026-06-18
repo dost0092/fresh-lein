@@ -49,6 +49,19 @@ export default function InteractiveMapExplorer({
 
   const sortedListings = useMemo(() => sortByUpcomingSale(listings), [listings]);
 
+  const countiesOnMap = useMemo(() => {
+    const seen = new Set();
+    const list = [];
+    for (const row of sortedListings) {
+      if (!row.county_name || !row.state) continue;
+      const key = `${row.county_name}|${row.state}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      list.push({ county_name: row.county_name, state: row.state });
+    }
+    return list.sort((a, b) => a.county_name.localeCompare(b.county_name));
+  }, [sortedListings]);
+
   const filtered = useMemo(() => {
     const q = searchValue.trim();
     if (!q) return sortedListings.slice(0, listLimit);
@@ -87,10 +100,28 @@ export default function InteractiveMapExplorer({
               type="search"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search using address, city, or ZIP"
+              placeholder="Search address, city, county, or ZIP"
               className="h-10 w-full rounded-lg border border-border bg-muted/20 pl-10 pr-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
             />
           </form>
+
+          {countiesOnMap.length > 0 && (
+            <div className="mt-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Counties on this map ({countiesOnMap.length})
+              </p>
+              <div className="mt-1.5 flex max-h-16 flex-wrap gap-1 overflow-y-auto">
+                {countiesOnMap.map(({ county_name, state }) => (
+                  <span
+                    key={`${county_name}-${state}`}
+                    className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-medium text-primary"
+                  >
+                    {county_name}, {state}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
@@ -140,10 +171,12 @@ export default function InteractiveMapExplorer({
                       <p className="text-sm font-semibold leading-snug text-foreground line-clamp-2">
                         {row.property_address}
                       </p>
-                      <p className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
-                        <MapPin className="h-3 w-3 shrink-0" />
-                        {row.county_name ? `${row.county_name} Co., ` : ''}
-                        {row.state}
+                      <p className="mt-1 text-[11px] text-muted-foreground line-clamp-1">
+                        <MapPin className="mr-0.5 inline h-3 w-3 shrink-0" />
+                        {[row.city, row.state].filter(Boolean).join(', ') || row.state || '—'}
+                      </p>
+                      <p className="mt-1 text-[11px] font-semibold text-primary">
+                        {row.county_name ? `${row.county_name} County` : 'County unavailable'}
                       </p>
                       <div className="mt-2 grid grid-cols-3 gap-1 text-center">
                         <div className="rounded bg-muted/50 px-1 py-1">

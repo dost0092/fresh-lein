@@ -56,3 +56,36 @@ export function getCountyCentroid(countyName, state) {
   const c = COUNTY_CENTROIDS[key];
   return c ? { latitude: c[0], longitude: c[1] } : null;
 }
+
+/** Guess county from map coordinates when county_id is missing (nearest centroid in state). */
+export function inferCountyFromCoordinates(latitude, longitude, state) {
+  const lat = Number(latitude);
+  const lng = Number(longitude);
+  const st = String(state || '').toUpperCase();
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || !st) return null;
+
+  let bestName = null;
+  let bestDist = Infinity;
+
+  for (const [key, [clat, clng]] of Object.entries(COUNTY_CENTROIDS)) {
+    if (!key.endsWith(`-${st}`)) continue;
+    const countyName = key.slice(0, -(st.length + 1));
+    const dist = (lat - clat) ** 2 + (lng - clng) ** 2;
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestName = countyName;
+    }
+  }
+
+  return bestName;
+}
+
+/** Unique county names for a state from centroid keys (marketing / map legend). */
+export function getCountiesForState(state) {
+  const st = String(state || '').toUpperCase();
+  if (!st) return [];
+  return Object.keys(COUNTY_CENTROIDS)
+    .filter((key) => key.endsWith(`-${st}`))
+    .map((key) => key.slice(0, -(st.length + 1)))
+    .sort((a, b) => a.localeCompare(b));
+}
