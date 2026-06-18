@@ -1,7 +1,8 @@
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import MarketingPageHero from '@/components/landing/MarketingPageHero';
 import { LandingContainer } from '@/components/landing/LandingLayout';
-import { COMPANY } from '@/data/company';
+import SocialLinks from '@/components/brand/SocialLinks';
+import { COMPANY, SOCIAL_LINKS } from '@/data/company';
 
 function CodeBlock({ children }) {
   return (
@@ -21,6 +22,8 @@ function Section({ title, children }) {
 }
 
 export default function ApiDocsPage() {
+  const { apiBaseUrl, contactEmail, website } = COMPANY;
+
   return (
     <MarketingPageShell>
       <MarketingPageHero
@@ -34,30 +37,33 @@ export default function ApiDocsPage() {
           <Section title="Authentication">
             <p>
               All endpoints require an API key via the <strong>x-api-key</strong> header.
-              Contact <strong>{COMPANY.contactEmail}</strong> to get a key.
+              Contact <strong>{contactEmail}</strong> to get a key.
             </p>
             <CodeBlock>{`x-api-key: YOUR_API_KEY`}</CodeBlock>
           </Section>
 
           <Section title="Base URL">
             <p>
-              Use your Vercel domain as the base URL. Example:
+              All API requests use the FreshLien production base URL:
             </p>
-            <CodeBlock>{`https://YOUR-APP.vercel.app/api`}</CodeBlock>
+            <CodeBlock>{apiBaseUrl}</CodeBlock>
+            <p>
+              Live documentation: <strong>{website}/api</strong>
+            </p>
           </Section>
 
           <Section title="Health check">
             <CodeBlock>{`GET /api/health`}</CodeBlock>
             <CodeBlock>{`curl -s \\
   -H "x-api-key: YOUR_API_KEY" \\
-  https://YOUR-APP.vercel.app/api/health`}</CodeBlock>
+  ${apiBaseUrl}/health`}</CodeBlock>
           </Section>
 
           <Section title="Counties">
             <CodeBlock>{`GET /api/counties`}</CodeBlock>
             <CodeBlock>{`curl -s \\
   -H "x-api-key: YOUR_API_KEY" \\
-  https://YOUR-APP.vercel.app/api/counties`}</CodeBlock>
+  ${apiBaseUrl}/counties`}</CodeBlock>
           </Section>
 
           <Section title="Foreclosures (list / search)">
@@ -76,14 +82,14 @@ export default function ApiDocsPage() {
             </ul>
             <CodeBlock>{`curl -s \\
   -H "x-api-key: YOUR_API_KEY" \\
-  "https://YOUR-APP.vercel.app/api/foreclosures?state=NJ&status=Scheduled&limit=50&offset=0"`}</CodeBlock>
+  "${apiBaseUrl}/foreclosures?state=NJ&status=Scheduled&limit=50&offset=0"`}</CodeBlock>
           </Section>
 
           <Section title="Foreclosures (detail)">
             <CodeBlock>{`GET /api/foreclosures/:id`}</CodeBlock>
             <CodeBlock>{`curl -s \\
   -H "x-api-key: YOUR_API_KEY" \\
-  https://YOUR-APP.vercel.app/api/foreclosures/RECORD_UUID`}</CodeBlock>
+  ${apiBaseUrl}/foreclosures/RECORD_UUID`}</CodeBlock>
           </Section>
 
           <Section title="Performance notes">
@@ -93,9 +99,25 @@ export default function ApiDocsPage() {
               <li>Detail endpoint returns county + status history.</li>
             </ul>
           </Section>
+
+          <Section title="Support">
+            <p>
+              Email <strong>{contactEmail}</strong> for API keys, integration help, or enterprise access.
+            </p>
+            <p>Follow FreshLien for product updates:</p>
+            <ul className="list-disc space-y-1 pl-5">
+              {SOCIAL_LINKS.map(({ name, href }) => (
+                <li key={name}>
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
+                    {name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <SocialLinks className="pt-1" />
+          </Section>
         </div>
       </LandingContainer>
     </MarketingPageShell>
   );
 }
-

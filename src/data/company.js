@@ -5,6 +5,7 @@ export const COMPANY = {
     'FreshLien helps real estate investors discover high-equity foreclosure deals with court-sourced data, map-based search, and AI-powered insights.',
   contactEmail: 'waqasdostdost0092@gmail.com',
   website: 'https://freshlien.com',
+  apiBaseUrl: 'https://freshlien.com/api',
   year: new Date().getFullYear(),
 };
 
