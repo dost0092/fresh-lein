@@ -1,4 +1,5 @@
-import { Mail, MessageSquare, Clock } from 'lucide-react';
+import { Mail, MessageSquare, Clock, Share2 } from 'lucide-react';
+import SocialLinks from '@/components/brand/SocialLinks';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import MarketingPageHero from '@/components/landing/MarketingPageHero';
 import { LandingContainer } from '@/components/landing/LandingLayout';
@@ -47,6 +48,12 @@ const contactOptions = [
         Contact sales
       </a>
     ),
+  },
+  {
+    icon: Share2,
+    title: 'Follow us',
+    text: 'Stay updated on product news, county coverage, and foreclosure investing tips.',
+    action: <SocialLinks />,
   },
 ];
 

@@ -4,6 +4,7 @@ import { LandingContainer } from '@/components/landing/LandingLayout';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
 import FreshLienLogo from '@/components/brand/FreshLienLogo';
+import SocialLinks from '@/components/brand/SocialLinks';
 
 const productLinks = [
   { label: 'Platform', to: '/dashboard/foreclosures' },
@@ -39,6 +40,7 @@ export default function MarketingFooter() {
               <Mail className="h-4 w-4 text-primary" />
               {COMPANY.contactEmail}
             </a>
+            <SocialLinks className="mt-4" onDark />
           </div>
 
           <div>

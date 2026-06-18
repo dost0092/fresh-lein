@@ -4,8 +4,22 @@ export const COMPANY = {
   description:
     'FreshLien helps real estate investors discover high-equity foreclosure deals with court-sourced data, map-based search, and AI-powered insights.',
   contactEmail: 'waqasdostdost0092@gmail.com',
+  website: 'https://freshlien.com',
   year: new Date().getFullYear(),
 };
+
+export const SOCIAL_LINKS = [
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/freshlien',
+    label: 'Follow FreshLien on LinkedIn',
+  },
+  {
+    name: 'Facebook',
+    href: 'https://www.facebook.com/people/FreshLien/61590612976427/',
+    label: 'Follow FreshLien on Facebook',
+  },
+];
 
 export const CONTACT_MAILTO = `mailto:${COMPANY.contactEmail}`;
 export const CONTACT_MAILTO_SUBJECT = (subject) =>
