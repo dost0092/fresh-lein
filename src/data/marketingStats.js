@@ -1,12 +1,24 @@
-/** Marketing-facing coverage numbers (display with + suffix). */
+/** Marketing-facing coverage numbers — B2B positioning (update as live inventory grows). */
 export const MARKETING_COVERAGE = {
-  counties: '90+',
-  countiesMin: 90,
-  foreclosureRecords: '2,300+',
-  states: '15+',
+  counties: '250+',
+  countiesMin: 250,
+  foreclosureRecords: '100,000+',
+  foreclosureRecordsCompact: '100K+',
+  states: '40+',
+  statesMin: 40,
+  dataRefresh: 'Same-day',
+  coverageSubtitle:
+    'Court-sourced foreclosure, lien, and auction data aggregated from county clerk and sheriff-sale filings nationwide.',
 };
 
-/** Format live county count for display — uses marketing label. */
+/** Format county count for display. */
 export function formatCountiesDisplay() {
   return MARKETING_COVERAGE.counties;
+}
+
+/** Format record count — compact for nav/hero, full for coverage sections. */
+export function formatForeclosureRecordsDisplay({ compact = false } = {}) {
+  return compact
+    ? MARKETING_COVERAGE.foreclosureRecordsCompact
+    : MARKETING_COVERAGE.foreclosureRecords;
 }

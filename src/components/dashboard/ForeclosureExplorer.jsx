@@ -25,11 +25,16 @@ import {
   exportForeclosuresCsv,
   isUsingLiveData,
 } from '@/lib/foreclosureService';
+import { useAuth } from '@/lib/AuthContext';
 import { cn } from '@/lib/utils';
 
 const PAGE_SIZE = 20;
+const GUEST_MAP_LIMIT = 80;
+const AUTH_MAP_LIMIT = 150;
 
 export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
+  const { isAuthenticated } = useAuth();
+  const mapFetchLimit = isAuthenticated ? AUTH_MAP_LIMIT : GUEST_MAP_LIMIT;
   const [searchParams, setSearchParams] = useSearchParams();
   const [rows, setRows] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -102,13 +107,25 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
     };
   }, [page, filters]);
 
+  const reloadList = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    fetchForeclosuresPage({ page, pageSize: PAGE_SIZE, filters })
+      .then(({ rows: data, total }) => {
+        setRows(data);
+        setTotalCount(total);
+      })
+      .catch((err) => setError(err.message || 'Could not load foreclosure data.'))
+      .finally(() => setLoading(false));
+  }, [page, filters]);
+
   useEffect(() => {
     if (view !== 'map') return;
 
     let cancelled = false;
     setMapLoading(true);
 
-    fetchForeclosuresForMap({ filters })
+    fetchForeclosuresForMap({ filters, limit: mapFetchLimit })
       .then((data) => {
         if (!cancelled) setMapRows(data);
       })
@@ -122,7 +139,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
     return () => {
       cancelled = true;
     };
-  }, [view, filters]);
+  }, [view, filters, mapFetchLimit]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
@@ -308,7 +325,12 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
             </div>
           ) : error ? (
             <div className="flex-1 flex items-center justify-center p-6">
-              <EmptyState title="Could not load data" description={error} />
+              <EmptyState
+                title="Could not load data"
+                description={error}
+                actionLabel="Try again"
+                onAction={reloadList}
+              />
             </div>
           ) : showEmpty ? (
             <div className="flex-1 flex items-center justify-center p-6">

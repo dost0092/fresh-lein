@@ -139,7 +139,7 @@ export default function DashboardOverview() {
             eyebrow="Platform overview"
             title="Live foreclosure intelligence"
             titleHighlight="at a glance"
-            description={`Same-day court data across ${MARKETING_COVERAGE.counties} counties — search, map, export, and monitor auctions from one workspace.`}
+            description={`Same-day court data across ${MARKETING_COVERAGE.counties} counties and ${MARKETING_COVERAGE.foreclosureRecords} records — search, map, export, and monitor auctions from one workspace.`}
             className="mb-0 max-w-2xl"
           />
           <div className="shrink-0 pt-1 lg:pt-2">

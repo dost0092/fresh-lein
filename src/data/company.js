@@ -2,7 +2,7 @@ export const COMPANY = {
   name: 'FreshLien',
   tagline: 'AI-driven foreclosure intelligence',
   description:
-    'FreshLien helps real estate investors discover high-equity foreclosure deals with court-sourced data, map-based search, and AI-powered insights.',
+    'FreshLien helps real estate investors and proptech teams discover high-equity foreclosure deals with court-sourced data across 250+ counties, map-based search, and AI-powered insights.',
   contactEmail: 'waqasdostdost0092@gmail.com',
   website: 'https://freshlien.com',
   apiBaseUrl: 'https://freshlien.com/api',

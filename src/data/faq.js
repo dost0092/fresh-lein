@@ -1,7 +1,9 @@
+import { MARKETING_COVERAGE } from '@/data/marketingStats';
+
 export const FAQ_ITEMS = [
   {
     q: 'What is FreshLien?',
-    a: 'FreshLien is an AI-driven foreclosure intelligence platform for real estate investors. We aggregate court-sourced foreclosure filings, map them by property, and surface urgency signals like sale dates, starting bids, and estimated equity.',
+    a: 'FreshLien is an AI-driven foreclosure intelligence platform for real estate investors, wholesalers, and proptech teams. We aggregate court-sourced foreclosure filings, map them by property, and surface urgency signals like sale dates, starting bids, and estimated equity.',
   },
   {
     q: 'Where does your data come from?',
@@ -9,7 +11,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: 'Which counties and states do you cover?',
-    a: 'We currently cover 90+ counties across 15+ states with 2,300+ foreclosure records, and we add new counties regularly. Check the data coverage section on our homepage for the latest numbers.',
+    a: `FreshLien covers ${MARKETING_COVERAGE.counties} counties across ${MARKETING_COVERAGE.states} states with ${MARKETING_COVERAGE.foreclosureRecords} normalized foreclosure and auction records. We add new counties weekly as we expand official clerk and sheriff-sale integrations. See the homepage data coverage section for the latest figures.`,
   },
   {
     q: 'Is there a free plan?',

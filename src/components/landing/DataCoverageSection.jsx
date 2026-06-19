@@ -4,29 +4,30 @@ import { MARKETING_COVERAGE } from '@/data/marketingStats';
 const metrics = [
   { value: MARKETING_COVERAGE.counties, label: 'Counties live' },
   { value: MARKETING_COVERAGE.foreclosureRecords, label: 'Foreclosure records' },
-  { value: 'Same-day', label: 'Court data refresh' },
+  { value: MARKETING_COVERAGE.states, label: 'States covered' },
+  { value: MARKETING_COVERAGE.dataRefresh, label: 'Court data refresh' },
 ];
 
 export default function DataCoverageSection() {
   return (
     <section className="border-y border-border bg-slate-50/60 py-11 lg:py-14">
       <LandingContainer>
-        <div className="mb-8 max-w-xl">
+        <div className="mb-8 max-w-2xl">
           <LandingEyebrow>Data coverage</LandingEyebrow>
           <h2 className="font-display text-2xl font-semibold leading-tight sm:text-[1.75rem] lg:text-[2rem]">
-            Unparalleled &amp; growing{' '}
+            Enterprise-grade{' '}
             <span className="text-primary">
               <span className="inline box-decoration-clone rounded-sm px-1.5 py-0.5" style={highlightMarkStyle}>
-                data coverage
+                foreclosure intelligence
               </span>
             </span>
           </h2>
           <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-            AI-enriched sheriff-sale filings nationwide.
+            {MARKETING_COVERAGE.coverageSubtitle}
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {metrics.map(({ value, label }) => (
             <div
               key={label}

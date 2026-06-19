@@ -172,100 +172,52 @@ export async function fetchForeclosureFilterOptions() {
   const states = [...new Set([...countyMap.values()].map((c) => c.state).filter(Boolean))].sort();
 
   const { data: statusRows, error } = await withQueryTimeout(
-    supabase.from('foreclosure_cases').select('status').limit(3000)
+    supabase.from('foreclosure_cases').select('status').limit(800),
+    8000
   );
   if (error) throw new Error(error.message);
-  const statuses = [...new Set((statusRows ?? []).map((r) => r.status).filter(Boolean))].sort();
+  const fromDb = [...new Set((statusRows ?? []).map((r) => r.status).filter(Boolean))];
+  const statuses = [...new Set([...fromDb, 'Scheduled', 'Appraisal', 'Sold', 'Cancelled'])].sort();
 
   return { counties, states, statuses };
 }
 
-/** Server-side paginated list — upcoming sale dates first, oldest at end. */
+/** Server-side paginated list — single query (fast for dashboard / guest try). */
 export async function fetchForeclosuresPage({ page = 1, pageSize = 20, filters = {} } = {}) {
   assertSupabase();
   const countyMap = await getCountiesMap();
-  const today = new Date().toISOString().split('T')[0];
   const offset = (page - 1) * pageSize;
+  const today = new Date().toISOString().split('T')[0];
+  const { search = '', dateFrom = '', dateTo = '', status = 'all' } = filters;
+  const upcomingOnly = !dateFrom && !dateTo && status === 'all' && !search.trim();
 
-  const dataBase = () =>
-    applyListFilters(
-      supabase.from('foreclosure_cases').select(LIST_SELECT_PLAIN),
-      filters,
-      countyMap
-    );
+  let query = applyListFilters(
+    supabase.from('foreclosure_cases').select(LIST_LEAN_COLUMNS, { count: 'exact' }),
+    filters,
+    countyMap
+  );
 
-  const countBase = () =>
-    applyListFilters(
-      supabase.from('foreclosure_cases').select('id', { count: 'exact', head: true }),
-      filters,
-      countyMap
-    );
-
-  const [upRes, pastRes, nullRes] = await Promise.all([
-    withQueryTimeout(countBase().gte('sale_date', today)),
-    withQueryTimeout(countBase().lt('sale_date', today)),
-    withQueryTimeout(countBase().is('sale_date', null)),
-  ]);
-
-  if (upRes.error) throw new Error(upRes.error.message);
-  if (pastRes.error) throw new Error(pastRes.error.message);
-  if (nullRes.error) throw new Error(nullRes.error.message);
-
-  const upcomingTotal = upRes.count ?? 0;
-  const pastTotal = pastRes.count ?? 0;
-  const nullTotal = nullRes.count ?? 0;
-  const total = upcomingTotal + pastTotal + nullTotal;
-
-  const rows = [];
-  let need = pageSize;
-  let pos = offset;
-
-  if (pos < upcomingTotal && need > 0) {
-    const from = pos;
-    const to = Math.min(pos + need - 1, upcomingTotal - 1);
-    const { data, error } = await withQueryTimeout(
-      dataBase().gte('sale_date', today).order('sale_date', { ascending: true }).range(from, to)
-    );
-    if (error) throw new Error(error.message);
-    rows.push(...(data ?? []));
-    need -= to - from + 1;
-    pos = 0;
-  } else {
-    pos -= upcomingTotal;
+  if (upcomingOnly) {
+    query = query.gte('sale_date', today);
   }
 
-  if (need > 0 && pos < pastTotal) {
-    const from = pos;
-    const to = Math.min(pos + need - 1, pastTotal - 1);
-    const { data, error } = await withQueryTimeout(
-      dataBase().lt('sale_date', today).order('sale_date', { ascending: true }).range(from, to)
-    );
-    if (error) throw new Error(error.message);
-    rows.push(...(data ?? []));
-    need -= to - from + 1;
-    pos = 0;
-  } else if (pos > 0) {
-    pos -= pastTotal;
-  }
+  const { data, error, count } = await withQueryTimeout(
+    query.order('sale_date', { ascending: true, nullsFirst: false }).range(offset, offset + pageSize - 1),
+    18000
+  );
 
-  if (need > 0 && pos < nullTotal) {
-    const from = pos;
-    const to = Math.min(pos + need - 1, nullTotal - 1);
-    const { data, error } = await withQueryTimeout(
-      dataBase().is('sale_date', null).order('created_at', { ascending: false }).range(from, to)
-    );
-    if (error) throw new Error(error.message);
-    rows.push(...(data ?? []));
-  }
+  if (error) throw new Error(error.message);
 
   return {
-    rows: mapListRows(rows, countyMap),
-    total,
+    rows: mapListRows(data ?? [], countyMap),
+    total: count ?? 0,
   };
 }
 
-const LANDING_PREVIEW_COLUMNS =
+const LIST_LEAN_COLUMNS =
   'id, property_address, city, state, zip_code, sale_date, starting_bid, appraised_value, status, latitude, longitude, defendant, plaintiff, sheriff_number, parcel_number, attorney_name, county_id, created_at, updated_at';
+
+const LANDING_PREVIEW_COLUMNS = LIST_LEAN_COLUMNS;
 
 /** Fast landing-page preview — one query + cached county lookup for card labels. */
 export async function fetchLandingMapPreview({ limit = 60 } = {}) {
@@ -304,36 +256,46 @@ export async function fetchLandingMapPreview({ limit = 60 } = {}) {
   return sortByUpcomingSale(mapListRows(data ?? [], countyMap));
 }
 
-/** Map markers — upcoming first, capped batch (county lookup runs in parallel). */
-export async function fetchForeclosuresForMap({ filters = {}, limit = 800 } = {}) {
+/** Map markers — lean single-query fetch (upcoming sales first). */
+export async function fetchForeclosuresForMap({ filters = {}, limit = 150 } = {}) {
   assertSupabase();
   const today = new Date().toISOString().split('T')[0];
-  const upcomingLimit = Math.min(limit, 600);
-  const plain = () =>
-    applyListFilters(
-      supabase.from('foreclosure_cases').select(LIST_SELECT_PLAIN),
-      filters,
-      null
-    );
+  const capped = Math.min(Math.max(limit, 1), 400);
 
-  const [countyMap, upcomingRes, pastRes] = await Promise.all([
+  const [countyMap, primaryRes] = await Promise.all([
     getCountiesMap(),
     withQueryTimeout(
-      plain().gte('sale_date', today).order('sale_date', { ascending: true }).limit(upcomingLimit)
-    ),
-    withQueryTimeout(
-      plain()
-        .lt('sale_date', today)
+      applyListFilters(
+        supabase.from('foreclosure_cases').select(LIST_LEAN_COLUMNS),
+        filters,
+        null
+      )
+        .gte('sale_date', today)
         .order('sale_date', { ascending: true })
-        .limit(Math.max(0, limit - upcomingLimit))
+        .limit(capped),
+      15000
     ),
   ]);
 
-  if (upcomingRes.error) throw new Error(upcomingRes.error.message);
-  if (pastRes.error) throw new Error(pastRes.error.message);
+  let { data, error } = primaryRes;
+  if (error) throw new Error(error.message);
 
-  const combined = [...(upcomingRes.data ?? []), ...(pastRes.data ?? [])];
-  return sortByUpcomingSale(mapListRows(combined, countyMap));
+  if (!data?.length) {
+    const fallback = await withQueryTimeout(
+      applyListFilters(
+        supabase.from('foreclosure_cases').select(LIST_LEAN_COLUMNS),
+        filters,
+        null
+      )
+        .order('sale_date', { ascending: true, nullsFirst: false })
+        .limit(capped),
+      15000
+    );
+    if (fallback.error) throw new Error(fallback.error.message);
+    data = fallback.data;
+  }
+
+  return sortByUpcomingSale(mapListRows(data ?? [], countyMap));
 }
 
 /** Export all rows matching filters (paginated server fetch). */
@@ -469,27 +431,23 @@ export async function fetchRecentForeclosures(limit = 5) {
   assertSupabase();
   const today = new Date().toISOString().split('T')[0];
 
-  const { data, error } = await supabase
-    .from('foreclosure_cases')
-    .select(LIST_SELECT)
-    .gte('sale_date', today)
-    .order('sale_date', { ascending: true, nullsFirst: false })
-    .limit(limit);
+  const [countyMap, result] = await Promise.all([
+    getCountiesMap(),
+    withQueryTimeout(
+      supabase
+        .from('foreclosure_cases')
+        .select(LIST_LEAN_COLUMNS)
+        .gte('sale_date', today)
+        .order('sale_date', { ascending: true, nullsFirst: false })
+        .limit(limit),
+      12000
+    ),
+  ]);
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  const { data, error } = result;
+  if (error) throw new Error(error.message);
 
-  return sortByUpcomingSale(
-    (data ?? []).map((row) =>
-      enrichForeclosure(
-        mapRow({
-          ...row,
-          county_name: row.counties?.county_name,
-        })
-      )
-    )
-  );
+  return sortByUpcomingSale(mapListRows(data ?? [], countyMap));
 }
 
 export function exportForeclosuresCsv(rows) {
