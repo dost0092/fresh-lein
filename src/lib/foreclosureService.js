@@ -182,6 +182,9 @@ export async function fetchForeclosureFilterOptions() {
   return { counties, states, statuses };
 }
 
+const LIST_LEAN_COLUMNS =
+  'id, property_address, city, state, zip_code, sale_date, starting_bid, appraised_value, status, latitude, longitude, defendant, plaintiff, sheriff_number, parcel_number, attorney_name, county_id, created_at, updated_at';
+
 /** Server-side paginated list — single query (fast for dashboard / guest try). */
 export async function fetchForeclosuresPage({ page = 1, pageSize = 20, filters = {} } = {}) {
   assertSupabase();
@@ -214,46 +217,95 @@ export async function fetchForeclosuresPage({ page = 1, pageSize = 20, filters =
   };
 }
 
-const LIST_LEAN_COLUMNS =
-  'id, property_address, city, state, zip_code, sale_date, starting_bid, appraised_value, status, latitude, longitude, defendant, plaintiff, sheriff_number, parcel_number, attorney_name, county_id, created_at, updated_at';
+const LANDING_PREVIEW_COLUMNS =
+  'id, property_address, city, state, zip_code, sale_date, starting_bid, appraised_value, status, latitude, longitude, defendant, plaintiff, sheriff_number, county_id, counties(county_name)';
 
-const LANDING_PREVIEW_COLUMNS = LIST_LEAN_COLUMNS;
+const LANDING_PREVIEW_SELECT = LANDING_PREVIEW_COLUMNS;
 
-/** Fast landing-page preview — one query + cached county lookup for card labels. */
-export async function fetchLandingMapPreview({ limit = 60 } = {}) {
-  assertSupabase();
+async function fetchLandingPreviewFromApi(limit) {
+  if (typeof window === 'undefined') return null;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 28000);
+
+  try {
+    const res = await fetch(
+      `${window.location.origin}/api/foreclosures/preview?limit=${limit}`,
+      { signal: controller.signal, headers: { Accept: 'application/json' } }
+    );
+    if (!res.ok) return null;
+    const body = await res.json();
+    if (!Array.isArray(body?.rows)) return null;
+    return body.rows;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchLandingPreviewDirect(limit) {
   const today = new Date().toISOString().split('T')[0];
+  const capped = Math.min(Math.max(limit, 1), 60);
 
-  const run = (query) => withQueryTimeout(query, 12000);
+  const run = (query) => withQueryTimeout(query, 28000);
 
-  const [countyMap, primaryRes] = await Promise.all([
-    getCountiesMap(),
-    run(
-      supabase
-        .from('foreclosure_cases')
-        .select(LANDING_PREVIEW_COLUMNS)
-        .gte('sale_date', today)
-        .order('sale_date', { ascending: true })
-        .limit(limit)
-    ),
-  ]);
+  let { data, error } = await run(
+    supabase
+      .from('foreclosure_cases')
+      .select(LANDING_PREVIEW_SELECT)
+      .gte('sale_date', today)
+      .order('sale_date', { ascending: true })
+      .limit(capped)
+  );
 
-  let { data, error } = primaryRes;
   if (error) throw new Error(error.message);
 
   if (!data?.length) {
     const fallback = await run(
       supabase
         .from('foreclosure_cases')
-        .select(LANDING_PREVIEW_COLUMNS)
+        .select(LANDING_PREVIEW_SELECT)
         .order('sale_date', { ascending: true, nullsFirst: false })
-        .limit(limit)
+        .limit(capped)
     );
     if (fallback.error) throw new Error(fallback.error.message);
     data = fallback.data;
   }
 
-  return sortByUpcomingSale(mapListRows(data ?? [], countyMap));
+  return data ?? [];
+}
+
+function normalizeLandingPreviewRows(rows) {
+  return sortByUpcomingSale(
+    rows.map((row) => {
+      const countyName = row.county_name ?? row.counties?.county_name ?? null;
+      return enrichForeclosure(
+        mapRow({
+          ...row,
+          county_name: countyName,
+        })
+      );
+    })
+  );
+}
+
+/** Fast landing-page preview — server API first, Supabase fallback, county names included. */
+export async function fetchLandingMapPreview({ limit = 40 } = {}) {
+  assertSupabase();
+  const capped = Math.min(Math.max(limit, 1), 60);
+
+  const apiRows = await fetchLandingPreviewFromApi(capped);
+  if (apiRows?.length) {
+    return normalizeLandingPreviewRows(apiRows);
+  }
+
+  const [countyMap, directRows] = await Promise.all([
+    getCountiesMap(),
+    fetchLandingPreviewDirect(capped),
+  ]);
+
+  return sortByUpcomingSale(mapListRows(directRows, countyMap));
 }
 
 /** Map markers — lean single-query fetch (upcoming sales first). */

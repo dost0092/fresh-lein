@@ -4,6 +4,7 @@ import { Lock, ArrowRight, RefreshCw } from 'lucide-react';
 import InteractiveMapExplorer from '@/components/dashboard/InteractiveMapExplorer';
 import { sortByUpcomingSale } from '@/lib/foreclosureUtils';
 import { fetchLandingMapPreview } from '@/lib/foreclosureService';
+import { readLandingMapCache, writeLandingMapCache } from '@/lib/landingMapCache';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { filterForeclosures } from '@/lib/foreclosureUtils';
 import {
@@ -18,8 +19,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/AuthContext';
 
 const PREVIEW_RESULT_LIMIT = 4;
-const GUEST_MAP_LIMIT = 60;
-const AUTH_MAP_LIMIT = 200;
+const GUEST_MAP_LIMIT = 40;
+const AUTH_MAP_LIMIT = 80;
 
 export default function LandingMapExplorer() {
   const { isAuthenticated } = useAuth();
@@ -41,17 +42,28 @@ export default function LandingMapExplorer() {
       return;
     }
 
-    setMapLoading(true);
-    setLoadError(null);
+    const cached = readLandingMapCache();
+    if (cached?.length) {
+      setAllRows(cached);
+      setMapLoading(false);
+      setLoadError(null);
+    } else {
+      setMapLoading(true);
+      setLoadError(null);
+    }
 
     try {
       const limit = isAuthenticated ? AUTH_MAP_LIMIT : GUEST_MAP_LIMIT;
       const data = await fetchLandingMapPreview({ limit });
       setAllRows(sortByUpcomingSale(data));
+      writeLandingMapCache(sortByUpcomingSale(data));
+      setLoadError(null);
     } catch (err) {
       console.warn('Landing map data:', err.message);
-      setLoadError(err.message || 'Could not load foreclosure records.');
-      setAllRows([]);
+      if (!cached?.length) {
+        setLoadError(err.message || 'Could not load foreclosure records.');
+        setAllRows([]);
+      }
     } finally {
       setMapLoading(false);
     }
