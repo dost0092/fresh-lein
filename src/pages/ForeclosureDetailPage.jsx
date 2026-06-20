@@ -90,15 +90,21 @@ export default function ForeclosureDetailPage() {
   const { isAuthenticated, isSupabaseConfigured } = useAuth();
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     setLoading(true);
+    setError('');
     fetchForeclosureById(id)
       .then((data) => {
         setRecord(data);
+      })
+      .catch((err) => {
+        setRecord(null);
+        setError(err?.message || 'Could not load this record.');
       })
       .finally(() => setLoading(false));
   }, [id]);
@@ -113,6 +119,15 @@ export default function ForeclosureDetailPage() {
 
   const formatCurrency = (v) =>
     v != null ? `$${Number(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '—';
+
+  const formatSaleDate = (saleDate) => {
+    if (!saleDate) return '—';
+    try {
+      return format(new Date(saleDate), 'MMMM d, yyyy');
+    } catch {
+      return saleDate;
+    }
+  };
 
   const getSaleDateSub = (saleDate) => {
     if (!saleDate) return 'No sale date scheduled';
@@ -147,7 +162,9 @@ export default function ForeclosureDetailPage() {
     return (
       <AppLayout>
         <div className="p-12 text-center">
-          <p className="text-muted-foreground mb-4">This foreclosure record could not be found.</p>
+          <p className="text-muted-foreground mb-2">
+            {error || 'This foreclosure record could not be found.'}
+          </p>
           <Button asChild>
             <Link to="/dashboard/foreclosures">Back to explorer</Link>
           </Button>
@@ -263,9 +280,9 @@ export default function ForeclosureDetailPage() {
             <MetricCard
               icon={DollarSign}
               label="Est. equity"
-              value={equity > 0 ? formatCurrency(equity) : '—'}
+              value={equity != null && equity > 0 ? formatCurrency(equity) : '—'}
               sub={equityPct ? `${equityPct.toFixed(0)}% spread vs appraisal` : undefined}
-              highlight={equity > 0}
+              highlight={equity != null && equity > 0}
             />
           </div>
 
@@ -313,7 +330,7 @@ export default function ForeclosureDetailPage() {
 
               <Section title="Auction" icon={FileText}>
                 <dl>
-                  <DataRow label="Sale date" value={formatDate(record.sale_date)} />
+                  <DataRow label="Sale date" value={formatSaleDate(record.sale_date)} />
                   <DataRow label="Starting bid" value={formatCurrency(record.starting_bid)} />
                   <DataRow label="Appraised value" value={formatCurrency(record.appraised_value)} />
                   {record.days_to_auction != null && record.status === 'Scheduled' && (
