@@ -4,11 +4,12 @@ export const MARKETING_COVERAGE = {
   countiesMin: 250,
   foreclosureRecords: '100,000+',
   foreclosureRecordsCompact: '100K+',
+  propertiesIndexed: '500K+',
   states: '40+',
   statesMin: 40,
   dataRefresh: 'Same-day',
   coverageSubtitle:
-    'Court-sourced foreclosure, lien, and auction data aggregated from county clerk and sheriff-sale filings nationwide.',
+    'Distressed property intelligence sourced from county clerk, recorder, and court filings — normalized for search, map, export, and API access.',
 };
 
 /** Format county count for display. */

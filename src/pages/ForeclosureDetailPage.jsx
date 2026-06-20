@@ -329,7 +329,7 @@ export default function ForeclosureDetailPage() {
               <div className="rounded-xl border border-border bg-white p-5 text-sm text-muted-foreground">
                 <p className="font-medium text-foreground mb-2">Investor note</p>
                 <p>
-                  Data is sourced from county scrapers. Additional fields (liens, probate flags, skip trace) may be
+                  Data is sourced from county public records. Additional fields (liens, probate flags, skip trace) may be
                   added as integrations expand.
                 </p>
               </div>

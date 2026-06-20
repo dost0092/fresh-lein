@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
@@ -7,10 +7,11 @@ import FreshLienLogo from '@/components/brand/FreshLienLogo';
 import SocialLinks from '@/components/brand/SocialLinks';
 
 const productLinks = [
-  { label: 'Platform', to: '/dashboard/foreclosures' },
+  { label: 'Web app', to: '/dashboard/foreclosures' },
+  { label: 'REST API', to: '/api' },
   { label: 'Pricing', to: '/pricing' },
-  { label: 'API', to: '/api' },
   { label: 'County alerts', to: '/dashboard/alerts' },
+  { label: 'Data coverage', to: '/#coverage' },
 ];
 
 const companyLinks = [
@@ -32,7 +33,9 @@ export default function MarketingFooter() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <FreshLienLogo to="/" variant="footer" onDark />
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">{COMPANY.tagline}</p>
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
+              Same-day distressed real estate intelligence — foreclosure, probate, tax lien, and default data from county-direct public records.
+            </p>
             <a
               href={CONTACT_MAILTO}
               className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
@@ -95,7 +98,7 @@ export default function MarketingFooter() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
           <p>© {COMPANY.year} {COMPANY.name}. All rights reserved.</p>
-          <p>Court-sourced foreclosure data for investors.</p>
+          <p>County-direct public records for distressed property professionals.</p>
         </div>
       </LandingContainer>
     </footer>

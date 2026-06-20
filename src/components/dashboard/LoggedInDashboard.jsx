@@ -12,8 +12,8 @@ import { MARKETING_COVERAGE } from '@/data/marketingStats';
 const platformFeatures = [
   {
     icon: Zap,
-    title: 'Same-day court data',
-    detail: 'Sheriff-sale filings synced from county sources — not stale monthly lists.',
+    title: 'Same-day county data',
+    detail: 'Filings synced from official county sources — not stale monthly lists.',
   },
   {
     icon: MapPin,
@@ -57,7 +57,7 @@ export default function LoggedInDashboard() {
             eyebrow="Your toolkit"
             title="Everything you need to"
             titleHighlight="find deals first"
-            description="Built for investors, wholesalers, and acquisition teams who need accurate foreclosure data before it hits the mass-market lists."
+            description="Built for investors, wholesalers, and acquisition teams who need county-direct distressed property data before it hits legacy platforms."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {platformFeatures.map(({ icon: Icon, title, detail }) => (

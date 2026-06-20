@@ -137,7 +137,7 @@ export default function DashboardOverview() {
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <LandingSectionHeader
             eyebrow="Platform overview"
-            title="Live foreclosure intelligence"
+            title="Live distressed property data"
             titleHighlight="at a glance"
             description={`Same-day court data across ${MARKETING_COVERAGE.counties} counties and ${MARKETING_COVERAGE.foreclosureRecords} records — search, map, export, and monitor auctions from one workspace.`}
             className="mb-0 max-w-2xl"

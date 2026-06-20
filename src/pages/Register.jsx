@@ -129,7 +129,7 @@ function RegisterForm() {
       subtitle={
         checkoutPlan
           ? `Sign up for ${CHECKOUT_PLAN_LABELS[checkoutPlan]}`
-          : 'Start exploring foreclosure intelligence'
+          : 'Start exploring distressed property data'
       }
       footer={
         <>

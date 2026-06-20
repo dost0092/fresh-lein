@@ -11,13 +11,17 @@ import { startPlanCheckout } from '@/lib/startPlanCheckout';
 
 const COPY = {
   platform: {
-    eyebrow: 'Plans',
-    title: 'Start free, upgrade when you grow',
-    description: 'Every account begins on Free. Upgrade anytime for more counties, exports, and alerts.',
+    eyebrow: 'Pricing',
+    title: 'Plans for every',
+    titleHighlight: 'investor stage',
+    description:
+      'Start free, then scale by state coverage, exports, alerts, API calls, skip trace, and portfolio monitoring.',
   },
   api: {
-    eyebrow: 'API',
-    title: 'Foreclosure data via API',
+    eyebrow: 'API pricing',
+    title: 'Distressed property data',
+    titleHighlight: 'via REST API',
+    description: 'Integrate normalized filing data into CRMs, underwriting tools, and custom dashboards.',
   },
 };
 

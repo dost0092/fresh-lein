@@ -84,7 +84,7 @@ export default function CompetitorTable() {
                   <td className="px-4 py-4 text-center">
                     <Check className="mx-auto h-4 w-4 text-white" />
                   </td>
-                  <td className="px-4 py-4 text-xs font-semibold text-white/90">County-direct benchmark</td>
+                  <td className="px-4 py-4 text-xs font-semibold text-white/90">County-direct · same-day · full API</td>
                 </tr>
               </tbody>
             </table>
@@ -92,7 +92,7 @@ export default function CompetitorTable() {
         </div>
 
         <p className="mt-5 text-center text-sm text-muted-foreground">
-          Same-day county-direct data — before it hits legacy list platforms.
+          Same-day county-direct public records — before legacy platforms with 30–60 day lag.
         </p>
       </LandingContainer>
     </section>
