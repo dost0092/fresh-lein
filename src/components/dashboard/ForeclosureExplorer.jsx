@@ -246,37 +246,41 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                 {isUsingLiveData() && totalCount > 0 && ' · live data'}
               </p>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0">
-              <div className="flex items-center bg-muted/50 rounded-md p-0.5 border border-border/80">
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="flex h-9 items-center rounded-md border border-border/80 bg-muted/40 p-0.5">
                 <button
                   type="button"
                   onClick={() => setView('list')}
                   className={cn(
-                    'flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium transition-all',
-                    view === 'list' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground'
+                    'flex h-full items-center gap-1.5 rounded px-3 text-xs font-medium transition-all',
+                    view === 'list'
+                      ? 'bg-white text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
-                  <List className="w-3.5 h-3.5" /> List
+                  <List className="h-3.5 w-3.5" /> List
                 </button>
                 <button
                   type="button"
                   onClick={() => setView('map')}
                   className={cn(
-                    'flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium transition-all',
-                    view === 'map' ? 'bg-white shadow-sm text-foreground' : 'text-muted-foreground'
+                    'flex h-full items-center gap-1.5 rounded px-3 text-xs font-medium transition-all',
+                    view === 'map'
+                      ? 'bg-white text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
-                  <Map className="w-3.5 h-3.5" /> Map
+                  <Map className="h-3.5 w-3.5" /> Map
                 </button>
               </div>
               <Button
                 variant="secondary"
                 size="sm"
-                className="h-8 text-xs"
+                className="h-9 text-xs"
                 onClick={handleExport}
                 disabled={exporting || totalCount === 0}
               >
-                <Download className="w-3.5 h-3.5 mr-1" /> {exporting ? 'Exporting…' : 'Export'}
+                <Download className="mr-1 h-3.5 w-3.5" /> {exporting ? 'Exporting…' : 'Export'}
               </Button>
             </div>
           </div>
@@ -293,21 +297,21 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mr-1 hidden sm:inline">
+            <span className="mr-1 hidden text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:inline">
               Filters
             </span>
-            <div className="hidden md:flex flex-wrap gap-2 flex-1">{filterControls}</div>
+            <div className="hidden flex-1 flex-wrap gap-2 md:flex">{filterControls}</div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="md:hidden h-8 text-xs">
-                  <SlidersHorizontal className="w-3.5 h-3.5 mr-1" /> Filters
+                <Button variant="outline" size="sm" className="h-9 text-xs md:hidden">
+                  <SlidersHorizontal className="mr-1 h-3.5 w-3.5" /> Filters
                 </Button>
               </SheetTrigger>
               <SheetContent side="bottom" className="rounded-t-xl">
                 <SheetHeader>
                   <SheetTitle className="text-base">Filters</SheetTitle>
                 </SheetHeader>
-                <div className="py-4 flex flex-wrap gap-2">{filterControls}</div>
+                <div className="flex flex-wrap gap-2 py-4">{filterControls}</div>
               </SheetContent>
             </Sheet>
             {hasFilters && (
@@ -315,9 +319,9 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="h-8 text-xs text-muted-foreground"
+                className="h-9 text-xs text-muted-foreground"
               >
-                <RotateCcw className="w-3 h-3 mr-1" /> Reset
+                <RotateCcw className="mr-1 h-3 w-3" /> Reset
               </Button>
             )}
           </div>
