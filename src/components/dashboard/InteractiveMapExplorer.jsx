@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Lock, MapPin } from 'lucide-react';
 import MapView from '@/components/dashboard/MapView';
-import MapRecordDetailPanel from '@/components/dashboard/MapRecordDetailPanel';
 import { filterForeclosures, sortByUpcomingSale } from '@/lib/foreclosureUtils';
 import { getUrgency, getMarkerColor } from '@/components/dashboard/UrgencyBadge';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,6 @@ export default function InteractiveMapExplorer({
   query = '',
   onQueryChange,
   onSearch,
-  selected,
   onSelect,
   listLimit = 12,
   lockedCount = 0,
@@ -82,9 +80,7 @@ export default function InteractiveMapExplorer({
       <MapView
         filings={mapFilings}
         onSelectFiling={onSelect}
-        selectedId={selected?.id}
         hidePopups
-        flyToSelected
         legendVariant="dark"
       />
 
@@ -148,19 +144,13 @@ export default function InteractiveMapExplorer({
             filtered.map((row) => {
               const urgency = getUrgency(row.days_to_auction, row.status === 'Appraisal' ? 'PRE' : 'NTS');
               const dotColor = getMarkerColor(urgency);
-              const isSelected = selected?.id === row.id;
 
               return (
                 <button
                   key={row.id}
                   type="button"
-                  onClick={() => onSelect(row)}
-                  className={cn(
-                    'w-full rounded-lg border p-3 text-left transition-all',
-                    isSelected
-                      ? 'border-primary bg-primary/5 shadow-md ring-1 ring-primary/20'
-                      : 'border-border bg-white hover:border-primary/30 hover:shadow-sm'
-                  )}
+                  onClick={() => onSelect?.(row)}
+                  className="w-full rounded-lg border border-border bg-white p-3 text-left transition-all hover:border-primary/30 hover:shadow-sm"
                 >
                   <div className="flex items-start gap-2.5">
                     <span
@@ -219,22 +209,6 @@ export default function InteractiveMapExplorer({
           )}
         </div>
       </div>
-
-      {/* Right detail panel */}
-      {selected && (
-        <MapRecordDetailPanel
-          record={selected}
-          onClose={() => onSelect(null)}
-          className="absolute right-3 top-3 bottom-3 z-[1000] hidden w-[min(calc(100%-1.5rem),400px)] sm:flex sm:right-4 sm:top-4 sm:bottom-4"
-        />
-      )}
-
-      {/* Mobile detail — bottom sheet style */}
-      {selected && (
-        <div className="absolute inset-x-3 bottom-3 z-[1001] max-h-[55%] sm:hidden">
-          <MapRecordDetailPanel record={selected} onClose={() => onSelect(null)} className="max-h-full" />
-        </div>
-      )}
 
       {showPaywallOverlay && paywallContent}
     </div>

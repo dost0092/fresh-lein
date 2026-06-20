@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Download, Map, List, SlidersHorizontal, RotateCcw } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import InteractiveMapExplorer from '@/components/dashboard/InteractiveMapExplorer';
 import { sortByUpcomingSale } from '@/lib/foreclosureUtils';
 import ForeclosureListCompact from '@/components/dashboard/ForeclosureListCompact';
-import ForeclosurePreviewDrawer from '@/components/dashboard/ForeclosurePreviewDrawer';
 import EmptyState from '@/components/dashboard/EmptyState';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,6 +32,7 @@ const GUEST_MAP_LIMIT = 80;
 const AUTH_MAP_LIMIT = 150;
 
 export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const mapFetchLimit = isAuthenticated ? AUTH_MAP_LIMIT : GUEST_MAP_LIMIT;
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,7 +52,6 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState(null);
   const [error, setError] = useState(null);
   const [filterOptions, setFilterOptions] = useState({ counties: [], states: [], statuses: [] });
 
@@ -167,6 +166,13 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
       setExporting(false);
     }
   }, [filters]);
+
+  const openRecord = useCallback(
+    (row) => {
+      if (row?.id) navigate(`/dashboard/foreclosures/${row.id}`);
+    },
+    [navigate]
+  );
 
   const filterControls = (
     <>
@@ -353,8 +359,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                 loading={mapLoading}
                 query={search}
                 onQueryChange={setSearch}
-                selected={selected}
-                onSelect={setSelected}
+                onSelect={openRecord}
                 listLimit={25}
                 heightClass="h-full min-h-[calc(100vh-220px)]"
                 leftPanelHeader={{
@@ -365,7 +370,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
             </div>
           ) : (
             <div className="flex-1 overflow-auto py-3">
-              <ForeclosureListCompact rows={rows} selectedId={selected?.id} onSelect={setSelected} />
+              <ForeclosureListCompact rows={rows} onOpenRecord={openRecord} />
               <div className="flex items-center justify-between px-5 py-2.5 mx-4 sm:mx-5 bg-white border border-border rounded-lg text-xs text-muted-foreground">
                 <span>
                   {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, totalCount)} of{' '}
@@ -395,10 +400,6 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
             </div>
           )}
         </div>
-
-        {view === 'list' && selected && (
-          <ForeclosurePreviewDrawer record={selected} onClose={() => setSelected(null)} />
-        )}
       </div>
     </AppLayout>
   );

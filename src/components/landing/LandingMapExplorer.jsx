@@ -30,7 +30,6 @@ export default function LandingMapExplorer() {
   const [loadError, setLoadError] = useState(null);
   const [query, setQuery] = useState('');
   const [activeQuery, setActiveQuery] = useState('');
-  const [selected, setSelected] = useState(null);
   const [showProGate, setShowProGate] = useState(false);
   const [remaining, setRemaining] = useState(getRemainingSearches());
 
@@ -113,7 +112,6 @@ export default function LandingMapExplorer() {
     incrementLandingSearch();
     setRemaining(getRemainingSearches());
     setActiveQuery(trimmed);
-    setSelected(null);
   };
 
   return (
@@ -168,8 +166,7 @@ export default function LandingMapExplorer() {
             query={query}
             onQueryChange={setQuery}
             onSearch={handleSearch}
-            selected={selected}
-            onSelect={setSelected}
+            onSelect={(row) => row?.id && navigate(`/dashboard/foreclosures/${row.id}`)}
             listLimit={previewLimit}
             lockedCount={lockedCount}
             showPaywallOverlay={!isAuthenticated && !canSearchOnLanding()}
