@@ -9,7 +9,7 @@ const ICONS = [Key, Database, FileDown, Bell, Briefcase, Headphones];
 
 export default function EnterpriseFeaturesSection() {
   return (
-    <section id="enterprise" className="bg-white py-11 lg:py-14">
+    <section id="enterprise" className="bg-white py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Enterprise"
@@ -24,9 +24,9 @@ export default function EnterpriseFeaturesSection() {
             return (
               <div
                 key={title}
-                className="rounded-xl border border-border/60 bg-white p-5 transition-colors hover:border-primary/20"
+                className="rounded-lg border border-border/80 bg-white p-6 shadow-card"
               >
-                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="icon-surface mb-3 h-9 w-9">
                   <Icon className="h-4 w-4" />
                 </div>
                 <h3 className="font-display text-sm font-semibold text-foreground">{title}</h3>

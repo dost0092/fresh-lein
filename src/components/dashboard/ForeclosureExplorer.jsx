@@ -171,7 +171,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
   const filterControls = (
     <>
       <Select value={county} onValueChange={setCounty}>
-        <SelectTrigger className="filter-chip w-[140px]">
+        <SelectTrigger className="filter-chip h-9 w-[140px] shrink-0">
           <SelectValue placeholder="County" />
         </SelectTrigger>
         <SelectContent>
@@ -184,7 +184,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectContent>
       </Select>
       <Select value={state} onValueChange={setState}>
-        <SelectTrigger className="filter-chip w-[88px]">
+        <SelectTrigger className="filter-chip h-9 w-[88px] shrink-0">
           <SelectValue placeholder="State" />
         </SelectTrigger>
         <SelectContent>
@@ -197,7 +197,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         </SelectContent>
       </Select>
       <Select value={status} onValueChange={setStatus}>
-        <SelectTrigger className="filter-chip w-[120px]">
+        <SelectTrigger className="filter-chip h-9 w-[120px] shrink-0">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -213,13 +213,13 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
         type="date"
         value={dateFrom}
         onChange={(e) => setDateFrom(e.target.value)}
-        className="filter-chip w-[130px]"
+        className="filter-chip h-9 w-[132px] shrink-0 px-2 text-xs"
       />
       <Input
         type="date"
         value={dateTo}
         onChange={(e) => setDateTo(e.target.value)}
-        className="filter-chip w-[130px]"
+        className="filter-chip h-9 w-[132px] shrink-0 px-2 text-xs"
       />
     </>
   );
@@ -359,7 +359,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                 heightClass="h-full min-h-[calc(100vh-220px)]"
                 leftPanelHeader={{
                   title: 'Active foreclosures',
-                  description: 'Upcoming auctions first — tomorrow and nearest sale dates at the top.',
+                  description: 'Upcoming auctions first. Tomorrow and nearest sale dates at the top.',
                 }}
               />
             </div>

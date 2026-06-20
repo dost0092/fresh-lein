@@ -7,13 +7,13 @@ const ICONS = [Newspaper, TrendingUp, Calendar, FileSearch];
 
 export default function MarketInsightsSection() {
   return (
-    <section id="insights" className="border-y border-border bg-slate-50/60 py-11 lg:py-14">
+    <section id="insights" className="border-y border-border bg-[#FAFAFA] py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Market intelligence"
           title="Distressed market"
           titleHighlight="insights & trends"
-          description="Weekly foreclosure pulse, top distressed ZIPs, auction trends, and probate activity — rolling out with full platform launch."
+          description="Weekly filing counts, top distressed ZIPs, auction trends, and probate activity as we roll out more markets."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -22,10 +22,10 @@ export default function MarketInsightsSection() {
             return (
               <div
                 key={title}
-                className="flex flex-col rounded-xl border border-border/70 bg-white p-5 shadow-sm"
+                className="flex flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card"
               >
                 <div className="mb-3 flex items-start justify-between gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="icon-surface h-9 w-9">
                     <Icon className="h-4 w-4" />
                   </div>
                   <StatusBadge status="soon" />

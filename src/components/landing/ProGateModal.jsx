@@ -16,7 +16,7 @@ export default function ProGateModal({ open, onClose }) {
         >
           <X className="w-4 h-4" />
         </button>
-        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+        <div className="icon-surface mb-4 h-12 w-12 rounded-xl">
           <Lock className="w-6 h-6 text-primary" />
         </div>
         <h3 className="font-display text-lg font-semibold text-foreground mb-2">
@@ -39,7 +39,7 @@ export default function ProGateModal({ open, onClose }) {
         </ul>
         <div className="flex flex-col gap-2">
           <Button asChild className="w-full h-10">
-            <Link to="/register">Start Pro — from $25/mo</Link>
+            <Link to="/register">Start Pro from $25/mo</Link>
           </Button>
           <Button variant="outline" asChild className="w-full h-9 text-xs">
             <Link to="/login">Already have an account? Log in</Link>

@@ -8,6 +8,7 @@ import AuthLayout from '@/components/AuthLayout';
 import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
 import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
+import { APP_HOME } from '@/lib/routes';
 import { GUEST_ACCESS_DAYS } from '@/lib/guestAccess';
 
 function LoginForm() {
@@ -30,7 +31,7 @@ function LoginForm() {
       return;
     }
     const from = location.state?.from?.pathname;
-    navigate(from || '/dashboard', { replace: true });
+    navigate(from || APP_HOME, { replace: true });
   };
 
   const handleSubmit = async (e) => {
@@ -82,7 +83,7 @@ function LoginForm() {
       )}
 
       {checkoutPlan && (
-        <div className="mb-4 p-3 rounded-lg bg-primary/10 text-sm text-foreground">
+        <div className="mb-4 p-3 rounded-lg border border-border bg-neutral-50 text-sm text-foreground">
           After login you&apos;ll be redirected to <strong>Stripe</strong> to complete payment.
         </div>
       )}

@@ -47,7 +47,7 @@ export default function SecurityPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {practices.map(({ icon: Icon, title, text }) => (
               <div key={title} className="rounded-xl border border-border/60 bg-white p-5">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="icon-surface mb-3 h-10 w-10">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-display text-base font-semibold text-foreground">{title}</h3>
@@ -58,7 +58,7 @@ export default function SecurityPage() {
         </LandingContainer>
       </section>
 
-      <section className="border-t border-border bg-slate-50/60 py-11 lg:py-14">
+      <section className="border-t border-border bg-[#FAFAFA] py-14 lg:py-20">
         <LandingContainer>
           <div className="mx-auto max-w-3xl space-y-6 text-sm leading-relaxed text-muted-foreground">
             <h2 className="font-display text-lg font-semibold text-foreground">Payments</h2>

@@ -1,8 +1,8 @@
 export const COMPANY = {
   name: 'FreshLien',
-  tagline: 'Same-day distressed real estate intelligence',
+  tagline: 'Same-day distressed property data',
   description:
-    'FreshLien delivers county-direct pre-foreclosure, foreclosure, probate, tax lien, and mortgage default intelligence to real estate investors, wholesalers, attorneys, and data teams — through a web app, REST API, and bulk export feeds.',
+    'FreshLien pulls county and court records into one searchable product. Today that means 100K+ foreclosure filings across 250+ counties, with probate and expanded court coverage rolling out market by market.',
   contactEmail: 'waqasdostdost0092@gmail.com',
   website: 'https://freshlien.com',
   apiBaseUrl: 'https://freshlien.com/api',

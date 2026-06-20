@@ -67,7 +67,7 @@ export default function ExportsPage() {
           </div>
 
           {/* Plan limits */}
-          <div className="bg-white border border-border rounded-2xl p-6 shadow-card mb-5">
+          <div className="bg-white border border-border rounded-lg p-6 shadow-card mb-5">
             <h2 className="font-heading font-semibold text-foreground mb-4 text-sm">Your Export Limits</h2>
             <div className="grid grid-cols-3 gap-4">
               {[
@@ -85,8 +85,8 @@ export default function ExportsPage() {
           </div>
 
           {/* Export Card */}
-          <div className="bg-white border border-border rounded-2xl p-8 shadow-card mb-5 text-center">
-            <div className="w-16 h-16 bg-navy/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white border border-border rounded-lg p-8 shadow-card mb-5 text-center">
+            <div className="w-16 h-16 bg-navy/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <FileText className="w-8 h-8 text-navy" />
             </div>
             <h3 className="font-heading font-semibold text-foreground mb-2">Export Current Results</h3>
@@ -108,7 +108,7 @@ export default function ExportsPage() {
 
           {/* Recent Exports */}
           {exported && (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-start gap-3">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-start gap-3">
               <Download className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-emerald-800">Export successful</p>

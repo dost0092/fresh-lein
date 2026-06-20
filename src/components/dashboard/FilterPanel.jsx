@@ -123,7 +123,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 placeholder="0"
                 value={filters.judgment_min || ''}
                 onChange={e => onChange({ ...filters, judgment_min: e.target.value })}
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan"
+                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary"
               />
             </div>
             <div className="flex-1">
@@ -133,7 +133,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 placeholder="1000000"
                 value={filters.judgment_max || ''}
                 onChange={e => onChange({ ...filters, judgment_max: e.target.value })}
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan"
+                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary"
               />
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
             placeholder="e.g. 30"
             value={filters.days_since_filing_max || ''}
             onChange={e => onChange({ ...filters, days_since_filing_max: e.target.value })}
-            className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan"
+            className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary"
           />
         </Section>
 
@@ -200,7 +200,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 type="date"
                 value={filters.auction_date_from || ''}
                 onChange={e => onChange({ ...filters, auction_date_from: e.target.value })}
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan"
+                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary"
               />
             </div>
             <div>
@@ -209,7 +209,7 @@ export default function FilterPanel({ filters, onChange, onReset }) {
                 type="date"
                 value={filters.auction_date_to || ''}
                 onChange={e => onChange({ ...filters, auction_date_to: e.target.value })}
-                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan"
+                className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary"
               />
             </div>
           </div>

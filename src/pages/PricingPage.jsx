@@ -6,7 +6,9 @@ import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import CompetitorTable from '@/components/landing/CompetitorTable';
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import MarketingFooter from '@/components/landing/MarketingFooter';
+import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 import { useAuth } from '@/lib/AuthContext';
+import { APP_HOME } from '@/lib/routes';
 
 function PricingPageHeader() {
   const { isAuthenticated, isTrialActive, trialEndsAt, subscription } = useAuth();
@@ -19,7 +21,7 @@ function PricingPageHeader() {
     : null;
 
   return (
-    <section className="border-b border-border bg-gradient-to-b from-primary/[0.04] to-white">
+    <section className="border-b border-border bg-white">
       <LandingContainer className="py-8 lg:py-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -33,25 +35,25 @@ function PricingPageHeader() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {hasActiveSubscription && subscription?.plan_name ? (
-              <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-semibold text-primary">
+              <span className="rounded-full border border-border bg-neutral-100 px-3 py-1 text-xs font-semibold text-primary">
                 Current: {subscription.plan_name}
               </span>
             ) : isTrialActive && trialDaysLeft != null ? (
-              <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-semibold text-primary">
+              <span className="rounded-full border border-border bg-neutral-100 px-3 py-1 text-xs font-semibold text-primary">
                 Pro trial · {trialDaysLeft} {trialDaysLeft === 1 ? 'day' : 'days'} left
               </span>
             ) : null}
             <Link
               to="/settings"
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/30 hover:bg-primary/[0.03]"
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-50"
             >
               Billing settings
             </Link>
             <Link
-              to="/dashboard"
+              to={APP_HOME}
               className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
             >
-              Back to dashboard
+              Back to app
             </Link>
           </div>
         </div>
@@ -64,9 +66,9 @@ export default function PricingPage() {
   const [pricingType, setPricingType] = useState('platform');
 
   return (
-    <div className="min-h-screen bg-[#f6f9f7]">
+    <div className="min-h-screen bg-white">
       <MarketingNav />
-      <div className="pt-[3.75rem] lg:pt-[4.25rem]">
+      <div className={MARKETING_NAV_OFFSET_CLASS}>
         <PricingPageHeader />
         <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
         <PricingCompareTable pricingType={pricingType} />

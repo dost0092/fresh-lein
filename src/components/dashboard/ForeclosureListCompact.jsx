@@ -30,7 +30,7 @@ export default function ForeclosureListCompact({ rows, selectedId, onSelect }) {
           className={cn(
             'flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors group text-sm',
             row.id === selectedId
-              ? 'bg-primary/[0.04] border-l-2 border-l-primary'
+              ? 'bg-neutral-50 border-l-2 border-l-primary'
               : 'hover:bg-white border-l-2 border-l-transparent'
           )}
           onClick={() => onSelect?.(row)}

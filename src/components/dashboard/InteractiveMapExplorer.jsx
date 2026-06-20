@@ -34,7 +34,7 @@ export default function InteractiveMapExplorer({
   paywallContent = null,
   leftPanelHeader = {
     title: 'Foreclosure coverage map',
-    description: 'Upcoming auctions first — soonest sale dates at the top.',
+    description: 'Upcoming auctions first. Soonest sale dates at the top.',
   },
   heightClass = 'h-[min(85vh,720px)]',
   className,
@@ -208,7 +208,7 @@ export default function InteractiveMapExplorer({
           )}
 
           {lockedCount > 0 && (
-            <div className="rounded-lg border border-dashed border-primary/40 bg-primary/[0.04] p-4 text-center">
+            <div className="rounded-lg border border-dashed border-border bg-neutral-50 p-4 text-center">
               <Lock className="mx-auto mb-2 h-5 w-5 text-primary" />
               <p className="text-xs font-semibold text-foreground">+{lockedCount} more results</p>
               <p className="mb-3 text-[11px] text-muted-foreground">Sign up to unlock full search</p>

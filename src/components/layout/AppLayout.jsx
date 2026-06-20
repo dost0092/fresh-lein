@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard,
   Gavel,
   Bookmark,
   Bell,
@@ -20,13 +19,14 @@ import {
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
 import FeedbackDialog from '@/components/FeedbackDialog';
-import FreshLienLogo from '@/components/brand/FreshLienLogo';
+import FreshLienLogo, { HOME_PATH } from '@/components/brand/FreshLienLogo';
 import GuestAccessBanner from '@/components/dashboard/GuestAccessBanner';
 import { getGuestDaysRemaining } from '@/lib/guestAccess';
 
+import { APP_HOME } from '@/lib/routes';
+
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Gavel, label: 'Foreclosures', path: '/dashboard/foreclosures' },
+  { icon: Gavel, label: 'Search & map', path: APP_HOME },
   { icon: Clock, label: 'Pre-Foreclosures', path: '/dashboard/pre-foreclosures', comingSoon: true },
   { icon: Clock, label: 'Probate', path: '/dashboard/probate', comingSoon: true },
   { icon: Clock, label: 'Tax Delinquency', path: '/dashboard/tax', comingSoon: true },
@@ -54,8 +54,10 @@ function NavContent({ collapsed, onNavClick }) {
   };
 
   const isActive = (path) => {
-    if (path === '/dashboard') return location.pathname === '/dashboard';
-    return location.pathname === path || location.pathname.startsWith(path + '/');
+    if (path === APP_HOME) {
+      return location.pathname === APP_HOME || location.pathname.startsWith(`${APP_HOME}/`);
+    }
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   return (
@@ -103,8 +105,8 @@ function NavContent({ collapsed, onNavClick }) {
               className={cn(
                 'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all duration-150',
                 active
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60',
+                  ? 'bg-neutral-100 text-primary font-semibold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-neutral-50',
                 collapsed && 'justify-center'
               )}
             >
@@ -155,7 +157,7 @@ function NavContent({ collapsed, onNavClick }) {
             to="/login"
             onClick={onNavClick}
             className={cn(
-              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/5 transition-all',
+              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-neutral-50 transition-all',
               collapsed && 'justify-center'
             )}
           >
@@ -185,7 +187,7 @@ export default function AppLayout({ children }) {
         )}
       >
         <div className="flex h-16 items-center justify-between border-b border-border px-4">
-          <FreshLienLogo to="/dashboard" variant="sidebar" onClick={() => setMobileOpen(false)} />
+          <FreshLienLogo to={HOME_PATH} variant="sidebar" onClick={() => setMobileOpen(false)} />
           <button type="button" onClick={() => setMobileOpen(false)} className="rounded-lg p-1.5 hover:bg-muted">
             <X className="h-5 w-5" />
           </button>
@@ -206,7 +208,7 @@ export default function AppLayout({ children }) {
           )}
         >
           <FreshLienLogo
-            to="/dashboard"
+            to={HOME_PATH}
             variant={collapsed ? 'icon' : 'sidebar'}
             className={collapsed ? 'mx-auto' : undefined}
           />
@@ -226,7 +228,7 @@ export default function AppLayout({ children }) {
           <button type="button" onClick={() => setMobileOpen(true)} className="rounded-lg p-1.5 hover:bg-muted">
             <Menu className="h-5 w-5" />
           </button>
-          <FreshLienLogo to="/dashboard" variant="mobile" />
+          <FreshLienLogo to={HOME_PATH} variant="mobile" />
           <div className="w-8" />
         </div>
         <GuestAccessBanner />

@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
+import { APP_HOME } from '@/lib/routes';
 import FreshLienLogo from '@/components/brand/FreshLienLogo';
 import SocialLinks from '@/components/brand/SocialLinks';
 
 const productLinks = [
-  { label: 'Web app', to: '/dashboard/foreclosures' },
+  { label: 'Search & map', to: APP_HOME },
   { label: 'REST API', to: '/api' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'County alerts', to: '/dashboard/alerts' },
@@ -34,7 +35,7 @@ export default function MarketingFooter() {
           <div className="sm:col-span-2 lg:col-span-1">
             <FreshLienLogo to="/" variant="footer" onDark />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
-              Same-day distressed real estate intelligence — foreclosure, probate, tax lien, and default data from county-direct public records.
+              Same-day distressed property data from county and court records. Foreclosure live today; probate and tax rolling out by county.
             </p>
             <a
               href={CONTACT_MAILTO}

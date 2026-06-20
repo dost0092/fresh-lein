@@ -20,14 +20,14 @@ function Cell({ value }) {
 
 export default function CompetitorTable() {
   return (
-    <section className="bg-white py-11 lg:py-14">
+    <section className="bg-white py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Benchmark"
           title="Why FreshLien wins"
         />
 
-        <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+        <div className="overflow-hidden rounded-lg border border-border/80 bg-white shadow-card">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -70,21 +70,21 @@ export default function CompetitorTable() {
                     <td className="px-4 py-3 text-xs text-muted-foreground">{c.freshlienEdge}</td>
                   </tr>
                 ))}
-                <tr className="border-t-2 border-primary bg-primary">
-                  <td className="px-4 py-4 text-sm font-bold text-white">FreshLien</td>
-                  <td className="px-4 py-4 text-center text-xs font-semibold text-white/90">$79–999/mo</td>
+                <tr className="border-t-2 border-primary bg-[#FAFAFA]">
+                  <td className="px-4 py-4 text-sm font-bold text-primary">FreshLien</td>
+                  <td className="px-4 py-4 text-center text-xs font-semibold text-foreground">$79–999/mo</td>
                   <td className="px-4 py-4 text-center">
-                    <span className="inline-flex items-center rounded-md bg-white/15 px-2 py-0.5 text-[11px] font-bold text-white">
+                    <span className="inline-flex items-center rounded-md border border-primary/20 bg-white px-2 py-0.5 text-[11px] font-bold text-primary">
                       Same-day
                     </span>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <Check className="mx-auto h-4 w-4 text-white" />
+                    <Check className="mx-auto h-4 w-4 text-primary" />
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <Check className="mx-auto h-4 w-4 text-white" />
+                    <Check className="mx-auto h-4 w-4 text-primary" />
                   </td>
-                  <td className="px-4 py-4 text-xs font-semibold text-white/90">County-direct · same-day · full API</td>
+                  <td className="px-4 py-4 text-xs font-semibold text-foreground">County-direct · same-day · full API</td>
                 </tr>
               </tbody>
             </table>
@@ -92,7 +92,7 @@ export default function CompetitorTable() {
         </div>
 
         <p className="mt-5 text-center text-sm text-muted-foreground">
-          Same-day county-direct public records — before legacy platforms with 30–60 day lag.
+          Same-day county records, before legacy platforms that lag 30 to 60 days.
         </p>
       </LandingContainer>
     </section>

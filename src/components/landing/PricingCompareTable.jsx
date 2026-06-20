@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Minus, Star, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import {
   API_COMPARE_ROWS,
@@ -13,7 +14,7 @@ import {
 function CellValue({ value }) {
   if (value === true) {
     return (
-      <span className="mx-auto inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+      <span className="mx-auto inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100">
         <Check className="h-3.5 w-3.5 text-primary" />
       </span>
     );
@@ -30,7 +31,7 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
   const rows = isApi ? API_COMPARE_ROWS : PLATFORM_COMPARE_ROWS;
 
   return (
-    <section id="compare-plans" className="border-t border-border bg-white py-11 lg:py-14">
+    <section id="compare-plans" className="border-t border-border bg-white py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           align="center"
@@ -39,8 +40,8 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
           className="mx-auto"
         />
 
-        <div className="flex flex-col gap-4 xl:flex-row">
-          <div className="flex-1 overflow-x-auto rounded-xl border border-border bg-white shadow-card">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-stretch">
+          <div className="flex-1 overflow-x-auto rounded-lg border border-border/80 bg-white shadow-card">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-border">
@@ -52,21 +53,23 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
                       key={plan.id}
                       className={cn(
                         'min-w-[120px] p-4 text-center',
-                        plan.popular ? 'bg-primary/[0.06]' : 'bg-slate-50/50'
+                        plan.popular ? 'bg-neutral-50 ring-1 ring-inset ring-primary/15' : 'bg-[#FAFAFA]'
                       )}
                     >
                       {plan.popular && (
-                        <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                        <span className="mb-2 inline-flex items-center gap-1 rounded-full border border-primary/20 bg-white px-2 py-0.5 text-[10px] font-bold text-primary">
                           <Star className="h-2.5 w-2.5 fill-primary" /> Most Popular
                         </span>
                       )}
                       <p className="font-semibold text-foreground">{plan.name}</p>
                       {plan.price != null ? (
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          <span className="text-lg font-bold text-foreground">${plan.price}</span>/mo
-                          {plan.price === 0 && (
-                            <span className="ml-1 text-[10px] font-semibold text-primary">Free</span>
+                          {plan.price === 0 ? (
+                            <span className="text-lg font-bold text-foreground">$0</span>
+                          ) : (
+                            <span className="text-lg font-bold text-foreground">${plan.price}</span>
                           )}
+                          /mo
                         </p>
                       ) : (
                         <p className="mt-0.5 text-xs text-muted-foreground">Custom</p>
@@ -92,7 +95,7 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
                         {plans.map((plan) => (
                           <td
                             key={plan.id}
-                            className={cn('px-4 py-3 text-center', plan.popular && 'bg-primary/[0.03]')}
+                            className={cn('px-4 py-3 text-center', plan.popular && 'bg-neutral-50/80')}
                           >
                             <CellValue value={item[plan.id]} />
                           </td>
@@ -105,26 +108,23 @@ export default function PricingCompareTable({ pricingType = 'platform' }) {
             </table>
           </div>
 
-          <div className="shrink-0 xl:w-56">
-            <div className="flex h-full flex-col rounded-xl bg-secondary p-5 text-secondary-foreground shadow-lg">
-              <span className="mb-4 inline-flex w-fit items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[10px] font-bold">
+          <div className="shrink-0 xl:w-64">
+            <div className="flex min-h-[28rem] flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card">
+              <span className="mb-4 inline-flex w-fit items-center gap-1 rounded-full border border-border bg-neutral-50 px-2 py-1 text-[10px] font-bold text-primary">
                 <Zap className="h-3 w-3" /> Custom
               </span>
-              <h3 className="mb-2 text-base font-semibold">
+              <h3 className="mb-2 text-lg font-semibold text-foreground">
                 {isApi ? 'Enterprise API' : 'Enterprise Platform'}
               </h3>
-              <p className="flex-1 text-xs leading-relaxed text-white/75">
+              <p className="flex-1 text-sm leading-[1.65] text-muted-foreground">
                 {isApi
                   ? 'Dedicated keys, custom counties, SLAs, and onboarding for data teams.'
                   : 'Unlimited counties, team seats, and dedicated support for your organization.'}
               </p>
-              <p className="my-4 text-2xl font-bold">Custom pricing</p>
-              <Link
-                to="/contact"
-                className="block rounded-lg bg-primary py-2.5 text-center text-xs font-semibold text-white transition-colors hover:bg-primary/90"
-              >
-                Talk to our team
-              </Link>
+              <p className="my-5 font-display text-2xl font-bold text-foreground">Custom pricing</p>
+              <Button asChild className="h-11 w-full text-sm font-semibold">
+                <Link to="/contact">Talk to our team</Link>
+              </Button>
             </div>
           </div>
         </div>

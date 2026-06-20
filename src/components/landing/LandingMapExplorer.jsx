@@ -126,7 +126,7 @@ export default function LandingMapExplorer() {
             titleHighlight="map"
             description={
               loadError ? (
-                <span className="text-destructive">Could not load live data — try again below.</span>
+                <span className="text-destructive">Could not load live data. Try again below.</span>
               ) : isAuthenticated ? (
                 <>
                   {mapLoading ? 'Loading live records…' : `${allRows.length.toLocaleString()}+ properties`} ·
@@ -138,7 +138,7 @@ export default function LandingMapExplorer() {
                   <span className="font-medium text-primary">{remaining} left</span>
                 </>
               ) : (
-                `${LANDING_FREE_SEARCH_LIMIT} free searches — then upgrade to Pro`
+                `${LANDING_FREE_SEARCH_LIMIT} free searches, then upgrade to Pro`
               )
             }
           />

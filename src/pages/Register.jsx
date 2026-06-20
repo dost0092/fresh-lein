@@ -9,6 +9,7 @@ import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
+import { APP_HOME } from '@/lib/routes';
 
 function RegisterForm() {
   const [fullName, setFullName] = useState('');
@@ -30,7 +31,7 @@ function RegisterForm() {
       navigate(`/dashboard/billing?plan=${checkoutPlan}`, { replace: true });
       return;
     }
-    navigate('/dashboard', { replace: true });
+    navigate(APP_HOME, { replace: true });
   };
 
   const handleSubmit = async (e) => {
@@ -150,7 +151,7 @@ function RegisterForm() {
       )}
 
       {checkoutPlan && (
-        <div className="mb-4 p-3 rounded-lg bg-primary/10 text-sm text-foreground">
+        <div className="mb-4 p-3 rounded-lg border border-border bg-neutral-50 text-sm text-foreground">
           After signup you&apos;ll go to <strong>Stripe</strong> to pay (13-day trial still applies if enabled).
         </div>
       )}

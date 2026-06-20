@@ -8,13 +8,13 @@ const ICONS = { web: Globe, api: Code2, export: Database };
 
 export default function PlatformOverviewSection() {
   return (
-    <section id="platform" className="bg-white py-11 lg:py-14">
+    <section id="platform" className="bg-white py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Platform"
           title="Three ways to access"
           titleHighlight="distressed property data"
-          description="One normalized dataset — search in the web app, integrate via API, or pull bulk feeds for your team."
+          description="One normalized dataset in the web app, through the API, or as bulk exports for your team."
         />
 
         <div className="grid gap-4 md:grid-cols-3">
@@ -24,10 +24,10 @@ export default function PlatformOverviewSection() {
               <Link
                 key={id}
                 to={href}
-                className="group flex flex-col rounded-xl border border-border/70 bg-white p-6 shadow-sm transition-all hover:border-primary/25 hover:shadow-md"
+                className="group flex flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card transition-all hover:shadow-card-hover"
               >
                 <div className="mb-4 flex items-start justify-between gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="icon-surface h-10 w-10">
                     <Icon className="h-5 w-5" />
                   </div>
                   <StatusBadge status={status} />

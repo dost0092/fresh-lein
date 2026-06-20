@@ -7,13 +7,12 @@ import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import DashboardUpcomingSection from '@/components/dashboard/DashboardUpcomingSection';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import MarketingFooter from '@/components/landing/MarketingFooter';
-import { MARKETING_COVERAGE } from '@/data/marketingStats';
 
 const platformFeatures = [
   {
     icon: Zap,
     title: 'Same-day county data',
-    detail: 'Filings synced from official county sources — not stale monthly lists.',
+    detail: 'Filings synced from official county sources, not stale monthly lists.',
   },
   {
     icon: MapPin,
@@ -46,26 +45,26 @@ export default function LoggedInDashboard() {
   return (
     <>
       <HeroSection />
-      <DashboardOverview />
-      <LandingMapExplorer />
-      <DashboardUpcomingSection />
       <DataCoverageSection />
+      <LandingMapExplorer />
+      <DashboardOverview />
+      <DashboardUpcomingSection />
 
-      <section className="border-b border-border bg-white py-11 lg:py-14">
+      <section className="border-b border-border bg-white py-14 lg:py-20">
         <LandingContainer>
           <LandingSectionHeader
             eyebrow="Your toolkit"
             title="Everything you need to"
             titleHighlight="find deals first"
-            description="Built for investors, wholesalers, and acquisition teams who need county-direct distressed property data before it hits legacy platforms."
+            description="Built for investors, wholesalers, and acquisition teams who need county records before they show up on legacy list sites."
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {platformFeatures.map(({ icon: Icon, title, detail }) => (
               <div
                 key={title}
-                className="rounded-xl border border-border/70 bg-white p-5 shadow-sm transition-all hover:border-primary/25 hover:shadow-md"
+                className="flex h-full flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card"
               >
-                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <span className="icon-surface mb-3 h-10 w-10">
                   <Icon className="h-4 w-4" />
                 </span>
                 <p className="text-sm font-semibold text-foreground">{title}</p>
@@ -76,25 +75,25 @@ export default function LoggedInDashboard() {
         </LandingContainer>
       </section>
 
-      <section className="bg-primary py-12 lg:py-14">
+      <section className="border-t border-border bg-white py-14 lg:py-20">
         <LandingContainer innerClassName="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">Ready to dig in</p>
-          <h2 className="font-display mt-2 text-xl font-semibold text-white sm:text-2xl">
-            Search {MARKETING_COVERAGE.foreclosureRecords} live foreclosure records
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Ready to dig in</p>
+          <h2 className="font-display mt-3 text-xl font-semibold text-foreground sm:text-2xl">
+            Search live foreclosure records
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-white/85">
-            Filter by county, sale date, and status — then export or save what matters.
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+            Filter by county, sale date, and status, then export or save what matters.
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/dashboard/foreclosures"
-              className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-2.5 text-sm font-semibold text-primary hover:bg-white/95"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
             >
               Open foreclosure explorer <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/dashboard/foreclosures?view=map"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-neutral-50"
             >
               Map view
             </Link>

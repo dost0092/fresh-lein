@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,41 +13,42 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 16%;
 
-    /* Primary #135133 (brand green) — actions, links, focus */
+    /* Primary #135133 — buttons, links, focus, active states only */
     --primary: 152 62% 20%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary #1e293b — premium charcoal on white (pairs with brand green) */
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary buttons: white surface + neutral border */
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 220 20% 16%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 44%;
-    --accent: 152 40% 96%;
-    --accent-foreground: 152 50% 28%;
+    --muted: 220 14% 97%;
+    --muted-foreground: 220 10% 38%;
+    --accent: 220 14% 97%;
+    --accent-foreground: 220 20% 16%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 152 62% 20%;
     --radius: 0.5rem;
 
-    --font-heading: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
     --brand-green: #135133;
     --brand-slate: #1e293b;
     --brand-slate-dark: #0f172a;
+    --surface-subtle: #fafafa;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 20% 22%;
     --sidebar-primary: 152 62% 20%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent: 220 14% 97%;
     --sidebar-accent-foreground: 220 20% 22%;
-    --sidebar-border: 220 13% 90%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 152 62% 20%;
   }
 }
@@ -58,24 +59,30 @@
   }
 
   html {
-    font-size: 15px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased text-sm leading-relaxed;
+    @apply bg-white text-foreground font-body antialiased text-base leading-[1.65];
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1 {
-    @apply font-heading text-xl font-semibold tracking-tight;
+    @apply font-display text-2xl font-semibold tracking-[-0.025em] text-foreground leading-tight;
   }
 
   h2 {
-    @apply font-heading text-lg font-semibold tracking-tight;
+    @apply font-display text-xl font-semibold tracking-[-0.02em] text-foreground leading-snug;
   }
 
   h3 {
-    @apply font-heading text-base font-semibold;
+    @apply font-display text-base font-semibold tracking-[-0.01em] text-foreground leading-snug;
+  }
+
+  p {
+    @apply leading-[1.65];
   }
 }
 
@@ -89,21 +96,38 @@
   }
 
   .saas-card {
-    @apply bg-white rounded-lg border border-border shadow-card;
+    @apply bg-white rounded-lg border border-border/80 shadow-card;
+  }
+
+  .saas-card-body {
+    @apply p-5;
+  }
+
+  .form-field {
+    @apply w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm transition-colors
+      focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary;
+  }
+
+  .section-subtle {
+    @apply bg-[#FAFAFA];
+  }
+
+  .icon-surface {
+    @apply flex items-center justify-center rounded-lg bg-neutral-100 text-primary;
   }
 
   .control-bar {
-    @apply bg-white border-b border-border px-4 sm:px-5 py-3;
+    @apply bg-white border-b border-border px-4 sm:px-5 py-3.5;
   }
 
   .search-input {
     @apply w-full h-10 pl-10 pr-3 text-sm border border-border rounded-lg bg-white
-      placeholder:text-muted-foreground/80
-      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all;
+      placeholder:text-muted-foreground/70
+      focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary transition-colors;
   }
 
   .filter-chip {
-    @apply h-8 text-xs bg-white border-border;
+    @apply h-9 min-h-9 text-xs bg-white border-border shadow-sm;
   }
 }
 
@@ -121,7 +145,7 @@
   }
 
   .status-cancelled {
-    @apply bg-slate-50 text-slate-600 border border-slate-200;
+    @apply bg-neutral-50 text-neutral-600 border border-neutral-200;
   }
 
   .status-appraisal {
@@ -137,5 +161,5 @@
 
 .leaflet-popup-content-wrapper {
   border-radius: 0.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }

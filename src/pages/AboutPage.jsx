@@ -6,28 +6,22 @@ import { LandingContainer, LandingSectionHeader } from '@/components/landing/Lan
 import { Button } from '@/components/ui/button';
 import { COMPANY } from '@/data/company';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
+import DataCoverageSection from '@/components/landing/DataCoverageSection';
 import { ABOUT, BRAND } from '@/data/marketingContent';
 
 const valueIcons = [Clock, Shield, MapPin, Layers];
-
-const milestones = [
-  { label: 'Counties covered', value: MARKETING_COVERAGE.counties },
-  { label: 'Filings tracked', value: MARKETING_COVERAGE.foreclosureRecords },
-  { label: 'Properties indexed', value: MARKETING_COVERAGE.propertiesIndexed },
-  { label: 'States live', value: MARKETING_COVERAGE.states },
-];
 
 export default function AboutPage() {
   return (
     <MarketingPageShell>
       <MarketingPageHero
         eyebrow="About FreshLien"
-        title="Same-day distressed real estate intelligence"
+        title="Same-day distressed property data"
         titleHighlight="for investors who move first"
         description={BRAND.positioning}
       />
 
-      <section className="py-11 lg:py-14">
+      <section className="py-14 lg:py-20">
         <LandingContainer>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <LandingSectionHeader
@@ -36,43 +30,22 @@ export default function AboutPage() {
               titleHighlight="one platform"
               description={ABOUT.mission}
             />
-            <div className="rounded-2xl border border-border/60 bg-slate-50/60 p-6 lg:p-8">
+            <div className="rounded-lg border border-border/80 bg-[#FAFAFA] p-6 lg:p-8">
               <p className="text-sm leading-relaxed text-muted-foreground">{ABOUT.story}</p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                Today we cover {MARKETING_COVERAGE.counties} counties across {MARKETING_COVERAGE.states} states
-                with {MARKETING_COVERAGE.foreclosureRecords} filings and {MARKETING_COVERAGE.propertiesIndexed} indexed
-                properties — with pre-foreclosure, probate, and tax delinquency categories rolling out county by county.
+                Today we index {MARKETING_COVERAGE.foreclosureFilingsLiveFull} searchable foreclosure filings
+                across {MARKETING_COVERAGE.counties} counties in {MARKETING_COVERAGE.states} states, with{' '}
+                {MARKETING_COVERAGE.propertiesLinkedFull} properties linked. Probate, pre-foreclosure, and
+                tax categories are rolling out with clear live or coming-soon labels.
               </p>
             </div>
           </div>
         </LandingContainer>
       </section>
 
-      <section className="border-y border-border bg-slate-50/60 py-11 lg:py-14">
-        <LandingContainer>
-          <LandingSectionHeader
-            eyebrow="What we're building"
-            title="A complete distressed"
-            titleHighlight="property platform"
-            align="center"
-            className="mx-auto"
-            description="Web app, REST API, and bulk data feeds — covering the full distress spectrum from pre-foreclosure through REO."
-          />
-          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 lg:grid-cols-4">
-            {milestones.map(({ label, value }) => (
-              <div
-                key={label}
-                className="rounded-xl border border-border/60 bg-white px-4 py-6 text-center shadow-sm"
-              >
-                <p className="font-display text-2xl font-semibold text-primary">{value}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{label}</p>
-              </div>
-            ))}
-          </div>
-        </LandingContainer>
-      </section>
+      <DataCoverageSection />
 
-      <section className="py-11 lg:py-14">
+      <section className="py-14 lg:py-20">
         <LandingContainer>
           <LandingSectionHeader
             eyebrow="What we believe"
@@ -85,9 +58,9 @@ export default function AboutPage() {
               return (
                 <div
                   key={title}
-                  className="rounded-xl border border-border/60 bg-white p-5 transition-colors hover:border-primary/20"
+                  className="rounded-lg border border-border/80 bg-white p-6 shadow-card"
                 >
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="icon-surface mb-3 h-10 w-10">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="font-display text-base font-semibold text-foreground">{title}</h3>
@@ -99,26 +72,21 @@ export default function AboutPage() {
         </LandingContainer>
       </section>
 
-      <section className="bg-primary py-11 lg:py-14">
+      <section className="border-t border-border bg-white py-14 lg:py-20">
         <LandingContainer innerClassName="text-center">
-          <h2 className="font-display text-xl font-semibold text-white sm:text-2xl">
+          <h2 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
             Ready to explore distressed property data?
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-white/85">
-            Start free or browse live filings on the map — {COMPANY.name} covers foreclosure, probate, and tax lien intelligence.
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+            Start free or browse live filings on the map. {COMPANY.name} covers foreclosure today, with probate and tax data rolling out.
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/95">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button asChild size="lg">
               <Link to="/register">
                 Start free <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
-            >
+            <Button asChild size="lg" variant="outline">
               <Link to="/contact">Contact us</Link>
             </Button>
           </div>

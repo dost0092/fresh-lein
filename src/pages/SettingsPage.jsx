@@ -8,6 +8,7 @@ import { getStripePaymentLink } from '@/lib/checkoutPlans';
 import { createStripePortalUrl, isStripeTestMode } from '@/lib/billing';
 import { isCheckoutPlanId } from '@/lib/checkoutPlans';
 import { startPlanCheckout } from '@/lib/startPlanCheckout';
+import { APP_HOME } from '@/lib/routes';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -108,7 +109,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Account */}
-          <div className="bg-white border border-border rounded-2xl p-6 shadow-card mb-5">
+          <div className="bg-white border border-border rounded-lg p-6 shadow-card mb-5">
             <div className="flex items-center gap-2 mb-5">
               <User className="w-4 h-4 text-navy" />
               <h2 className="font-heading font-semibold text-foreground">Account</h2>
@@ -124,11 +125,11 @@ export default function SettingsPage() {
               </div>
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Company</label>
-                <input className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan" placeholder="Your company name" />
+                <input className="form-field" placeholder="Your company name" />
               </div>
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Role</label>
-                <select className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan bg-white">
+                <select className="form-field bg-white">
                   <option>Real Estate Investor</option>
                   <option>Wholesale Operator</option>
                   <option>Mortgage Servicer</option>
@@ -142,14 +143,14 @@ export default function SettingsPage() {
           </div>
 
           {/* Subscription */}
-          <div className="bg-white border border-border rounded-2xl p-6 shadow-card mb-5">
+          <div className="bg-white border border-border rounded-lg p-6 shadow-card mb-5">
             <div className="flex items-center gap-2 mb-5">
               <CreditCard className="w-4 h-4 text-navy" />
               <h2 className="font-heading font-semibold text-foreground">Subscription</h2>
             </div>
 
             {checkoutNotice && (
-              <div className="mb-4 p-3 rounded-lg bg-primary/10 text-foreground text-sm">{checkoutNotice}</div>
+              <div className="mb-4 p-3 rounded-lg border border-border bg-neutral-50 text-foreground text-sm">{checkoutNotice}</div>
             )}
 
             {billingError && (
@@ -173,7 +174,7 @@ export default function SettingsPage() {
             {isSuperAdmin && (
               <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-sm text-emerald-900">
                 Super admin account — full access without payment.{' '}
-                <Link to="/dashboard" className="font-medium underline">
+                <Link to={APP_HOME} className="font-medium underline">
                   Go to dashboard
                 </Link>
               </div>
@@ -285,7 +286,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Danger zone */}
-          <div className="bg-white border border-red-100 rounded-2xl p-6 shadow-card">
+          <div className="bg-white border border-red-100 rounded-lg p-6 shadow-card">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-4 h-4 text-red-500" />
               <h2 className="font-heading font-semibold text-foreground">Danger Zone</h2>

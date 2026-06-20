@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
               { label: 'Avg Judgment', value: filings.length > 0 ? formatK(Math.round(filings.reduce((s, f) => s + (f.judgment_amount || 0), 0) / filings.filter(f => f.judgment_amount).length)) : '$0', icon: TrendingUp, color: 'text-emerald-600 bg-emerald-50' },
               { label: 'Active Auctions', value: filings.filter(f => f.auction_date).length, icon: Calendar, color: 'text-orange-600 bg-orange-50' },
             ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="bg-white rounded-2xl border border-border p-5 shadow-card">
+              <div key={label} className="bg-white rounded-lg border border-border p-5 shadow-card">
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
@@ -93,7 +93,7 @@ export default function AnalyticsPage() {
           {/* Charts Row 1 */}
           <div className="grid lg:grid-cols-2 gap-6 mb-6">
             {/* Filing by State */}
-            <div className="bg-white rounded-2xl border border-border p-6 shadow-card">
+            <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Filings by State</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={stateData}>
@@ -107,7 +107,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Filing Type Pie */}
-            <div className="bg-white rounded-2xl border border-border p-6 shadow-card">
+            <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Filing Type Breakdown</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
           {/* Charts Row 2 */}
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Monthly Trend */}
-            <div className="bg-white rounded-2xl border border-border p-6 shadow-card">
+            <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Monthly Filing Trend</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <LineChart data={monthData}>
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Avg Judgment by Type */}
-            <div className="bg-white rounded-2xl border border-border p-6 shadow-card">
+            <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Avg Judgment by Filing Type</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={avgJudgment}>

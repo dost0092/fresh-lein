@@ -16,7 +16,7 @@ export default function GuestAccessBanner() {
       className={
         urgent
           ? 'border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-950'
-          : 'border-b border-primary/15 bg-primary/[0.06] px-4 py-2.5 text-sm text-foreground'
+          : 'border-b border-border bg-[#FAFAFA] px-4 py-2.5 text-sm text-foreground'
       }
     >
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
@@ -26,7 +26,7 @@ export default function GuestAccessBanner() {
             <>Your {GUEST_ACCESS_DAYS}-day guest access ends today.</>
           ) : (
             <>
-              Browsing as guest — <strong>{daysLeft}</strong> day{daysLeft === 1 ? '' : 's'} left of your{' '}
+              Browsing as guest. <strong>{daysLeft}</strong> day{daysLeft === 1 ? '' : 's'} left of your{' '}
               {GUEST_ACCESS_DAYS}-day preview.
             </>
           )}

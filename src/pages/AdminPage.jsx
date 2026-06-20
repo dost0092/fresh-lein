@@ -57,7 +57,7 @@ export default function AdminPage() {
               { label: 'Failed Scrapers', value: byStatus.failed || 0, icon: XCircle, color: 'text-red-600 bg-red-50' },
               { label: 'Total Filings', value: filingCount, icon: Database, color: 'text-navy bg-navy/10' },
             ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="bg-white rounded-2xl border border-border p-5 shadow-card">
+              <div key={label} className="bg-white rounded-lg border border-border p-5 shadow-card">
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
@@ -68,7 +68,7 @@ export default function AdminPage() {
           </div>
 
           {/* Counties Table */}
-          <div className="bg-white rounded-2xl border border-border shadow-card overflow-hidden">
+          <div className="bg-white rounded-lg border border-border shadow-card overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <h2 className="font-heading font-semibold text-foreground">County Scraper Status</h2>
               <Button size="sm" variant="outline" className="text-xs border-border">

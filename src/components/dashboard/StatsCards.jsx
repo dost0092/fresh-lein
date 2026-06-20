@@ -1,22 +1,24 @@
 import { Gavel, MapPin, Calendar, Sparkles } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CoverageStatItem, coverageStatGridClass } from '@/components/landing/CoverageStats';
 import { formatCountiesDisplay } from '@/data/marketingStats';
+import { cn } from '@/lib/utils';
 
 const cards = [
-  { key: 'activeForeclosures', label: 'Active', icon: Gavel },
-  { key: 'countiesCovered', label: 'Counties', icon: MapPin },
-  { key: 'upcomingAuctions', label: 'Upcoming', icon: Calendar },
-  { key: 'newListingsToday', label: 'New today', icon: Sparkles },
+  { key: 'activeForeclosures', label: 'Active filings in database', icon: Gavel },
+  { key: 'countiesCovered', label: 'Priority counties covered', icon: MapPin },
+  { key: 'upcomingAuctions', label: 'Upcoming auctions scheduled', icon: Calendar },
+  { key: 'newListingsToday', label: 'New filings added today', icon: Sparkles },
 ];
 
 export default function StatsCards({ stats, loading }) {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className={cn(coverageStatGridClass, 'max-w-none gap-4')}>
         {cards.map(({ key }) => (
-          <div key={key} className="saas-card p-4">
-            <Skeleton className="h-3 w-16 mb-2" />
-            <Skeleton className="h-7 w-12" />
+          <div key={key} className="rounded-lg border border-border/80 bg-white p-5">
+            <Skeleton className="mb-3 h-4 w-32" />
+            <Skeleton className="h-10 w-20" />
           </div>
         ))}
       </div>
@@ -24,16 +26,18 @@ export default function StatsCards({ stats, loading }) {
   }
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      {cards.map(({ key, label, icon: Icon }) => (
-        <div key={key} className="saas-card p-4 hover:border-primary/20 transition-colors">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
-            <Icon className="w-3.5 h-3.5 text-primary/70" />
-          </div>
-          <p className="text-2xl font-display font-semibold text-foreground tracking-tight">
-            {key === 'countiesCovered' ? formatCountiesDisplay() : (stats?.[key]?.toLocaleString() ?? '—')}
-          </p>
+    <div className={cn(coverageStatGridClass, 'max-w-none gap-4')}>
+      {cards.map(({ key, label }) => (
+        <div key={key} className="rounded-lg border border-border/80 bg-white p-5">
+          <CoverageStatItem
+            label={label}
+            value={
+              key === 'countiesCovered'
+                ? formatCountiesDisplay()
+                : (stats?.[key]?.toLocaleString() ?? '—')
+            }
+            align="left"
+          />
         </div>
       ))}
     </div>

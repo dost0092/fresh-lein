@@ -14,32 +14,33 @@ import {
 import { useAuth } from '@/lib/AuthContext';
 import { fetchDashboardStats } from '@/lib/foreclosureService';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
+import { CoverageStatsGrid } from '@/components/landing/CoverageStats';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
 import { cn } from '@/lib/utils';
 
 const metricMeta = [
   {
     key: 'activeForeclosures',
-    label: 'Active filings',
+    label: 'Active filings in database',
     detail: 'Sheriff-sale records in your coverage area',
     icon: Gavel,
   },
   {
     key: 'countiesCovered',
-    label: 'Counties live',
+    label: 'Priority counties covered',
     detail: `${MARKETING_COVERAGE.states} states · expanding weekly`,
     icon: TrendingUp,
     format: () => MARKETING_COVERAGE.counties,
   },
   {
     key: 'upcomingAuctions',
-    label: 'Upcoming auctions',
+    label: 'Upcoming auctions scheduled',
     detail: 'Scheduled from today forward',
     icon: Calendar,
   },
   {
     key: 'newListingsToday',
-    label: 'New today',
+    label: 'New filings added today',
     detail: 'Fresh court filings added in 24h',
     icon: Sparkles,
   },
@@ -79,7 +80,7 @@ const actions = [
 function PlanBadge({ isTrialActive, trialDaysLeft, hasActiveSubscription, subscription }) {
   if (hasActiveSubscription && subscription?.plan_name) {
     return (
-      <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+      <span className="inline-flex items-center rounded-full border border-border bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
         {subscription.plan_name} plan
       </span>
     );
@@ -88,7 +89,7 @@ function PlanBadge({ isTrialActive, trialDaysLeft, hasActiveSubscription, subscr
   if (isTrialActive && trialDaysLeft != null) {
     return (
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+        <span className="inline-flex items-center rounded-full border border-border bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
           Pro trial
         </span>
         <span className="text-xs text-muted-foreground">
@@ -131,15 +132,22 @@ export default function DashboardOverview() {
     ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
     : null;
 
+  const liveStats = metricMeta.map(({ key, label, detail, format }) => ({
+    id: key,
+    label,
+    detail,
+    value: format ? format() : (stats?.[key]?.toLocaleString() ?? '—'),
+  }));
+
   return (
-    <section className="border-b border-border bg-slate-50/50">
-      <LandingContainer className="py-10 lg:py-12">
+    <section className="border-b border-border bg-[#FAFAFA]">
+      <LandingContainer className="py-12 lg:py-16">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <LandingSectionHeader
             eyebrow="Platform overview"
             title="Live distressed property data"
             titleHighlight="at a glance"
-            description={`Same-day court data across ${MARKETING_COVERAGE.counties} counties and ${MARKETING_COVERAGE.foreclosureRecords} records — search, map, export, and monitor auctions from one workspace.`}
+            description={`Same-day data across ${MARKETING_COVERAGE.counties} counties and ${MARKETING_COVERAGE.foreclosureFilingsLiveFull} indexed filings. Search, map, export, and track auctions from one workspace.`}
             className="mb-0 max-w-2xl"
           />
           <div className="shrink-0 pt-1 lg:pt-2">
@@ -152,43 +160,18 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {metricMeta.map(({ key, label, detail, icon: Icon, format }) => (
-            <div
-              key={key}
-              className="group rounded-xl border border-border/80 bg-white p-4 shadow-sm transition-all hover:border-primary/25 hover:shadow-md"
-            >
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  {label}
-                </p>
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/[0.08] text-primary transition-colors group-hover:bg-primary/12">
-                  <Icon className="h-3.5 w-3.5" />
-                </span>
-              </div>
-              {loading ? (
-                <div className="h-8 w-16 animate-pulse rounded bg-muted" />
-              ) : (
-                <p className="font-display text-2xl font-semibold tracking-tight text-foreground">
-                  {format ? format() : (stats?.[key]?.toLocaleString() ?? '—')}
-                </p>
-              )}
-              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{detail}</p>
-            </div>
-          ))}
-        </div>
+        <CoverageStatsGrid stats={liveStats} loading={loading} gridClassName="max-w-none" />
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {actions.map(({ icon: Icon, title, description, href, cta }) => (
             <Link
               key={href}
               to={href}
               className={cn(
-                'group flex flex-col rounded-xl border border-border/80 bg-white p-4 shadow-sm transition-all',
-                'hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-md'
+                'group flex h-full flex-col rounded-lg border border-border/80 bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover'
               )}
             >
-              <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span className="icon-surface mb-3 h-9 w-9">
                 <Icon className="h-4 w-4" />
               </span>
               <p className="text-sm font-semibold text-foreground">{title}</p>
@@ -208,7 +191,7 @@ export default function DashboardOverview() {
           </p>
           <Link
             to="/settings"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-neutral-50"
           >
             <Settings className="h-3.5 w-3.5 text-primary" />
             Settings

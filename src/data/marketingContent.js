@@ -1,45 +1,34 @@
-import { MARKETING_COVERAGE } from '@/data/marketingStats';
-
-/** Central marketing copy aligned with FreshLien Master SaaS Document v1.0 */
+/** Re-export for components that imported COVERAGE_STATS from here */
+export { COVERAGE_STAT_CARDS as COVERAGE_STATS, COVERAGE_ROADMAP } from '@/data/marketingStats';
 
 export const BRAND = {
-  headline: 'Same-day distressed real estate intelligence before the crowd.',
+  headline: 'Same-day distressed property data, before the crowd.',
   subheadline:
-    'County-direct foreclosure, probate, tax lien, and default intelligence — delivered through a web app, API, and bulk data feeds.',
-  trustLine:
-    'Same-day freshness · County-direct public records · Export & API access',
+    'FreshLien pulls county and court records into one place. Search filings, set alerts, export lists, or plug in our API.',
+  trustLine: '100K+ filings indexed · 250+ counties · Same-day on priority markets',
   positioning:
-    'FreshLien is a B2B SaaS platform that aggregates, normalizes, and delivers same-day distressed real estate intelligence — pre-foreclosure, active foreclosure, probate, tax delinquency, and mortgage default signals — sourced directly from U.S. county recorders, clerk-of-court portals, and official public databases.',
+    'FreshLien helps investors and B2B teams find distressed deals faster. We index 100K+ foreclosure filings across 250+ counties today, with same-day updates on priority markets. Probate and expanded court coverage are rolling out county by county.',
 };
-
-export const COVERAGE_STATS = [
-  { value: MARKETING_COVERAGE.counties, label: 'Counties covered' },
-  { value: MARKETING_COVERAGE.foreclosureRecords, label: 'Filings tracked' },
-  { value: '500K+', label: 'Properties indexed' },
-  { value: MARKETING_COVERAGE.states, label: 'States live' },
-  { value: MARKETING_COVERAGE.dataRefresh, label: 'Data refresh' },
-  { value: 'Daily', label: 'Alert delivery' },
-];
 
 export const PLATFORM_SURFACES = [
   {
     id: 'web',
-    title: 'Web App',
-    description: 'Search, filter, and monitor distressed properties on an interactive map with property-level detail.',
+    title: 'Web app',
+    description: 'Search on a map, filter by county, and open full property detail.',
     href: '/dashboard/foreclosures',
     status: 'live',
   },
   {
     id: 'api',
     title: 'REST API',
-    description: 'Integrate normalized filing data into CRMs, underwriting tools, and custom investor workflows.',
+    description: 'Pull normalized filing data into your CRM, scripts, or internal tools.',
     href: '/api',
     status: 'live',
   },
   {
     id: 'export',
-    title: 'Bulk Export & Feeds',
-    description: 'CSV exports and warehouse-ready data feeds for teams that need volume, not clicks.',
+    title: 'Bulk export',
+    description: 'Download CSV batches or set up feeds for your team.',
     href: '/pricing',
     status: 'partial',
   },
@@ -47,83 +36,79 @@ export const PLATFORM_SURFACES = [
 
 export const CORE_WORKFLOWS = [
   {
-    title: 'Precision search',
-    description:
-      'Filter by state, county, ZIP, property type, filing type, auction date, equity range, and lien flags.',
+    title: 'Search',
+    description: 'Filter by state, county, ZIP, filing type, auction date, equity, and lien flags.',
     status: 'live',
   },
   {
     title: 'Map view',
-    description: 'Clustered pins with urgency colors so you see where action is concentrated at a glance.',
+    description: 'See pins by urgency so you know where to look first.',
     status: 'live',
   },
   {
     title: 'Property detail',
-    description:
-      'Timeline, owner, liens, auction info, flood zone, and equity estimates in one property drawer.',
+    description: 'Timeline, owner, liens, auction date, flood zone, and equity in one panel.',
     status: 'live',
   },
   {
-    title: 'Alerts & watch areas',
-    description: 'Save counties or criteria and get notified when new filings match your investment thesis.',
+    title: 'Alerts',
+    description: 'Get notified when new filings hit your counties or match your filters.',
     status: 'live',
   },
   {
-    title: 'Export & skip trace',
-    description: 'Download filtered results to CSV or append owner contact data for outreach campaigns.',
+    title: 'Export',
+    description: 'Download filtered results to CSV for outreach or underwriting.',
     status: 'partial',
   },
   {
-    title: 'Portfolio monitoring',
-    description: 'Monitor distress signals across a portfolio of parcels via API or enterprise dashboard.',
+    title: 'Portfolio watch',
+    description: 'Track distress across a list of properties via API or enterprise tools.',
     status: 'soon',
   },
 ];
 
 export const DIFFERENTIATORS = [
   {
-    title: 'County-direct sourcing',
-    description:
-      'Records come from official county clerk, recorder, and court portals — not recycled third-party lists.',
+    title: 'County sources',
+    description: 'Data comes from clerk, recorder, and court portals. Not recycled list broker feeds.',
   },
   {
-    title: 'Same-day freshness',
-    description:
-      'Filings surface the day they hit public record. Legacy platforms often lag 30–60 days behind.',
+    title: 'Same-day updates',
+    description: 'Filings show up the day they hit public record. Many platforms lag weeks behind.',
   },
   {
-    title: 'Probate included',
-    description: 'Estate and probate filings alongside foreclosure — a category most competitors skip entirely.',
+    title: 'Probate on the roadmap',
+    description: 'We are adding estate and probate filings alongside foreclosure, county by county.',
   },
   {
-    title: 'Transparent coverage',
-    description: 'We publish what we cover, how fresh it is, and where gaps remain — no black-box data claims.',
+    title: 'Clear coverage labels',
+    description: 'Every category shows live, partial, or coming soon. No vague “nationwide” claims.',
   },
   {
     title: 'Built for investors',
-    description: 'Map-first UX, export tools, and urgency signals designed for wholesalers and acquisition teams.',
+    description: 'Map search, exports, and alerts that match how acquisition teams actually work.',
   },
   {
-    title: 'API + UI together',
-    description: 'One normalized dataset powering both the dashboard and programmatic integrations.',
+    title: 'API and UI',
+    description: 'Same normalized data in the web app and through the API.',
   },
 ];
 
 export const DATA_CATEGORIES = [
   {
     id: 'pre-foreclosure',
-    title: 'Pre-Foreclosure',
+    title: 'Pre-foreclosure',
     filing: 'NOD / Lis Pendens',
     stage: 'Before auction',
-    value: 'Highest — homeowner still in property',
+    value: 'Highest lead time',
     status: 'soon',
   },
   {
     id: 'active-foreclosure',
-    title: 'Active Foreclosure',
-    filing: 'NTS / Sheriff Sale',
+    title: 'Active foreclosure',
+    filing: 'NTS / Sheriff sale',
     stage: 'Scheduled sale',
-    value: 'High — time-sensitive',
+    value: 'Time-sensitive',
     status: 'live',
   },
   {
@@ -131,7 +116,7 @@ export const DATA_CATEGORIES = [
     title: 'REO',
     filing: 'Post-auction deed',
     stage: 'Lender-owned',
-    value: 'Medium — negotiable',
+    value: 'Negotiable',
     status: 'soon',
   },
   {
@@ -139,30 +124,30 @@ export const DATA_CATEGORIES = [
     title: 'Probate',
     filing: 'Probate court filing',
     stage: 'Estate selling',
-    value: 'High — motivated seller',
+    value: 'Motivated seller',
     status: 'soon',
   },
   {
     id: 'tax-delinquency',
-    title: 'Tax Delinquency',
+    title: 'Tax delinquency',
     filing: 'County tax records',
     stage: 'Pre-lien',
-    value: 'Medium — early signal',
+    value: 'Early signal',
     status: 'soon',
   },
   {
     id: 'mortgage-default',
-    title: 'Mortgage Default',
-    filing: 'Payment missed / HELOC default',
+    title: 'Mortgage default',
+    filing: 'Missed payment / HELOC default',
     stage: 'Early warning',
-    value: 'High — lead time advantage',
+    value: 'Lead time advantage',
     status: 'soon',
   },
   {
     id: 'enrichment',
-    title: 'Enrichment layers',
-    filing: 'Flood zone · Zoning · AVM',
-    stage: 'Risk & value context',
+    title: 'Enrichment',
+    filing: 'Flood zone, zoning, AVM',
+    stage: 'Risk context',
     value: 'Underwriting support',
     status: 'partial',
   },
@@ -171,132 +156,132 @@ export const DATA_CATEGORIES = [
 export const USE_CASES = [
   {
     segment: 'Fix-and-flip investors',
-    pain: 'Stale data means missing the best deals before auction.',
-    value: 'Same-day NOD and lis pendens alerts with equity filters.',
+    pain: 'Old lists mean you miss deals before auction.',
+    value: 'Same-day filings with equity filters and map search.',
   },
   {
     segment: 'Wholesalers',
-    pain: 'Manual courthouse research eats 4–6 hours per week.',
-    value: '165+ filters, bulk export, and map-based territory planning.',
+    pain: 'Courthouse research takes hours every week.',
+    value: 'Filters, bulk export, and territory maps in one tool.',
   },
   {
     segment: 'Real estate attorneys',
-    pain: 'Hours spent searching dockets across county portals.',
-    value: 'Full property timeline with case numbers and lien holders.',
+    pain: 'Case research jumps between county sites.',
+    value: 'One timeline with case numbers and lien holders.',
   },
   {
     segment: 'Mortgage servicers',
-    pain: 'No portfolio-level distress monitoring on collateral.',
-    value: 'API flags on any parcel in your loan book.',
+    pain: 'Hard to monitor collateral across a portfolio.',
+    value: 'API alerts when distress hits a tracked property.',
   },
   {
     segment: 'Hard money lenders',
-    pain: 'Hidden collateral distress discovered too late.',
-    value: 'Collateral risk scoring and filing alerts.',
+    pain: 'Collateral problems show up too late.',
+    value: 'Filing alerts and risk context on each parcel.',
   },
   {
     segment: 'Hedge funds / PE',
-    pain: 'Nationwide deal sourcing requires custom data pipelines.',
-    value: 'Full API access, bulk feeds, and dedicated support.',
+    pain: 'Need custom data pipelines at scale.',
+    value: 'API access, bulk feeds, and dedicated support.',
   },
   {
     segment: 'Probate professionals',
-    pain: 'Estate properties buried in court records.',
-    value: 'Probate filing alerts linked to parcel data.',
+    pain: 'Estate deals hide in court records.',
+    value: 'Probate alerts linked to property data (rolling out).',
   },
 ];
 
 export const TRUST_ITEMS = [
   {
-    title: 'Source types',
+    title: 'Where data comes from',
     items: [
-      'County recorder & clerk-of-court portals',
+      'County recorder and clerk-of-court portals',
       'Sheriff sale and auction calendars',
-      'County assessor & tax records',
-      'Probate court filings (select counties)',
+      'County assessor and tax records',
+      'Probate filings in select counties',
     ],
   },
   {
-    title: 'Freshness rules',
+    title: 'How fresh it is',
     items: [
-      'Core foreclosure filings: same-day or next business day',
-      'Assessor enrichment: weekly refresh',
-      'Coverage map updated as new counties go live',
-      'Filing date and recording date preserved on every record',
+      'Foreclosure filings: same-day or next business day on live counties',
+      'Assessor fields: weekly refresh where available',
+      'Coverage table updated as new counties go live',
+      'Filing date and recording date kept on every record',
     ],
   },
   {
     title: 'Compliance',
     items: [
-      'Lawful use of public records only',
+      'Public records only, used lawfully',
       'No resale of raw county data without license',
-      'SOC 2-aligned security practices',
-      'GDPR-ready data handling for EU users',
+      'Security practices aligned with SOC 2 expectations',
+      'GDPR-ready handling for EU users',
     ],
   },
 ];
 
 export const ENTERPRISE_FEATURES = [
-  { title: 'API keys', description: 'Dedicated keys with custom rate limits and usage dashboards.' },
-  { title: 'Data warehouse access', description: 'Direct feeds to Snowflake, BigQuery, or S3-compatible storage.' },
-  { title: 'Bulk data feeds', description: 'Scheduled county or state-level delivery in CSV, JSON, or Parquet.' },
-  { title: 'Custom alerts', description: 'Polygon watch areas, portfolio triggers, and webhook delivery.' },
-  { title: 'Portfolio monitoring', description: 'Distress checks across thousands of parcels in your loan book.' },
-  { title: 'Dedicated support', description: 'Slack channel, SLA, and onboarding for your data team.' },
+  { title: 'API keys', description: 'Dedicated keys, usage dashboards, and custom rate limits.' },
+  { title: 'Warehouse feeds', description: 'Deliver to Snowflake, BigQuery, or S3-compatible storage.' },
+  { title: 'Bulk delivery', description: 'Scheduled county or state files in CSV, JSON, or Parquet.' },
+  { title: 'Custom alerts', description: 'Polygon watch areas, portfolio triggers, webhooks.' },
+  { title: 'Portfolio monitoring', description: 'Distress checks across large property lists.' },
+  { title: 'Dedicated support', description: 'Slack channel, SLA, and onboarding for your team.' },
 ];
 
 export const MARKET_INSIGHTS = [
   {
     title: 'Weekly foreclosure pulse',
-    description: 'County-level filing volume and week-over-week trends.',
+    description: 'Filing volume by county, week over week.',
     tag: 'Market update',
   },
   {
     title: 'Top distressed ZIPs',
-    description: 'Highest-concentration ZIP codes by filing type and equity band.',
+    description: 'ZIPs with the highest filing concentration.',
     tag: 'Research',
   },
   {
-    title: 'Auction calendar trends',
-    description: 'Upcoming sale dates, average judgment amounts, and sold ratios.',
+    title: 'Auction trends',
+    description: 'Upcoming sales, judgment amounts, sold ratios.',
     tag: 'Auction intel',
   },
   {
-    title: 'Probate filing trends',
-    description: 'Estate activity by county — a leading indicator for off-market deals.',
+    title: 'Probate trends',
+    description: 'Estate activity by county.',
     tag: 'Probate',
   },
 ];
 
 export const DASHBOARD_IA = [
-  { zone: 'Left sidebar', component: 'Filters', description: 'State, county, ZIP, filing type, dates, equity, lien flags' },
-  { zone: 'Center', component: 'Map view', description: 'Clustered pins color-coded by filing stage and urgency' },
-  { zone: 'Right drawer', component: 'Property detail', description: 'Timeline, owner, liens, auction, flood zone, equity' },
-  { zone: 'Top bar', component: 'Search & controls', description: 'Address search, view toggle, active filters, export' },
-  { zone: 'Bottom bar', component: 'Summary stats', description: 'Result count, avg judgment, auction calendar strip' },
+  { zone: 'Left sidebar', component: 'Filters', description: 'State, county, ZIP, filing type, dates, equity, liens' },
+  { zone: 'Center', component: 'Map', description: 'Pins color-coded by urgency and filing stage' },
+  { zone: 'Right drawer', component: 'Property detail', description: 'Timeline, owner, liens, auction, flood, equity' },
+  { zone: 'Top bar', component: 'Search', description: 'Address search, view toggle, filters, export' },
+  { zone: 'Bottom bar', component: 'Stats', description: 'Result count, averages, auction calendar' },
 ];
 
 export const ABOUT = {
   mission:
-    'Real estate investors lose hours jumping between county sites, PDF dockets, and outdated spreadsheets. FreshLien unifies distressed property intelligence into one searchable platform — with map view, alerts, API access, and the context you need to evaluate a deal in minutes.',
+    'FreshLien pulls county and court records into one searchable product. Today that means 100K+ foreclosure filings across 250+ counties, with map search, alerts, exports, and an API.',
   story:
-    'We built FreshLien because speed is the product. When a lis pendens hits the docket today, the investor who sees it first contacts the homeowner before anyone else. That first-mover advantage is worth tens of thousands per deal — and it requires county-direct data, not month-old aggregator feeds.',
+    'We started FreshLien because investors waste time jumping between county websites and stale lists. We publish what is live today, label what is still rolling out, and update priority counties same-day when the source allows it.',
   values: [
     {
-      title: 'Speed is the product',
-      text: 'Same-day updates from official county sources. Foreclosure windows are short — your data should keep pace.',
+      title: 'Speed matters',
+      text: 'Foreclosure windows are short. Priority counties refresh same-day or next business day.',
     },
     {
-      title: 'Data you can trust',
-      text: 'Every record links to case numbers, sale dates, and source portals. Transparent coverage with no black-box claims.',
+      title: 'Honest numbers',
+      text: 'We show what is indexed now and what is still coming. No inflated “nationwide” claims.',
     },
     {
-      title: 'Built for the field',
-      text: 'Map-first search, county filters, CSV export, and API access designed for investors who move fast.',
+      title: 'Works in the field',
+      text: 'Map search, county filters, CSV export, and API access for teams that move fast.',
     },
     {
-      title: 'Full distress spectrum',
-      text: 'Foreclosure, probate, tax delinquency, and default signals in one platform — not siloed point solutions.',
+      title: 'Full picture over time',
+      text: 'Foreclosure is live today. Probate, pre-foreclosure, and tax data are rolling out county by county.',
     },
   ],
 };

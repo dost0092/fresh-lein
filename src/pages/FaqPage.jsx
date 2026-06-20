@@ -37,7 +37,7 @@ export default function FaqPage() {
               ))}
             </Accordion>
 
-            <div className="mt-10 rounded-xl border border-border bg-slate-50/60 p-6 text-center">
+            <div className="mt-10 rounded-lg border border-border bg-[#FAFAFA] p-8 text-center">
               <p className="text-sm text-muted-foreground">Still have questions?</p>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
                 <Button asChild>

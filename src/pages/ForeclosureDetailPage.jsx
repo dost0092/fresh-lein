@@ -35,7 +35,7 @@ function MetricCard({ icon: Icon, label, value, sub, highlight }) {
     <div
       className={cn(
         'rounded-lg border p-4 bg-white transition-shadow hover:shadow-card',
-        highlight ? 'border-primary/30 bg-primary/[0.03]' : 'border-border shadow-card'
+        highlight ? 'border-primary/30 bg-neutral-50' : 'border-border shadow-card'
       )}
     >
       <div className="flex items-center gap-2 text-muted-foreground mb-2">
@@ -114,11 +114,16 @@ export default function ForeclosureDetailPage() {
   const formatCurrency = (v) =>
     v != null ? `$${Number(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '—';
 
-  const formatDate = (d) => {
+  const getSaleDateSub = (saleDate) => {
+    if (!saleDate) return 'No sale date scheduled';
     try {
-      return d ? format(new Date(d), 'EEEE, MMMM d, yyyy') : '—';
+      const days = Math.ceil((new Date(saleDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      if (days > 1) return `${days} days until auction`;
+      if (days === 1) return 'Auction tomorrow';
+      if (days === 0) return 'Auction today';
+      return 'Past auction date';
     } catch {
-      return d || '—';
+      return 'Scheduled sheriff sale';
     }
   };
 
@@ -127,7 +132,7 @@ export default function ForeclosureDetailPage() {
       <AppLayout>
         <div className="p-8 max-w-6xl mx-auto space-y-6">
           <Skeleton className="h-10 w-64" />
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <Skeleton key={i} className="h-28" />
             ))}
@@ -240,7 +245,7 @@ export default function ForeclosureDetailPage() {
               icon={Calendar}
               label="Sale date"
               value={record.sale_date ? format(new Date(record.sale_date), 'MMM d, yyyy') : '—'}
-              sub={formatDate(record.sale_date)}
+              sub={getSaleDateSub(record.sale_date)}
               highlight
             />
             <MetricCard

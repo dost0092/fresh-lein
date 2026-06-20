@@ -33,7 +33,7 @@ export default function LoggedInDashboardStrip() {
   const name = profile?.full_name?.split(' ')[0] || profile?.email?.split('@')[0] || 'there';
 
   return (
-    <section className="border-b border-border bg-gradient-to-b from-primary/[0.04] to-white">
+    <section className="border-b border-border bg-white">
       <LandingContainer className="py-6 lg:py-8">
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -62,7 +62,7 @@ export default function LoggedInDashboardStrip() {
             <Link
               key={href}
               to={href}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-neutral-50"
             >
               <Icon className="h-3.5 w-3.5 text-primary" />
               {label}

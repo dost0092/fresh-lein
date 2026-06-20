@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Gavel, Map, BarChart2 } from 'lucide-react';
+import { Search, ArrowRight, Gavel, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   canSearchOnLanding,
@@ -8,8 +8,7 @@ import {
   getRemainingSearches,
 } from '@/lib/landingSearchLimit';
 import ProGateModal from '@/components/landing/ProGateModal';
-import { LandingContainer, LandingEyebrow, highlightMarkStyle } from '@/components/landing/LandingLayout';
-import { formatForeclosureRecordsDisplay } from '@/data/marketingStats';
+import { LandingContainer, LandingEyebrow, highlightMarkStyle, LANDING_SECTION } from '@/components/landing/LandingLayout';
 import { BRAND } from '@/data/marketingContent';
 import { useAuth } from '@/lib/AuthContext';
 
@@ -39,31 +38,19 @@ export default function HeroSection() {
     window.dispatchEvent(new CustomEvent('freshlien-landing-search', { detail: q }));
   };
 
-  const scrollToCoverage = () => {
-    document.getElementById('coverage')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border/50 bg-[#f6f9f7]">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden
-          style={{
-            background: 'linear-gradient(180deg, rgba(19, 81, 51, 0.05) 0%, transparent 40%)',
-          }}
-        />
-
-        <LandingContainer className="relative py-11 lg:py-14">
-          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+      <section className={`relative overflow-hidden border-b border-border/60 bg-white ${LANDING_SECTION}`}>
+        <LandingContainer className="relative">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
               <LandingEyebrow>Distressed real estate intelligence</LandingEyebrow>
 
-              <h1 className="font-display mb-4 font-semibold leading-[1.15] tracking-tight text-primary">
+              <h1 className="font-display mb-5 font-semibold leading-[1.12] tracking-tight text-foreground">
                 <span className="block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
                   Same-day distressed property intelligence
                 </span>
-                <span className="mt-1.5 block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
+                <span className="mt-2 block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
                   <span
                     className="inline box-decoration-clone rounded-sm px-1.5 py-0.5 text-primary"
                     style={highlightMarkStyle}
@@ -73,16 +60,14 @@ export default function HeroSection() {
                 </span>
               </h1>
 
-              <p className="mb-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              <p className="mb-8 max-w-md text-base leading-[1.65] text-muted-foreground">
                 {BRAND.subheadline}
               </p>
 
-              <p className="mb-6 text-xs font-medium text-primary/80 sm:text-sm">{BRAND.trustLine}</p>
-
-              <form onSubmit={handleSearch} className="mb-4 max-w-lg">
-                <div className="flex flex-col overflow-hidden rounded-lg border border-border bg-white shadow-sm focus-within:border-primary/30 focus-within:ring-2 focus-within:ring-primary/10 sm:flex-row">
+              <form onSubmit={handleSearch} className="mb-6 max-w-lg">
+                <div className="flex flex-col overflow-hidden rounded-lg border border-border bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 sm:flex-row">
                   <div className="relative flex min-w-0 flex-1 items-center">
-                    <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-primary/70" />
+                    <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-muted-foreground" />
                     <input
                       type="search"
                       value={query}
@@ -92,14 +77,14 @@ export default function HeroSection() {
                     />
                   </div>
                   <Button type="submit" className="h-11 shrink-0 rounded-none px-6 sm:h-12">
-                    Search data
+                    Search
                   </Button>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
-                  {isAuthenticated
-                    ? `${formatForeclosureRecordsDisplay({ compact: true })} live filings · full explorer with filters & export`
-                    : `${getRemainingSearches()} free preview searches`}
-                </p>
+                {!isAuthenticated && (
+                  <p className="mt-2.5 text-xs text-muted-foreground sm:text-sm">
+                    {getRemainingSearches()} free preview searches on the map below
+                  </p>
+                )}
               </form>
 
               <div className="flex flex-wrap items-center gap-3">
@@ -110,11 +95,7 @@ export default function HeroSection() {
                         <Gavel className="mr-2 h-4 w-4" /> Browse filings
                       </Link>
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
-                      asChild
-                    >
+                    <Button variant="outline" className="h-10 px-5 font-semibold" asChild>
                       <Link to="/dashboard/foreclosures?view=map">
                         <Map className="mr-2 h-4 w-4" /> Map view
                       </Link>
@@ -122,21 +103,13 @@ export default function HeroSection() {
                   </>
                 ) : (
                   <>
-                    <Button className="h-10 px-5 font-semibold" type="button" onClick={handleSearch}>
-                      <Search className="mr-2 h-4 w-4" /> Search data
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="h-10 border-primary px-5 font-semibold text-primary hover:bg-primary/5"
-                      type="button"
-                      onClick={scrollToCoverage}
-                    >
-                      <BarChart2 className="mr-2 h-4 w-4" /> View coverage
-                    </Button>
-                    <Button variant="ghost" className="h-10 font-semibold text-primary" asChild>
+                    <Button className="h-10 px-5 font-semibold" asChild>
                       <Link to="/register">
                         Get started free <ArrowRight className="ml-1 h-4 w-4" />
                       </Link>
+                    </Button>
+                    <Button variant="outline" className="h-10 px-5 font-semibold" type="button" onClick={handleSearch}>
+                      Preview live map
                     </Button>
                   </>
                 )}
@@ -144,7 +117,7 @@ export default function HeroSection() {
             </div>
 
             <div className="w-full">
-              <div className="overflow-hidden rounded-xl border border-border/70 shadow-md">
+              <div className="overflow-hidden rounded-lg border border-border/80 shadow-card">
                 <img
                   src="/hero-foreclosure.png"
                   alt="FreshLien distressed property map with urgency-coded pins"

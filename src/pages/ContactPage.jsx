@@ -75,7 +75,7 @@ export default function ContactPage() {
                   key={title}
                   className="rounded-xl border border-border/60 bg-white p-5 shadow-sm"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="icon-surface h-10 w-10">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="mt-3 font-display text-base font-semibold text-foreground">{title}</h3>

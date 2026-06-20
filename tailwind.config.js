@@ -109,9 +109,9 @@ module.exports = {
   			'fade-up': 'fade-up 0.4s ease-out'
   		},
   		boxShadow: {
-  			'card': '0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05)',
-  			'card-hover': '0 10px 25px -5px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04)',
-  			'drawer': '-4px 0 24px rgba(0,0,0,0.1)',
+  			'card': '0 1px 2px 0 rgba(0,0,0,0.04)',
+  			'card-hover': '0 4px 16px -4px rgba(0,0,0,0.08)',
+  			'drawer': '-4px 0 24px rgba(0,0,0,0.06)',
   			'nav': '0 1px 0 0 hsl(var(--border))'
   		}
   	}

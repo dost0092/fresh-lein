@@ -1,10 +1,16 @@
 import { cn } from '@/lib/utils';
+import { coverageIntroTitleClass, coverageIntroSubtitleClass } from '@/components/landing/CoverageStats';
 
 export const LANDING_MAX = 'max-w-7xl';
 export const LANDING_PAD = 'px-4 sm:px-6 lg:px-8';
+export const LANDING_SECTION = 'py-14 lg:py-20';
+
+/** Fixed marketing header height — keep in sync with MarketingNav */
+export const MARKETING_NAV_HEIGHT_CLASS = 'h-[4.25rem] sm:h-[4.5rem]';
+export const MARKETING_NAV_OFFSET_CLASS = 'pt-[4.25rem] sm:pt-[4.5rem]';
 
 export const highlightMarkStyle = {
-  backgroundColor: 'rgba(19, 81, 51, 0.14)',
+  backgroundColor: 'rgba(0, 0, 0, 0.04)',
   boxDecorationBreak: 'clone',
   WebkitBoxDecorationBreak: 'clone',
 };
@@ -21,7 +27,7 @@ export function LandingEyebrow({ children, className }) {
   return (
     <p
       className={cn(
-        'mb-3 text-xs font-bold uppercase tracking-[0.18em] text-primary',
+        'mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary',
         className
       )}
     >
@@ -41,7 +47,7 @@ export function LandingSectionHeader({
   return (
     <div
       className={cn(
-        'mb-8 lg:mb-10',
+        'mb-10 lg:mb-12',
         align === 'center' && 'mx-auto max-w-2xl text-center',
         align === 'left' && 'max-w-2xl',
         className
@@ -52,7 +58,7 @@ export function LandingSectionHeader({
           {eyebrow}
         </LandingEyebrow>
       )}
-      <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-[1.75rem] lg:text-[2rem]">
+      <h2 className={coverageIntroTitleClass}>
         {title}
         {titleHighlight && (
           <>
@@ -67,7 +73,7 @@ export function LandingSectionHeader({
         )}
       </h2>
       {description && (
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
+        <p className={cn(coverageIntroSubtitleClass, align === 'center' && 'mx-auto')}>{description}</p>
       )}
     </div>
   );

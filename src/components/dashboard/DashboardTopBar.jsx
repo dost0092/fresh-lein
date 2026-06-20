@@ -30,7 +30,7 @@ export default function DashboardTopBar({ view, onViewChange, filters, onFilterR
             value={searchVal}
             onChange={e => setSearchVal(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && onSearch?.(searchVal)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan/30 focus:border-cyan bg-muted/40 transition-all"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary bg-muted/40 transition-all"
           />
         </div>
 

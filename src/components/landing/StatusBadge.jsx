@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
 
 const STYLES = {
-  live: 'bg-primary/10 text-primary border-primary/20',
+  live: 'bg-neutral-100 text-primary border-neutral-200',
   partial: 'bg-amber-50 text-amber-800 border-amber-200',
-  soon: 'bg-muted text-muted-foreground border-border',
+  soon: 'bg-neutral-50 text-muted-foreground border-border',
 };
 
 const LABELS = {

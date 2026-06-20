@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+import { APP_HOME } from '@/lib/routes';
+
 function pathFromRedirectUrl(redirectTo) {
   try {
     const url = new URL(redirectTo, window.location.origin);
-    return `${url.pathname}${url.search}` || '/dashboard';
+    return `${url.pathname}${url.search}` || APP_HOME;
   } catch {
-    return '/dashboard';
+    return APP_HOME;
   }
 }
 
@@ -34,7 +36,7 @@ export default function AuthCallbackHandler() {
       if (session) {
         const stored = sessionStorage.getItem('auth_redirect');
         sessionStorage.removeItem('auth_redirect');
-        const target = stored || '/dashboard';
+        const target = stored || APP_HOME;
         window.history.replaceState({}, '', target);
         navigate(target, { replace: true });
         return;
@@ -61,7 +63,7 @@ export default function AuthCallbackHandler() {
       if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
         const stored = sessionStorage.getItem('auth_redirect');
         sessionStorage.removeItem('auth_redirect');
-        const target = stored || '/dashboard';
+        const target = stored || APP_HOME;
         window.history.replaceState({}, '', target);
         navigate(target, { replace: true });
       }

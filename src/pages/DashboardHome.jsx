@@ -3,12 +3,13 @@ import LoggedInDashboard from '@/components/dashboard/LoggedInDashboard';
 import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
 import RequireEntitlement from '@/components/RequireEntitlement';
 import GuestAccessBanner from '@/components/dashboard/GuestAccessBanner';
+import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 
 function DashboardHomeContent() {
   return (
     <div className="min-h-screen bg-white">
       <MarketingNav />
-      <div className="pt-[3.75rem] lg:pt-[4.25rem]">
+      <div className={MARKETING_NAV_OFFSET_CLASS}>
         <GuestAccessBanner />
         <LoggedInDashboard />
       </div>

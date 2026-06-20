@@ -2,13 +2,13 @@ import { LandingContainer, highlightMarkStyle } from '@/components/landing/Landi
 
 export default function MarketingPageHero({ eyebrow, title, titleHighlight, description, children }) {
   return (
-    <section className="border-b border-border bg-gradient-to-b from-primary/[0.05] via-white to-white">
-      <LandingContainer className="py-10 lg:py-14">
+    <section className="border-b border-border bg-white">
+      <LandingContainer className="py-14 lg:py-20">
         <div className="mx-auto max-w-3xl text-center">
           {eyebrow && (
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{eyebrow}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{eyebrow}</p>
           )}
-          <h1 className="font-display mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+          <h1 className="font-display mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
             {title}
             {titleHighlight && (
               <>
@@ -23,7 +23,7 @@ export default function MarketingPageHero({ eyebrow, title, titleHighlight, desc
             )}
           </h1>
           {description && (
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               {description}
             </p>
           )}

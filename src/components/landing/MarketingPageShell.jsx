@@ -1,11 +1,12 @@
 import MarketingNav from '@/components/layout/MarketingNav';
 import MarketingFooter from '@/components/landing/MarketingFooter';
+import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 
 export default function MarketingPageShell({ children, className = '' }) {
   return (
-    <div className={`min-h-screen bg-[#f6f9f7] ${className}`}>
+    <div className={`min-h-screen bg-white ${className}`}>
       <MarketingNav />
-      <div className="pt-[3.75rem] lg:pt-[4.25rem]">{children}</div>
+      <div className={MARKETING_NAV_OFFSET_CLASS}>{children}</div>
       <MarketingFooter />
     </div>
   );

@@ -4,13 +4,13 @@ import { DATA_CATEGORIES } from '@/data/marketingContent';
 
 export default function DataCategoriesSection() {
   return (
-    <section id="data-categories" className="border-y border-border bg-slate-50/60 py-11 lg:py-14">
+    <section id="data-categories" className="border-y border-border bg-[#FAFAFA] py-14 lg:py-20">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Data categories"
           title="Full distress spectrum"
           titleHighlight="in one dataset"
-          description="Pre-foreclosure through REO — plus probate, tax delinquency, default signals, and enrichment layers."
+          description="Pre-foreclosure through REO, plus probate, tax delinquency, default signals, and property enrichment."
         />
 
         <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">

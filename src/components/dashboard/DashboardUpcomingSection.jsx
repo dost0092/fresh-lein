@@ -39,7 +39,7 @@ export default function DashboardUpcomingSection() {
             eyebrow="Nearest auctions"
             title="Upcoming sheriff sales"
             titleHighlight="sorted by date"
-            description="Soonest sale dates first — click any row for full case details, equity estimates, and status history."
+            description="Soonest sale dates first. Click any row for case details, equity estimates, and status history."
             className="mb-0 max-w-2xl"
           />
           <Button asChild variant="outline" size="sm" className="shrink-0 border-primary/30 text-primary">
@@ -76,7 +76,7 @@ export default function DashboardUpcomingSection() {
                 <Link
                   key={row.id}
                   to={`/dashboard/foreclosures/${row.id}`}
-                  className="group grid gap-2 px-4 py-3.5 transition-colors hover:bg-primary/[0.02] sm:grid-cols-[1fr_120px_100px_100px] sm:items-center sm:gap-4"
+                  className="group grid gap-2 px-4 py-3.5 transition-colors hover:bg-neutral-50 sm:grid-cols-[1fr_120px_100px_100px] sm:items-center sm:gap-4"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground group-hover:text-primary">
