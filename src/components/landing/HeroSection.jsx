@@ -8,7 +8,7 @@ import {
   getRemainingSearches,
 } from '@/lib/landingSearchLimit';
 import ProGateModal from '@/components/landing/ProGateModal';
-import { LandingContainer, LandingEyebrow, highlightMarkStyle, LANDING_SECTION } from '@/components/landing/LandingLayout';
+import { LandingContainer, LandingEyebrow, highlightMarkStyle } from '@/components/landing/LandingLayout';
 import { BRAND } from '@/data/marketingContent';
 import { useAuth } from '@/lib/AuthContext';
 
@@ -40,19 +40,19 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className={`relative overflow-hidden border-b border-border/60 bg-white ${LANDING_SECTION}`}>
+      <section className="relative overflow-hidden border-b border-border/60 bg-white py-16 sm:py-20 lg:py-28">
         <LandingContainer className="relative">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <LandingEyebrow>Distressed real estate intelligence</LandingEyebrow>
 
-              <h1 className="font-display mb-5 font-semibold leading-[1.12] tracking-tight text-foreground">
-                <span className="block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
-                  Same-day distressed property intelligence
+              <h1 className="font-display mb-6 font-semibold leading-[1.05] tracking-[-0.03em] text-foreground">
+                <span className="block text-[2.25rem] sm:text-[2.85rem] lg:text-[3.4rem]">
+                  Same-day distressed property data,
                 </span>
-                <span className="mt-2 block text-[1.85rem] sm:text-[2.1rem] lg:text-[2.5rem]">
+                <span className="mt-1 block text-[2.25rem] sm:text-[2.85rem] lg:text-[3.4rem]">
                   <span
-                    className="inline box-decoration-clone rounded-sm px-1.5 py-0.5 text-primary"
+                    className="inline box-decoration-clone rounded-md px-2 py-0.5 text-primary"
                     style={highlightMarkStyle}
                   >
                     before the crowd
@@ -60,7 +60,7 @@ export default function HeroSection() {
                 </span>
               </h1>
 
-              <p className="mb-8 max-w-md text-base leading-[1.65] text-muted-foreground">
+              <p className="mb-8 max-w-md text-lg leading-[1.6] text-muted-foreground">
                 {BRAND.subheadline}
               </p>
 
@@ -87,30 +87,37 @@ export default function HeroSection() {
                 )}
               </form>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
                 {isAuthenticated ? (
                   <>
-                    <Button className="h-10 px-5 font-semibold" asChild>
+                    <Button className="h-11 px-6 text-[15px] font-semibold" asChild>
                       <Link to="/dashboard/foreclosures">
                         <Gavel className="mr-2 h-4 w-4" /> Browse filings
                       </Link>
                     </Button>
-                    <Button variant="outline" className="h-10 px-5 font-semibold" asChild>
-                      <Link to="/dashboard/foreclosures?view=map">
-                        <Map className="mr-2 h-4 w-4" /> Map view
-                      </Link>
-                    </Button>
+                    <Link
+                      to="/dashboard/foreclosures?view=map"
+                      className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-foreground transition-colors hover:text-primary"
+                    >
+                      <Map className="h-4 w-4" /> Map view
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </>
                 ) : (
                   <>
-                    <Button className="h-10 px-5 font-semibold" asChild>
+                    <Button className="h-11 px-6 text-[15px] font-semibold" asChild>
                       <Link to="/register">
                         Get started free <ArrowRight className="ml-1 h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="outline" className="h-10 px-5 font-semibold" type="button" onClick={handleSearch}>
+                    <button
+                      type="button"
+                      onClick={handleSearch}
+                      className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-foreground transition-colors hover:text-primary"
+                    >
                       Preview live map
-                    </Button>
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </button>
                   </>
                 )}
               </div>

@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils';
 
 export const coverageIntroTitleClass =
-  'font-display text-[1.65rem] font-semibold leading-[1.2] tracking-[-0.025em] text-foreground sm:text-[2rem] lg:text-[2.35rem]';
+  'font-display text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.03em] text-foreground sm:text-[2.25rem] lg:text-[2.6rem]';
 
 export const coverageIntroSubtitleClass =
-  'mt-4 max-w-2xl text-base leading-[1.65] text-muted-foreground';
+  'mt-4 max-w-2xl text-[1.0625rem] leading-[1.6] text-muted-foreground';
 
 export const coverageStatLabelClass = 'text-sm font-medium leading-snug text-muted-foreground';
 

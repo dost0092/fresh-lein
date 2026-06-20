@@ -1,10 +1,6 @@
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import StatusBadge from '@/components/landing/StatusBadge';
-import {
-  CoverageLeadBox,
-  CoverageSectionIntro,
-  CoverageStatsGrid,
-} from '@/components/landing/CoverageStats';
+import { CoverageLeadBox } from '@/components/landing/CoverageStats';
 import {
   COVERAGE_DISPLAY_STATS,
   COVERAGE_ROADMAP,
@@ -13,18 +9,39 @@ import {
 
 export default function DataCoverageSection() {
   return (
-    <section id="coverage" className="border-y border-border bg-[#FAFAFA] py-14 lg:py-20">
-      <LandingContainer>
-        <CoverageSectionIntro
-          title="Clean and useful distressed property data that's easy to understand"
-          subtitle="Because you want to find deals from county records, not wrangle raw PDFs and clerk portals."
-        />
+    <section id="coverage">
+      <div className="bg-navy-dark">
+        <LandingContainer className="py-16 lg:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-display text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.03em] text-white sm:text-[2.25rem] lg:text-[2.6rem]">
+              Clean, useful distressed property data that&apos;s easy to understand
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-[1.0625rem] leading-[1.6] text-white/60">
+              Because you want to find deals from county records, not wrangle raw PDFs and clerk portals.
+            </p>
+          </div>
 
-        <CoverageStatsGrid stats={COVERAGE_DISPLAY_STATS} />
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-14 lg:grid-cols-4 lg:gap-5">
+            {COVERAGE_DISPLAY_STATS.map(({ id, value, label }) => (
+              <div
+                key={id}
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-6 text-center sm:px-5 sm:py-7"
+              >
+                <p className="font-display text-3xl font-semibold tracking-tight text-white sm:text-[2.5rem]">
+                  {value}
+                </p>
+                <p className="mt-2 text-xs font-medium leading-snug text-white/55 sm:text-sm">{label}</p>
+              </div>
+            ))}
+          </div>
+        </LandingContainer>
+      </div>
 
-        <CoverageLeadBox>{MARKETING_COVERAGE.coverageLead}</CoverageLeadBox>
+      <div className="border-t border-border bg-[#FAFAFA] py-14 lg:py-20">
+        <LandingContainer>
+          <CoverageLeadBox className="mt-0">{MARKETING_COVERAGE.coverageLead}</CoverageLeadBox>
 
-        <div className="mt-12 overflow-hidden rounded-lg border border-border/80 bg-white shadow-card lg:mt-14">
+          <div className="mt-12 overflow-hidden rounded-lg border border-border/80 bg-white shadow-card lg:mt-14">
           <div className="border-b border-border bg-neutral-50 px-4 py-4 sm:px-6">
             <h3 className="text-sm font-semibold text-foreground">Coverage roadmap</h3>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
@@ -96,11 +113,12 @@ export default function DataCoverageSection() {
           </div>
         </div>
 
-        <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-[1.65] text-muted-foreground">
-          Figures are estimates from public market data and live county integrations. We add clerk, recorder, and
-          court sources county by county and label each market clearly.
-        </p>
-      </LandingContainer>
+          <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-[1.65] text-muted-foreground">
+            Figures are estimates from public market data and live county integrations. We add clerk, recorder, and
+            court sources county by county and label each market clearly.
+          </p>
+        </LandingContainer>
+      </div>
     </section>
   );
 }

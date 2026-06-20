@@ -10,29 +10,34 @@ import SocialLinks from '@/components/brand/SocialLinks';
 const productLinks = [
   { label: 'Search & map', to: APP_HOME },
   { label: 'REST API', to: '/api' },
-  { label: 'Pricing', to: '/pricing' },
   { label: 'County alerts', to: '/dashboard/alerts' },
-  { label: 'Data coverage', to: '/#coverage' },
+  { label: 'Bulk export', to: '/pricing' },
+  { label: 'Pricing', to: '/pricing' },
+];
+
+const resourceLinks = [
+  { label: 'API documentation', to: '/api' },
+  { label: 'Coverage dashboard', to: '/#coverage' },
+  { label: 'FAQ', to: '/faq' },
+  { label: 'Security', to: '/security' },
 ];
 
 const companyLinks = [
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
-  { label: 'FAQ', to: '/faq' },
 ];
 
 const legalLinks = [
   { label: 'Privacy', to: '/privacy' },
   { label: 'Terms', to: '/terms' },
-  { label: 'Security', to: '/security' },
 ];
 
 export default function MarketingFooter() {
   return (
     <footer className="border-t border-white/10 bg-navy-dark">
       <LandingContainer className="py-12 lg:py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2 lg:col-span-1">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
+          <div className="sm:col-span-2 lg:col-span-4">
             <FreshLienLogo to="/" variant="footer" onDark />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
               Same-day distressed property data from county and court records. Foreclosure live today; probate and tax rolling out by county.
@@ -47,11 +52,11 @@ export default function MarketingFooter() {
             <SocialLinks className="mt-4" onDark />
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Product</p>
             <ul className="mt-4 space-y-2.5">
               {productLinks.map(({ label, to }) => (
-                <li key={to}>
+                <li key={`${label}-${to}`}>
                   <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
                     {label}
                   </Link>
@@ -60,11 +65,24 @@ export default function MarketingFooter() {
             </ul>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Resources</p>
+            <ul className="mt-4 space-y-2.5">
+              {resourceLinks.map(({ label, to }) => (
+                <li key={`${label}-${to}`}>
+                  <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Company</p>
             <ul className="mt-4 space-y-2.5">
               {companyLinks.map(({ label, to }) => (
-                <li key={to}>
+                <li key={`${label}-${to}`}>
                   <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
                     {label}
                   </Link>
@@ -83,11 +101,11 @@ export default function MarketingFooter() {
             </ul>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Legal</p>
             <ul className="mt-4 space-y-2.5">
               {legalLinks.map(({ label, to }) => (
-                <li key={to}>
+                <li key={`${label}-${to}`}>
                   <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
                     {label}
                   </Link>

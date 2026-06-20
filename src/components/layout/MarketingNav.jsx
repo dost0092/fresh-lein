@@ -7,7 +7,7 @@ import {
   LANDING_PAD,
   MARKETING_NAV_HEIGHT_CLASS,
 } from '@/components/landing/LandingLayout';
-import { PlatformMenu, ProductsMegaMenuPanel } from '@/components/layout/ProductsMegaMenu';
+import { ProductMenu, ResourcesMenu, ProductsMegaMenuPanel } from '@/components/layout/ProductsMegaMenu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
@@ -23,10 +23,6 @@ import { APP_HOME } from '@/lib/routes';
 
 const navLinkClass =
   'inline-flex items-center rounded-md px-3 py-2 text-[15px] font-medium text-primary/90 transition-colors hover:text-primary';
-
-function NavDivider() {
-  return <span className="mx-1 hidden h-6 w-px bg-border/80 lg:block" aria-hidden />;
-}
 
 function UserMenu() {
   const { profile, signOut } = useAuth();
@@ -161,16 +157,15 @@ export default function MarketingNav() {
           <FreshLienLogo to={HOME_PATH} variant="nav" />
 
           <div className="flex min-w-0 flex-1 items-center justify-end gap-0">
-            <nav className="hidden items-center lg:flex lg:pr-5 lg:mr-5 lg:border-r lg:border-border/70">
-              <PlatformMenu triggerClassName="text-[15px] font-medium text-primary/90 hover:text-primary px-3" />
-              <NavDivider />
+            <nav className="hidden items-center gap-0.5 lg:flex lg:pr-5 lg:mr-5 lg:border-r lg:border-border/70">
+              <ProductMenu triggerClassName="px-3" />
+              <ResourcesMenu triggerClassName="px-3" />
               <Link
                 to="/pricing"
                 className={cn(navLinkClass, pricingActive && 'font-semibold text-primary')}
               >
                 Pricing
               </Link>
-              <NavDivider />
               <Link
                 to="/about"
                 className={cn(navLinkClass, aboutActive && 'font-semibold text-primary')}
