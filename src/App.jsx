@@ -31,6 +31,7 @@ import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
 import RequireEntitlement from '@/components/RequireEntitlement';
 import AuthCallbackHandler from '@/components/AuthCallbackHandler';
 import FeedbackThankYou from '@/components/FeedbackThankYou';
+import AssistantWidget from '@/components/assistant/AssistantWidget';
 
 function AppRoutes() {
   return (
@@ -135,6 +136,7 @@ function AppRoutes() {
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      <AssistantWidget />
     </>
   );
 }
