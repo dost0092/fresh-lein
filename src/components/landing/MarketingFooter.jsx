@@ -16,6 +16,7 @@ const productLinks = [
 ];
 
 const resourceLinks = [
+  { label: 'Blog', to: '/blog' },
   { label: 'API documentation', to: '/api' },
   { label: 'Coverage dashboard', to: '/#coverage' },
   { label: 'FAQ', to: '/faq' },

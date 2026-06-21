@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Mail,
   BarChart3,
+  Newspaper,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -54,6 +55,12 @@ const PRODUCT_LINKS = [
 ];
 
 const RESOURCE_LINKS = [
+  {
+    icon: Newspaper,
+    label: 'Blog',
+    description: 'Foreclosure & distressed property guides',
+    href: '/blog',
+  },
   {
     icon: BookOpen,
     label: 'API documentation',

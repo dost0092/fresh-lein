@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Disallow private app areas from indexing
+Disallow: /dashboard/
+Disallow: /settings
+Disallow: /analytics
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://freshlien.com/sitemap.xml
