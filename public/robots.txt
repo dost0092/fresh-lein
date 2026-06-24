@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /blog
+Allow: /blog/
 
 # Disallow private app areas from indexing
 Disallow: /dashboard/
@@ -11,3 +13,6 @@ Disallow: /reset-password
 Disallow: /forgot-password
 
 Sitemap: https://freshlien.com/sitemap.xml
+
+# AI / answer engine discovery
+# See also: https://freshlien.com/llms.txt

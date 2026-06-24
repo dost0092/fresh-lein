@@ -22,6 +22,15 @@ const siteSchema = {
   '@type': 'WebSite',
   name: COMPANY.name,
   url: BASE_URL,
+  description: COMPANY.description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${BASE_URL}/dashboard/foreclosures?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 export default function Landing() {

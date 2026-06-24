@@ -13,8 +13,26 @@ import { FAQ_ITEMS } from '@/data/faq';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
 
 export default function FaqPage() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+
   return (
-    <MarketingPageShell>
+    <MarketingPageShell
+      seo={{
+        title: 'FAQ: Foreclosure Data, Coverage & Pricing',
+        description:
+          'Answers about FreshLien foreclosure data, county coverage, data freshness, pricing plans, CSV export, API access, and county alerts.',
+        path: '/faq',
+        jsonLd: faqSchema,
+      }}
+    >
       <MarketingPageHero
         eyebrow="FAQ"
         title="Frequently asked questions"

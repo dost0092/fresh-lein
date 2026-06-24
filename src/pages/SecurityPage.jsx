@@ -30,7 +30,14 @@ const practices = [
 
 export default function SecurityPage() {
   return (
-    <MarketingPageShell>
+    <MarketingPageShell
+      seo={{
+        title: 'Security & Data Practices',
+        description:
+          'How FreshLien protects your account data: HTTPS encryption, secure authentication, SOC 2-aligned infrastructure, and row-level access controls.',
+        path: '/security',
+      }}
+    >
       <MarketingPageHero
         eyebrow="Security"
         title="How we protect your data"

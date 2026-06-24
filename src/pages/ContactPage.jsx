@@ -59,7 +59,14 @@ const contactOptions = [
 
 export default function ContactPage() {
   return (
-    <MarketingPageShell>
+    <MarketingPageShell
+      seo={{
+        title: 'Contact FreshLien: Sales, Support & Partnerships',
+        description:
+          'Contact FreshLien for sales, enterprise plans, API access, county coverage requests, and product support. We reply within 1 to 2 business days.',
+        path: '/contact',
+      }}
+    >
       <MarketingPageHero
         eyebrow="Contact"
         title="We'd love to hear from you"

@@ -1,0 +1,40 @@
+# FreshLien
+
+> Same-day distressed property data for real estate investors and B2B teams.
+
+FreshLien pulls county and court public records into one searchable platform. Search 100K+ foreclosure filings across 250+ counties in 40+ states with same-day updates on priority markets.
+
+## Product
+
+- Web app (map search, filters, property detail): https://freshlien.com/dashboard/foreclosures
+- Pricing: https://freshlien.com/pricing
+- REST API docs: https://freshlien.com/api
+- Free signup: https://freshlien.com/register
+
+## Blog (foreclosure & distressed property guides)
+
+- Blog index: https://freshlien.com/blog
+- Introducing FreshLien: https://freshlien.com/blog/introducing-freshlien-same-day-distressed-property-data
+- How to find foreclosure deals before auction: https://freshlien.com/blog/how-to-find-foreclosure-deals-before-auction
+- What is foreclosure: https://freshlien.com/blog/what-is-foreclosure-complete-guide
+- What is pre-foreclosure: https://freshlien.com/blog/what-is-pre-foreclosure
+- What is a distressed property: https://freshlien.com/blog/what-is-a-distressed-property
+- Sheriff sale vs trustee sale: https://freshlien.com/blog/sheriff-sale-vs-trustee-sale
+- Notice of Trustee Sale (NTS): https://freshlien.com/blog/what-is-notice-of-trustee-sale
+- How foreclosure auctions work: https://freshlien.com/blog/how-foreclosure-auctions-work
+- What is REO: https://freshlien.com/blog/what-is-reo-real-estate-owned
+- Foreclosure leads vs county records: https://freshlien.com/blog/foreclosure-leads-vs-county-records
+- How to analyze a foreclosure deal: https://freshlien.com/blog/how-to-analyze-a-foreclosure-deal
+- Probate real estate guide: https://freshlien.com/blog/probate-real-estate-investing-guide
+- Tax delinquent properties: https://freshlien.com/blog/tax-delinquent-properties-for-investors
+- What is lis pendens: https://freshlien.com/blog/what-is-lis-pendens
+- Wholesaling pre-foreclosure deals: https://freshlien.com/blog/wholesaling-pre-foreclosure-and-foreclosure-deals
+
+## FAQ
+
+- FAQ: https://freshlien.com/faq
+
+## Contact
+
+- Email: waqasdostdost0092@gmail.com
+- Contact page: https://freshlien.com/contact

@@ -13,7 +13,14 @@ const valueIcons = [Clock, Shield, MapPin, Layers];
 
 export default function AboutPage() {
   return (
-    <MarketingPageShell>
+    <MarketingPageShell
+      seo={{
+        title: 'About FreshLien: County-Direct Distressed Property Data',
+        description:
+          'FreshLien pulls county and court records into one searchable platform. Learn our mission, coverage (100K+ filings, 250+ counties), and how we help investors find distressed deals.',
+        path: '/about',
+      }}
+    >
       <MarketingPageHero
         eyebrow="About FreshLien"
         title="Same-day distressed property data"

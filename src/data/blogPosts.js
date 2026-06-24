@@ -10,6 +10,8 @@
  * Keep claims honest and aligned with FreshLien's real coverage.
  */
 
+import { BLOG_POSTS_BATCH_2 } from '@/data/blogPostsBatch2';
+
 export const BLOG_CATEGORIES = {
   news: 'Product news',
   guide: 'How-to guide',
@@ -680,6 +682,7 @@ export const BLOG_POSTS = [
       },
     ],
   },
+  ...BLOG_POSTS_BATCH_2,
 ];
 
 export function getAllPosts() {

@@ -8,6 +8,7 @@ import CoreWorkflowsSection from '@/components/landing/CoreWorkflowsSection';
 import WhyDifferentSection from '@/components/landing/WhyDifferentSection';
 import UseCasesSection from '@/components/landing/UseCasesSection';
 import TrustTransparencySection from '@/components/landing/TrustTransparencySection';
+import BlogPreviewSection from '@/components/landing/BlogPreviewSection';
 import PricingSection from '@/components/landing/PricingSection';
 import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import { LandingContainer } from '@/components/landing/LandingLayout';
@@ -31,6 +32,7 @@ export default function LandingPageContent({ topSlot = null }) {
       <WhyDifferentSection />
       <UseCasesSection />
       <TrustTransparencySection />
+      <BlogPreviewSection />
 
       <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
       <PricingCompareTable pricingType={pricingType} />

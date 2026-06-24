@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MarketingNav from '@/components/layout/MarketingNav';
+import Seo from '@/components/seo/Seo';
 import PricingSection from '@/components/landing/PricingSection';
 import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import CompetitorTable from '@/components/landing/CompetitorTable';
@@ -67,6 +68,11 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Seo
+        title="Pricing: Foreclosure Data Plans from Free to Enterprise"
+        description="FreshLien pricing: free county search, Starter at $15/mo, Professional at $25/mo, plus API and Enterprise plans for foreclosure data, exports, and alerts."
+        path="/pricing"
+      />
       <MarketingNav />
       <div className={MARKETING_NAV_OFFSET_CLASS}>
         <PricingPageHeader />

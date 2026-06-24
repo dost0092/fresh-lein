@@ -25,7 +25,14 @@ export default function ApiDocsPage() {
   const { apiBaseUrl, contactEmail, website } = COMPANY;
 
   return (
-    <MarketingPageShell>
+    <MarketingPageShell
+      seo={{
+        title: 'FreshLien REST API: Foreclosure Data for Developers',
+        description:
+          'REST API documentation for FreshLien foreclosure data. Search filings, fetch records by ID, and integrate normalized distressed property data into your app or CRM.',
+        path: '/api',
+      }}
+    >
       <MarketingPageHero
         eyebrow="API"
         title="FreshLien Data API"
