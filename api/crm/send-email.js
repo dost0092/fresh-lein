@@ -57,6 +57,7 @@ async function sendViaResend({ apiKey, from, message, unsubscribeUrl }) {
     body: JSON.stringify({
       from,
       to: [message.to],
+      reply_to: message.reply_to || undefined,
       subject: message.subject,
       html: message.html,
       headers: {
@@ -115,7 +116,8 @@ module.exports = async (req, res) => {
   const resendKey = (process.env.RESEND_API_KEY || '').trim();
   const sendgridKey = (process.env.SENDGRID_API_KEY || '').trim();
   const fromEmail = (process.env.CRM_FROM_EMAIL || 'onboarding@resend.dev').trim();
-  const fromName = (process.env.CRM_FROM_NAME || 'FreshLien CRM').trim();
+  const fromName = (body.fromName || process.env.CRM_FROM_NAME || 'FreshLien CRM').trim();
+  const defaultReplyTo = (body.replyTo || '').trim();
   const from = `${fromName} <${fromEmail}>`;
   const siteUrl = (process.env.PUBLIC_SITE_URL || 'https://freshlien.com').replace(/\/$/, '');
 
@@ -127,12 +129,22 @@ module.exports = async (req, res) => {
 
   for (const message of valid) {
     const unsubscribeUrl = `${siteUrl}/unsubscribe?e=${encodeURIComponent(message.to)}`;
+    const enriched = {
+      ...message,
+      reply_to: message.reply_to || defaultReplyTo || undefined,
+    };
     let result;
     try {
       if (provider === 'resend') {
-        result = await sendViaResend({ apiKey: resendKey, from, message, unsubscribeUrl });
+        result = await sendViaResend({ apiKey: resendKey, from, message: enriched, unsubscribeUrl });
       } else if (provider === 'sendgrid') {
-        result = await sendViaSendgrid({ apiKey: sendgridKey, from, fromName, message, unsubscribeUrl });
+        result = await sendViaSendgrid({
+          apiKey: sendgridKey,
+          from: fromEmail,
+          fromName,
+          message: enriched,
+          unsubscribeUrl,
+        });
       } else {
         result = { ok: true, simulated: true };
       }

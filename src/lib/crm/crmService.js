@@ -63,28 +63,38 @@ async function parseJsonResponse(resp) {
   }
 }
 
-async function sendViaDirectRelay(payload, contacts, fromName = 'Your agent') {
+async function sendViaDirectRelay(payload, contacts, fromName = 'Your agent', replyTo) {
   const audience = contacts.slice(0, DEMO_SEND_LIMIT);
   if (audience.length === 0) throw new Error('No recipients in this audience.');
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const displayName = payload.senderName || fromName;
+  const reply = payload.replyToEmail || replyTo;
   const messages = audience.map((contact) => ({
     to: contact.email,
+    reply_to: reply,
     subject: renderTemplate(payload.subject, contact),
     html: buildEmailHtml({
       bodyText: payload.body,
       contact,
-      fromName,
+      fromName: displayName,
       unsubscribeUrl: `${origin}/unsubscribe?e=${encodeURIComponent(contact.email)}`,
     }),
   }));
   const resp = await fetch('/api/crm/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, fromName: displayName, replyTo: reply }),
   });
   const data = await parseJsonResponse(resp);
   if (!resp.ok) throw new Error(data?.message || data?.error || 'Send failed');
-  return { total: data.total, sent: data.sent, failed: data.failed, simulated: data.simulated };
+  return {
+    total: data.total,
+    sent: data.sent,
+    failed: data.failed,
+    simulated: data.simulated,
+    provider: data.provider,
+    results: data.results || [],
+  };
 }
 
 async function recordCampaignSent(payload, stats, userId) {
@@ -303,6 +313,8 @@ export async function sendCampaign(payload) {
         sent: data.sent,
         failed: data.failed,
         simulated: data.simulated,
+        provider: data.provider,
+        results: data.results || [],
       };
     } catch (err) {
       // Fallback: send directly via relay (works without service_role on Vercel).

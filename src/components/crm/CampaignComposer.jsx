@@ -21,6 +21,7 @@ import { toast } from '@/components/ui/use-toast';
 import { deriveTags, audienceFor, DEMO_SEND_LIMIT } from '@/lib/crm/crmService';
 import { useContacts, useSuppressions, useSendCampaign, useSaveDraft } from '@/lib/crm/useCrmQueries';
 import { TEMPLATE_VARIABLES, renderTemplate, smsSegments } from '@/lib/crm/template';
+import { useAuth } from '@/lib/AuthContext';
 
 const SAMPLE_CONTACT = {
   first_name: 'Jordan',
@@ -32,6 +33,7 @@ const SAMPLE_CONTACT = {
 };
 
 export default function CampaignComposer({ initial, onClose }) {
+  const { profile } = useAuth();
   const { data: contacts = [] } = useContacts();
   const { data: suppressionList = [] } = useSuppressions();
   const tags = useMemo(() => deriveTags(contacts), [contacts]);
@@ -43,6 +45,8 @@ export default function CampaignComposer({ initial, onClose }) {
   const [audienceTag, setAudienceTag] = useState(initial?.audienceTag || 'all');
   const [subject, setSubject] = useState(initial?.subject || '');
   const [body, setBody] = useState(initial?.body || '');
+  const [senderName, setSenderName] = useState(initial?.senderName || profile?.full_name || '');
+  const [replyToEmail, setReplyToEmail] = useState(initial?.replyToEmail || profile?.email || '');
   const [result, setResult] = useState(null);
   const bodyRef = useRef(null);
   const sending = sendMut.isPending;
@@ -78,6 +82,14 @@ export default function CampaignComposer({ initial, onClose }) {
     { label: 'Message body written', ok: body.trim().length > 0 },
     { label: 'At least one recipient', ok: recipients.length > 0 },
     {
+      label: 'Reply-to email added',
+      ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail.trim()),
+    },
+    {
+      label: 'Sender name added',
+      ok: senderName.trim().length > 0,
+    },
+    {
       label: 'One-click unsubscribe included automatically',
       ok: true,
       auto: true,
@@ -95,7 +107,16 @@ export default function CampaignComposer({ initial, onClose }) {
     if (!canSend) return;
     setResult(null);
     sendMut.mutate(
-      { campaignId: initial?.id, name, channel, subject, body, audienceTag },
+      {
+        campaignId: initial?.id,
+        name,
+        channel,
+        subject,
+        body,
+        audienceTag,
+        senderName: senderName.trim(),
+        replyToEmail: replyToEmail.trim(),
+      },
       {
         onSuccess: (data) => {
           setResult({ ...data, total: data.total ?? capped.length });
@@ -182,6 +203,38 @@ export default function CampaignComposer({ initial, onClose }) {
             )}
           </p>
         </div>
+
+        {channel === 'email' && (
+          <div className="space-y-3 rounded-lg border border-border bg-neutral-50/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sender identity</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="camp-sender-name">Your name (shown to recipients)</Label>
+                <Input
+                  id="camp-sender-name"
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
+                  placeholder="e.g. Mike Avery · ABC Realty"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="camp-reply-to">Reply-to email (where replies go)</Label>
+                <Input
+                  id="camp-reply-to"
+                  type="email"
+                  value={replyToEmail}
+                  onChange={(e) => setReplyToEmail(e.target.value)}
+                  placeholder="you@yourbrokerage.com"
+                />
+              </div>
+            </div>
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
+              Recipients see <strong>{senderName.trim() || 'Your name'}</strong> as the sender. Replies go to{' '}
+              <strong>{replyToEmail.trim() || 'your email'}</strong>. The technical sending address uses your verified
+              FreshLien domain (set in Vercel) so mail lands in the inbox, not spam.
+            </p>
+          </div>
+        )}
 
         {channel === 'email' && (
           <div className="space-y-1.5">
@@ -341,12 +394,20 @@ function ChannelButton({ active, icon: Icon, label, onClick, soon }) {
 }
 
 function SendResult({ result, name, onClose }) {
+  const failedRows = (result.results || []).filter((r) => !r.ok);
+  const resendTestLimit =
+    result.failed > 0 &&
+    result.provider === 'resend' &&
+    failedRows.some((r) => /only send testing emails|verify a domain/i.test(r.error || ''));
+
   return (
     <div className="mx-auto max-w-md py-8 text-center">
       <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
         <CheckCircle2 className="h-7 w-7" />
       </span>
-      <h3 className="mt-4 text-xl font-semibold">Campaign sent</h3>
+      <h3 className="mt-4 text-xl font-semibold">
+        {result.failed > 0 ? 'Campaign partially sent' : 'Campaign sent'}
+      </h3>
       <p className="mt-1 text-sm text-muted-foreground">
         “{name}” {result.simulated ? 'was simulated successfully' : 'is on its way'}.
       </p>
@@ -355,6 +416,25 @@ function SendResult({ result, name, onClose }) {
           Simulation mode: no email provider key is configured, so no real emails were sent. Add a RESEND_API_KEY (or
           SENDGRID_API_KEY) in your environment to send for real.
         </p>
+      )}
+      {resendTestLimit && (
+        <p className="mx-auto mt-3 max-w-sm rounded-lg bg-amber-50 px-3 py-2 text-left text-xs text-amber-800">
+          <strong>Resend test mode:</strong> with <code className="text-[11px]">onboarding@resend.dev</code>, only your
+          Resend signup email can receive mail. The other {result.failed} address
+          {result.failed === 1 ? '' : 'es'} were rejected. Verify your domain in Resend and set{' '}
+          <code className="text-[11px]">CRM_FROM_EMAIL</code> to e.g.{' '}
+          <code className="text-[11px]">agents@mail.freshlien.com</code> to send to anyone.
+        </p>
+      )}
+      {result.failed > 0 && !resendTestLimit && failedRows.length > 0 && (
+        <div className="mx-auto mt-3 max-w-sm rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-left text-xs text-rose-800">
+          <p className="font-medium">Failed recipients:</p>
+          <ul className="mt-1 list-inside list-disc">
+            {failedRows.slice(0, 5).map((r) => (
+              <li key={r.to}>{r.to}</li>
+            ))}
+          </ul>
+        </div>
       )}
       <div className="mt-4 grid grid-cols-3 gap-3">
         <ResultStat label="Recipients" value={result.total} />

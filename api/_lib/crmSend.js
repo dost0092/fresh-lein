@@ -91,8 +91,9 @@ async function reconcileCampaign(supabase, campaignId) {
  * @param {object} opts      { limit, pacingMs }
  * @returns {Promise<{processed:number, sent:number, failed:number, provider:string}>}
  */
-async function drainMessages(supabase, { limit = 100, pacingMs, campaignId } = {}) {
+async function drainMessages(supabase, { limit = 100, pacingMs, campaignId, fromName } = {}) {
   const cfg = senderConfig();
+  if (fromName) cfg.from = `${fromName} <${cfg.fromEmail}>`;
   const pace = pacingMs != null ? pacingMs : cfg.provider === 'simulation' ? 5 : 120;
 
   let query = supabase

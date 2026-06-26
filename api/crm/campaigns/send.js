@@ -95,8 +95,8 @@ module.exports = async (req, res) => {
   if (recipients.length === 0) return json(res, 400, { error: 'no_recipients' });
 
   const cfg = senderConfig();
-  const agentName = user.user_metadata?.full_name || user.email || 'Your agent';
-  const replyTo = user.email || null;
+  const agentName = body.senderName || user.user_metadata?.full_name || user.email || 'Your agent';
+  const replyTo = body.replyToEmail || user.email || null;
 
   // Create the campaign record (or reuse an existing draft).
   let campaignId = body.campaignId || null;
@@ -153,7 +153,7 @@ module.exports = async (req, res) => {
   // Demo: drain all recipients inline (<= 50 fits within the serverless window).
   let result = { sent: 0, failed: 0, provider: cfg.provider };
   try {
-    result = await drainMessages(supabase, { campaignId, limit: DEMO_LIMIT });
+    result = await drainMessages(supabase, { campaignId, limit: DEMO_LIMIT, fromName: agentName });
   } catch (err) {
     return json(res, 500, { error: err?.message || 'send_failed', campaignId });
   }
