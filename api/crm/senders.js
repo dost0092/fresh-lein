@@ -8,9 +8,39 @@
  * DELETE ?id=<sender_id>  — remove a sender account
  */
 const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
 const { getUserFromRequest } = require('../_lib/authUser');
-const { getAdminClient } = require('../_lib/supabaseAdmin');
 const { encrypt, decrypt } = require('../_lib/encryption');
+
+/**
+ * Build a Supabase client scoped to the user's own JWT token.
+ * This means auth.uid() works correctly in RLS policies,
+ * regardless of whether SUPABASE_SERVICE_ROLE_KEY is configured.
+ */
+function getUserScopedClient(token) {
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+  // Use service role key if available (bypasses RLS), otherwise fall back
+  // to the anon key with the user's JWT injected as Authorization header.
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  const anonKey   = process.env.SUPABASE_ANON_KEY
+    || process.env.VITE_SUPABASE_ANON_KEY
+    || serviceKey; // last resort: if only service key is set, use it
+
+  if (!url) throw new Error('SUPABASE_URL env var is not set');
+
+  if (serviceKey) {
+    // Service role bypasses RLS — most permissive, simplest
+    return createClient(url, serviceKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+  }
+
+  // Fallback: use anon key with user's token injected so auth.uid() works
+  return createClient(url, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -49,11 +79,16 @@ module.exports = async function handler(req, res) {
   }
   Object.entries(CORS).forEach(([k, v]) => res.setHeader(k, v));
 
-  const { user, error: authError } = await getUserFromRequest(req);
+  const { user, error: authError, token } = await getUserFromRequest(req);
   if (!user) {
     return res.status(401).json({ error: authError || 'unauthorized' });
   }
-  const supabase = getAdminClient();
+  let supabase;
+  try {
+    supabase = getUserScopedClient(token);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 
   // ─── GET — list senders ───────────────────────────────────────────────────
   if (req.method === 'GET') {

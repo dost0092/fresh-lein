@@ -18,9 +18,23 @@
  * }
  */
 const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
 const { getUserFromRequest } = require('../_lib/authUser');
-const { getAdminClient } = require('../_lib/supabaseAdmin');
 const { decrypt } = require('../_lib/encryption');
+
+function getSupabase(token) {
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  const anonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || serviceKey;
+  if (!url) throw new Error('SUPABASE_URL env var is not set');
+  if (serviceKey) {
+    return createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  }
+  return createClient(url, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -64,7 +78,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'POST only' });
   }
 
-  const { user, error: authError } = await getUserFromRequest(req);
+  const { user, token, error: authError } = await getUserFromRequest(req);
   if (!user) return res.status(401).json({ error: authError || 'unauthorized' });
 
   let body = req.body;
@@ -77,7 +91,7 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'senderAccountId, subject, body, and recipients[] required' });
   }
 
-  const supabase = getAdminClient();
+  const supabase = getSupabase(token);
 
   // Fetch the sender account — verify ownership
   const { data: sender, error: senderErr } = await supabase
