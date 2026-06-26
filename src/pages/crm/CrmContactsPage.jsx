@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Search, Upload, Trash2, Tag as TagIcon, Users, ShieldCheck, BadgeCheck, X } from 'lucide-react';
+import { Search, Upload, Trash2, Tag as TagIcon, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -112,17 +112,14 @@ export default function CrmContactsPage() {
           {/* Stat strip */}
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
-              { icon: Users,     label: 'Total',       value: contacts.length,                        color: 'bg-blue-50 text-blue-600'    },
-              { icon: BadgeCheck, label: 'Opted In',   value: contacts.filter(c => c.opt_in).length,  color: 'bg-emerald-50 text-emerald-600'},
-              { icon: TagIcon,   label: 'Tags',        value: tags.length,                             color: 'bg-violet-50 text-violet-600' },
-              { icon: ShieldCheck,label: 'Suppressed', value: suppressed.size,                         color: 'bg-red-50 text-red-600'       },
+              { label: 'Total',      value: contacts.length                       },
+              { label: 'Opted In',   value: contacts.filter(c => c.opt_in).length },
+              { label: 'Tags',       value: tags.length                            },
+              { label: 'Suppressed', value: suppressed.size                        },
             ].map(s => (
-              <div key={s.label} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-                <div className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${s.color} mb-2`}>
-                  <s.icon size={16} />
-                </div>
-                <p className="text-2xl font-bold text-gray-900 tabular-nums">{s.value}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+              <div key={s.label} className="rounded-lg border border-gray-200 bg-white px-4 py-4">
+                <p className="text-2xl font-semibold tabular-nums text-gray-900">{s.value}</p>
+                <p className="mt-0.5 text-sm text-gray-500">{s.label}</p>
               </div>
             ))}
           </div>

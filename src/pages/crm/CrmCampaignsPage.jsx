@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Plus, Send, Mail, Pencil, Trash2, ArrowLeft, Clock, Users, ChevronRight } from 'lucide-react';
+import { Plus, Send, Pencil, Trash2, ArrowLeft, Clock, Users } from 'lucide-react';
 import CrmLayout from '@/components/layout/CrmLayout';
 import { toast } from '@/components/ui/use-toast';
 import CampaignComposer from '@/components/crm/CampaignComposer';
@@ -137,20 +137,15 @@ function CampaignCard({ campaign: c, onEdit, onDelete, confirmDelete }) {
   const pct  = c.total > 0 ? Math.min(100, Math.round((sent / c.total) * 100)) : 0;
 
   return (
-    <div className="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:border-blue-200 hover:shadow-md transition-all sm:flex-row sm:items-center">
-      {/* Icon */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-        <Mail size={18} />
-      </div>
-
+    <div className="group flex flex-col gap-2 rounded-lg border border-gray-200 bg-white px-5 py-4 hover:border-gray-300 hover:shadow-sm transition-all sm:flex-row sm:items-center">
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 mb-0.5">
-          <p className="font-semibold text-gray-900 truncate">{c.name}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-medium text-gray-900 truncate">{c.name}</p>
           <StatusBadge status={c.status} />
         </div>
-        <p className="text-sm text-gray-500 truncate">{c.subject || 'No subject'}</p>
-        <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-gray-400">
+        <p className="mt-0.5 text-sm text-gray-500 truncate">{c.subject || 'No subject'}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-gray-400">
           <span className="flex items-center gap-1">
             <Clock size={11} />
             {c.status === 'sent' ? `Sent ${formatDate(c.sent_at)}` : `Created ${formatDate(c.created_at)}`}
@@ -166,10 +161,11 @@ function CampaignCard({ campaign: c, onEdit, onDelete, confirmDelete }) {
           </span>
         </div>
         {c.status === 'sent' && c.total > 0 && (
-          <div className="mt-2">
-            <div className="h-1 w-full max-w-[200px] rounded-full bg-gray-100 overflow-hidden">
+          <div className="mt-2.5">
+            <div className="h-1 w-full max-w-[180px] rounded-full bg-gray-100 overflow-hidden">
               <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
             </div>
+            <p className="mt-1 text-[11px] text-gray-400">{pct}% delivered</p>
           </div>
         )}
       </div>
@@ -179,14 +175,14 @@ function CampaignCard({ campaign: c, onEdit, onDelete, confirmDelete }) {
         {c.status !== 'sent' && (
           <button
             onClick={onEdit}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
           >
             <Pencil size={12} /> Edit
           </button>
         )}
         <button
           onClick={onDelete}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+          className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
             confirmDelete === c.id
               ? 'bg-red-600 text-white hover:bg-red-700'
               : 'border border-gray-200 bg-white text-red-500 hover:bg-red-50 hover:border-red-200'
@@ -202,19 +198,17 @@ function CampaignCard({ campaign: c, onEdit, onDelete, confirmDelete }) {
 
 function EmptyState({ onNew }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-20 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-        <Send size={28} />
-      </div>
-      <h3 className="mt-4 text-lg font-bold text-gray-900">No campaigns yet</h3>
-      <p className="mt-1.5 max-w-sm text-sm text-gray-500">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-white px-6 py-20 text-center">
+      <Send size={24} className="text-gray-300" />
+      <h3 className="mt-4 text-base font-semibold text-gray-800">No campaigns yet</h3>
+      <p className="mt-1.5 max-w-xs text-sm text-gray-500">
         Create your first campaign to start reaching your leads with personalized emails.
       </p>
       <button
         onClick={onNew}
-        className="mt-5 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+        className="mt-5 inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
       >
-        <Plus size={15} /> Create Campaign
+        <Plus size={14} /> Create Campaign
       </button>
     </div>
   );

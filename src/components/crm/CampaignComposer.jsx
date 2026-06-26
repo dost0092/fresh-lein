@@ -237,26 +237,28 @@ export default function CampaignComposer({ initial, onClose }) {
             </select>
           </Field>
 
-          <div className={`rounded-2xl border p-5 ${recipients.length === 0 ? 'border-amber-200 bg-amber-50' : 'border-blue-100 bg-blue-50'}`}>
-            <div className="flex items-center gap-3">
-              <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${recipients.length === 0 ? 'bg-amber-100' : 'bg-blue-100'}`}>
-                <Users size={22} className={recipients.length === 0 ? 'text-amber-600' : 'text-blue-600'} />
-              </div>
+          <div className="rounded-lg border border-gray-200 bg-white px-5 py-4">
+            <div className="flex items-center justify-between">
               <div>
-                <p className={`text-2xl font-bold tabular-nums ${recipients.length === 0 ? 'text-amber-700' : 'text-blue-700'}`}>
+                <p className="text-3xl font-semibold tabular-nums text-gray-900">
                   {recipients.length.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="mt-0.5 text-sm text-gray-500">
                   {recipients.length === 0
-                    ? 'No eligible contacts — import leads first'
+                    ? 'No eligible contacts'
                     : `eligible recipient${recipients.length === 1 ? '' : 's'}`}
                 </p>
               </div>
+              {recipients.length > 0 && (
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                  opted-in &amp; unsuppressed
+                </span>
+              )}
             </div>
             {recipients.length > DEMO_SEND_LIMIT && (
-              <p className="mt-3 text-xs text-amber-700 flex items-center gap-1.5">
+              <p className="mt-3 text-xs text-amber-600 flex items-center gap-1.5 border-t border-gray-100 pt-3">
                 <AlertTriangle size={13} />
-                Only the first {DEMO_SEND_LIMIT} will be sent on the demo plan.
+                Demo plan — only the first {DEMO_SEND_LIMIT} will be sent.
               </p>
             )}
           </div>
@@ -408,7 +410,7 @@ export default function CampaignComposer({ initial, onClose }) {
           </div>
 
           {/* Pre-flight checks */}
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+          <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-5">
             <p className="text-sm font-semibold text-gray-700 mb-3">Pre-flight checks</p>
             <ul className="space-y-2">
               {[
@@ -430,16 +432,16 @@ export default function CampaignComposer({ initial, onClose }) {
           </div>
 
           {usingOwnInbox && (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 flex items-center gap-2">
-              <CheckCircle2 size={16} className="shrink-0" />
-              Emails will be sent directly from <strong>{selectedSender.email}</strong>. Replies land in your Gmail inbox.
+            <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 flex items-center gap-2">
+              <CheckCircle2 size={15} className="shrink-0 text-emerald-500" />
+              Sends from <strong>{selectedSender.email}</strong> — replies land in your Gmail inbox.
             </div>
           )}
 
           <button
             onClick={handleSend}
             disabled={!canLaunch}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-base font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors shadow-sm"
+            className="w-full flex items-center justify-center gap-2 rounded-md bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
           >
             {sending
               ? <><Loader2 size={18} className="animate-spin" /> Sending to {capped.length} people…</>
@@ -527,9 +529,9 @@ function ChannelCard({ icon: Icon, label, active, disabled, onClick }) {
 
 function SummaryCard({ label, value }) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-gray-900 truncate" title={value}>{value}</p>
+    <div className="rounded-lg border border-gray-200 bg-white px-4 py-3.5">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">{label}</p>
+      <p className="mt-1 text-sm font-medium text-gray-900 truncate" title={value}>{value}</p>
     </div>
   );
 }
@@ -542,48 +544,48 @@ function SendResult({ result, name, onClose }) {
     failedRows.some(r => /only send testing emails|verify a domain/i.test(r.error || ''));
 
   return (
-    <div className="mx-auto max-w-md py-10 text-center">
-      <div className="flex h-20 w-20 mx-auto items-center justify-center rounded-full bg-emerald-100">
-        <CheckCircle2 size={40} className="text-emerald-600" />
+    <div className="mx-auto max-w-md py-10">
+      <div className="flex items-center gap-3 mb-1">
+        <CheckCircle2 size={22} className="text-emerald-500 shrink-0" />
+        <h2 className="text-xl font-semibold text-gray-900">
+          {result.failed > 0 && !result.smtpMode ? 'Partially sent' : 'Campaign sent'}
+        </h2>
       </div>
-      <h2 className="mt-5 text-2xl font-bold text-gray-900">
-        {result.failed > 0 && !result.smtpMode ? 'Partially Sent' : 'Campaign Sent! 🎉'}
-      </h2>
-      <p className="mt-2 text-gray-500">"{name}" is on its way to your leads.</p>
+      <p className="ml-9 text-sm text-gray-500">"{name}" is on its way to your leads.</p>
 
       {result.smtpMode && (
-        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 text-left">
-          ✅ Sent directly from your Gmail — replies will arrive in your inbox.
-          {result.message && <p className="mt-1 font-medium">{result.message}</p>}
+        <div className="mt-5 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700">
+          Sent directly from your Gmail — replies will arrive in your inbox.
+          {result.message && <p className="mt-1 text-gray-500">{result.message}</p>}
         </div>
       )}
       {result.simulated && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 text-left">
-          <strong>Simulation mode</strong> — no email key configured. Add RESEND_API_KEY in Vercel to send for real.
+        <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <strong>Simulation mode</strong> — add RESEND_API_KEY in Vercel to send real emails.
         </div>
       )}
       {resendTestLimit && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 text-left">
-          <strong>Resend test mode:</strong> only your signup email can receive. Verify your domain in Resend and update CRM_FROM_EMAIL to send to anyone.
+        <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <strong>Resend test mode:</strong> only your signup email can receive. Verify a domain in Resend to send to anyone.
         </div>
       )}
 
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="mt-5 grid grid-cols-3 gap-3">
         {[
-          { label: 'Total',  value: result.total,  color: 'text-gray-900' },
-          { label: 'Sent',   value: result.sent,   color: 'text-emerald-600' },
-          { label: 'Failed', value: result.failed || 0, color: result.failed ? 'text-red-500' : 'text-gray-400' },
+          { label: 'Total',  value: result.total  },
+          { label: 'Sent',   value: result.sent   },
+          { label: 'Failed', value: result.failed || 0 },
         ].map(s => (
-          <div key={s.label} className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className={`text-3xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+          <div key={s.label} className="rounded-lg border border-gray-200 bg-white px-4 py-4 text-center">
+            <p className="text-2xl font-semibold tabular-nums text-gray-900">{s.value}</p>
+            <p className="mt-0.5 text-xs text-gray-500">{s.label}</p>
           </div>
         ))}
       </div>
 
       <button
         onClick={onClose}
-        className="mt-6 w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+        className="mt-5 w-full rounded-md bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
       >
         Done
       </button>
