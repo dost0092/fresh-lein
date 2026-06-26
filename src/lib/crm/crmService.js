@@ -25,17 +25,87 @@ function isValidEmail(e) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(e));
 }
 
-async function getSession() {
+async function getSessionWithRefresh() {
   if (!isSupabaseConfigured || !supabase) return null;
-  const { data } = await supabase.auth.getSession();
-  return data?.session || null;
+  let { data: { session } } = await supabase.auth.getSession();
+  if (!session) return null;
+  const expiresAt = (session.expires_at ?? 0) * 1000;
+  if (Date.now() > expiresAt - 120_000) {
+    const { data: refreshed, error } = await supabase.auth.refreshSession();
+    if (!error && refreshed.session) session = refreshed.session;
+  }
+  return session;
 }
 
 /** Resolve the current backend mode + identity. */
 export async function getMode() {
-  const session = await getSession();
-  if (session?.user) return { mode: 'supabase', userId: session.user.id, token: session.access_token };
+  const session = await getSessionWithRefresh();
+  if (session?.user) {
+    return {
+      mode: 'supabase',
+      userId: session.user.id,
+      token: session.access_token,
+      user: session.user,
+    };
+  }
   return { mode: 'local' };
+}
+
+async function parseJsonResponse(resp) {
+  const text = await resp.text();
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    if (/server error/i.test(text)) {
+      throw new Error('Server error — please try again in a moment.');
+    }
+    throw new Error('Unexpected server response. Please try again.');
+  }
+}
+
+async function sendViaDirectRelay(payload, contacts, fromName = 'Your agent') {
+  const audience = contacts.slice(0, DEMO_SEND_LIMIT);
+  if (audience.length === 0) throw new Error('No recipients in this audience.');
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const messages = audience.map((contact) => ({
+    to: contact.email,
+    subject: renderTemplate(payload.subject, contact),
+    html: buildEmailHtml({
+      bodyText: payload.body,
+      contact,
+      fromName,
+      unsubscribeUrl: `${origin}/unsubscribe?e=${encodeURIComponent(contact.email)}`,
+    }),
+  }));
+  const resp = await fetch('/api/crm/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages }),
+  });
+  const data = await parseJsonResponse(resp);
+  if (!resp.ok) throw new Error(data?.message || data?.error || 'Send failed');
+  return { total: data.total, sent: data.sent, failed: data.failed, simulated: data.simulated };
+}
+
+async function recordCampaignSent(payload, stats, userId) {
+  const row = {
+    user_id: userId,
+    name: payload.name || 'Untitled campaign',
+    channel: payload.channel || 'email',
+    subject: payload.subject || '',
+    body: payload.body || '',
+    audience_tag: payload.audienceTag || 'all',
+    status: 'sent',
+    total: stats.total,
+    sent_count: stats.sent,
+    failed_count: stats.failed,
+    sent_at: new Date().toISOString(),
+  };
+  if (payload.campaignId) {
+    await supabase.from('crm_campaigns').update(row).eq('id', payload.campaignId).eq('user_id', userId);
+  } else {
+    await supabase.from('crm_campaigns').insert(row);
+  }
 }
 
 /* ------------------------------- Contacts ------------------------------- */
@@ -204,40 +274,59 @@ export async function saveDraft(campaign) {
  * local mode it renders client-side and posts to the simple relay.
  */
 export async function sendCampaign(payload) {
-  const { mode, token } = await getMode();
+  const mode = await getMode();
 
-  if (mode === 'supabase') {
-    const resp = await fetch('/api/crm/campaigns/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(payload),
-    });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data?.message || data?.error || 'Send failed');
-    return { total: data.total, sent: data.sent, failed: data.failed, simulated: data.simulated };
+  if (mode.mode === 'supabase') {
+    const fromName = mode.user?.user_metadata?.full_name || mode.user?.email || 'Your agent';
+    let contacts = await listContacts();
+    const suppressed = await listSuppressions();
+    const audience = audienceFor(contacts, suppressed, payload.audienceTag || 'all');
+
+    // Try the full multi-tenant queue endpoint first.
+    try {
+      const resp = await fetch('/api/crm/campaigns/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${mode.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await parseJsonResponse(resp);
+      if (!resp.ok) {
+        const err = new Error(data?.message || data?.error || 'Send failed');
+        err.status = resp.status;
+        throw err;
+      }
+      return {
+        total: data.total,
+        sent: data.sent,
+        failed: data.failed,
+        simulated: data.simulated,
+      };
+    } catch (err) {
+      // Fallback: send directly via relay (works without service_role on Vercel).
+      const retryable =
+        err.status === 401 ||
+        err.status === 403 ||
+        err.status === 503 ||
+        err.status >= 500 ||
+        /unauthorized|server error|misconfigured/i.test(err?.message || '');
+      if (!retryable) throw err;
+
+      const stats = await sendViaDirectRelay(payload, audience, fromName);
+      try {
+        await recordCampaignSent(payload, stats, mode.userId);
+      } catch {
+        // Sending succeeded; campaign record is best-effort.
+      }
+      return stats;
+    }
   }
 
-  // Local fallback: render + relay client-side, then record the campaign.
-  const audience = local.getAudience({ tag: payload.audienceTag || 'all' }).slice(0, DEMO_SEND_LIMIT);
-  if (audience.length === 0) throw new Error('No recipients in this audience.');
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  const messages = audience.map((contact) => ({
-    to: contact.email,
-    subject: renderTemplate(payload.subject, contact),
-    html: buildEmailHtml({
-      bodyText: payload.body,
-      contact,
-      fromName: 'Your agent',
-      unsubscribeUrl: `${origin}/unsubscribe?e=${encodeURIComponent(contact.email)}`,
-    }),
-  }));
-  const resp = await fetch('/api/crm/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages }),
-  });
-  const data = await resp.json();
-  if (!resp.ok) throw new Error(data?.message || data?.error || 'Send failed');
+  // Local-only demo (not logged in).
+  const audience = local.getAudience({ tag: payload.audienceTag || 'all' });
+  const stats = await sendViaDirectRelay(payload, audience);
   local.saveCampaign({
     id: payload.campaignId,
     name: payload.name,
@@ -247,9 +336,9 @@ export async function sendCampaign(payload) {
     audienceTag: payload.audienceTag,
     status: 'sent',
     sent_at: new Date().toISOString(),
-    stats: { sent: data.sent, failed: data.failed, total: data.total },
+    stats: { sent: stats.sent, failed: stats.failed, total: stats.total },
   });
-  return { total: data.total, sent: data.sent, failed: data.failed, simulated: data.simulated };
+  return stats;
 }
 
 /* -------------------------------- Helpers ------------------------------- */

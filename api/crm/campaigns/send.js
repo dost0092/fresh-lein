@@ -45,7 +45,10 @@ module.exports = async (req, res) => {
   if (setCors(req, res)) return;
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
 
-  const user = await getUserFromRequest(req);
+  const { user, error: authError } = await getUserFromRequest(req);
+  if (authError === 'server_misconfigured') {
+    return json(res, 503, { error: 'server_misconfigured', message: 'Add SUPABASE_SERVICE_ROLE_KEY in Vercel.' });
+  }
   if (!user) return json(res, 401, { error: 'unauthorized' });
 
   let body;
