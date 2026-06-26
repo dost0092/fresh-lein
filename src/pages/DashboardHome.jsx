@@ -7,7 +7,7 @@ import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 
 function DashboardHomeContent() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="fl-app min-h-screen bg-white">
       <MarketingNav />
       <div className={MARKETING_NAV_OFFSET_CLASS}>
         <GuestAccessBanner />

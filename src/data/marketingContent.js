@@ -12,6 +12,13 @@ export const BRAND = {
 
 export const PLATFORM_SURFACES = [
   {
+    id: 'crm',
+    title: 'Outreach CRM',
+    description: 'Import leads, send from your own Gmail, and track every campaign.',
+    href: '/crm',
+    status: 'live',
+  },
+  {
     id: 'web',
     title: 'Web app',
     description: 'Search on a map, filter by county, and open full property detail.',
@@ -35,6 +42,11 @@ export const PLATFORM_SURFACES = [
 ];
 
 export const CORE_WORKFLOWS = [
+  {
+    title: 'Outreach',
+    description: 'Import leads and send personalized campaigns from your own Gmail inbox.',
+    status: 'live',
+  },
   {
     title: 'Search',
     description: 'Filter by state, county, ZIP, filing type, auction date, equity, and lien flags.',

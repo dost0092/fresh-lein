@@ -35,7 +35,7 @@ const siteSchema = {
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="fl-app min-h-screen bg-white">
       <Seo
         title="Same-day distressed property data for investors"
         description="FreshLien pulls county and court records into one searchable platform. Search 100K+ foreclosure filings across 250+ counties with same-day updates, alerts, exports, and an API."

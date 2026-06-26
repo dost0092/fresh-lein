@@ -8,6 +8,7 @@ import FreshLienLogo from '@/components/brand/FreshLienLogo';
 import SocialLinks from '@/components/brand/SocialLinks';
 
 const productLinks = [
+  { label: 'Outreach CRM', to: '/crm' },
   { label: 'Search & map', to: APP_HOME },
   { label: 'REST API', to: '/api' },
   { label: 'County alerts', to: '/dashboard/alerts' },

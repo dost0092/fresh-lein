@@ -12,6 +12,7 @@ import {
   Mail,
   BarChart3,
   Newspaper,
+  Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -22,6 +23,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const PRODUCT_LINKS = [
+  {
+    icon: Send,
+    label: 'Outreach CRM',
+    description: 'Import leads and send from your own Gmail inbox',
+    href: '/crm',
+  },
   {
     icon: Gavel,
     label: 'Search & map',

@@ -6,7 +6,7 @@ const ICONS = [Shield, RefreshCw, Scale];
 
 export default function TrustTransparencySection() {
   return (
-    <section id="trust" className="border-y border-border bg-[#FAFAFA] py-14 lg:py-20">
+    <section id="trust" className="fl-marketing-section-muted border-y">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Trust & transparency"
@@ -19,14 +19,9 @@ export default function TrustTransparencySection() {
           {TRUST_ITEMS.map(({ title, items }, i) => {
             const Icon = ICONS[i];
             return (
-              <div
-                key={title}
-                className="flex h-full flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card"
-              >
-                <div className="icon-surface mb-4 h-10 w-10">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="font-display text-base font-semibold text-foreground">{title}</h3>
+              <div key={title} className="fl-card flex h-full flex-col p-6">
+                <Icon className="mb-4 h-5 w-5 text-primary" strokeWidth={1.75} />
+                <h3 className="text-base font-semibold text-foreground">{title}</h3>
                 <ul className="mt-4 flex-1 space-y-2.5">
                   {items.map((item) => (
                     <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">

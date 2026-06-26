@@ -141,7 +141,7 @@ function MobileNav({ open, onOpenChange }) {
               <Button variant="outline" asChild className="h-11 w-full justify-center text-[15px] font-semibold">
                 <Link to="/login" onClick={close}>Sign in</Link>
               </Button>
-              <Button asChild className="h-11 w-full justify-center text-[15px] font-semibold">
+              <Button asChild className="fl-btn-primary h-11 w-full justify-center">
                 <Link to="/register" onClick={close}>Get started</Link>
               </Button>
             </div>
@@ -161,7 +161,7 @@ export default function MarketingNav() {
   const aboutActive = location.pathname === '/about';
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/70 bg-white">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/70 bg-white/95 backdrop-blur-sm">
       <div className={cn('w-full', LANDING_PAD)}>
         <div className={cn('mx-auto flex items-center justify-between gap-4', MARKETING_NAV_HEIGHT_CLASS, LANDING_MAX)}>
           <FreshLienLogo to={HOME_PATH} variant="nav" />
@@ -193,9 +193,9 @@ export default function MarketingNav() {
             <div className="hidden items-center gap-4 lg:flex">
               {isAuthenticated ? (
                 <>
-                  <Button asChild className="h-10 rounded-md px-5 text-[15px] font-semibold shadow-none">
-                    <Link to="/crm">Open CRM</Link>
-                  </Button>
+                  <Link to="/crm" className="fl-btn-primary h-10 px-5">
+                    Open CRM
+                  </Link>
                   <UserMenu />
                 </>
               ) : (
@@ -206,7 +206,7 @@ export default function MarketingNav() {
                   >
                     Sign in
                   </Link>
-                  <Button asChild className="h-10 rounded-md px-5 text-[15px] font-semibold shadow-none">
+                  <Button asChild className="fl-btn-primary h-10 px-5 shadow-none">
                     <Link to="/register">Get started</Link>
                   </Button>
                 </>

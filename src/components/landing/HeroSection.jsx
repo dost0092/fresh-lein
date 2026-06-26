@@ -76,7 +76,7 @@ export default function HeroSection() {
                       className="h-11 w-full border-0 bg-transparent pl-10 pr-3 text-sm focus:outline-none sm:h-12 sm:text-base"
                     />
                   </div>
-                  <Button type="submit" className="h-11 shrink-0 rounded-none px-6 sm:h-12">
+                  <Button type="submit" className="fl-btn-primary h-11 shrink-0 rounded-none px-6 sm:h-12 sm:rounded-r-lg">
                     Search
                   </Button>
                 </div>

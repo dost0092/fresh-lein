@@ -41,18 +41,18 @@ function StepBar({ current }) {
           <div key={s.n} className="flex items-center flex-1 min-w-0">
             <div className="flex flex-col items-center shrink-0">
               <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all ${
-                done   ? 'bg-blue-600 text-white'          :
-                active ? 'bg-blue-600 text-white ring-4 ring-blue-100' :
+                done   ? 'bg-crm text-white'          :
+                active ? 'bg-crm text-white ring-4 ring-crm-light' :
                          'bg-gray-100 text-gray-400'
               }`}>
                 {done ? <CheckCircle2 size={16} /> : s.n}
               </div>
               <span className={`mt-1.5 text-[11px] font-medium whitespace-nowrap ${
-                active ? 'text-blue-700' : done ? 'text-gray-600' : 'text-gray-400'
+                active ? 'text-crm' : done ? 'text-gray-600' : 'text-gray-400'
               }`}>{s.label}</span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className={`h-px flex-1 mx-2 mb-4 transition-all ${done ? 'bg-blue-400' : 'bg-gray-200'}`} />
+              <div className={`h-px flex-1 mx-2 mb-4 transition-all ${done ? 'bg-crm' : 'bg-gray-200'}`} />
             )}
           </div>
         );
@@ -189,21 +189,21 @@ export default function CampaignComposer({ initial, onClose }) {
       {step === 1 && (
         <div className="space-y-6">
           <StepHeader
-            title="Campaign Details"
-            sub="Give your campaign a name and choose the sending channel."
+            title="Campaign details"
+            sub="Name your campaign and pick how you want to reach people."
           />
 
-          <Field label="Campaign Name" helper="Only visible to you.">
+          <Field label="Campaign name" helper="Only visible to you.">
             <Input
               autoFocus
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="e.g. Motivated Sellers — Texas June"
-              className="h-11 text-base"
+              placeholder="Motivated sellers, Texas June"
+              className="crm-input h-11 text-base"
             />
           </Field>
 
-          <Field label="Channel" helper="Email campaigns are live. SMS requires A2P registration.">
+          <Field label="Channel" helper="Email is ready now. SMS is coming soon.">
             <div className="grid grid-cols-2 gap-3">
               <ChannelCard
                 icon={Mail} label="Email" active={channel === 'email'}
@@ -222,15 +222,15 @@ export default function CampaignComposer({ initial, onClose }) {
       {step === 2 && (
         <div className="space-y-6">
           <StepHeader
-            title="Choose Your Audience"
-            sub="Select which contacts will receive this campaign."
+            title="Choose your audience"
+            sub="Pick who receives this campaign."
           />
 
-          <Field label="Send To" helper="Only opted-in, unsuppressed contacts receive the campaign.">
+          <Field label="Send to" helper="Only opted-in contacts who are not suppressed.">
             <select
               value={audienceTag}
               onChange={e => setAudienceTag(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-crm/25"
             >
               <option value="all">All opted-in contacts</option>
               {tags.map(t => <option key={t} value={t}>Tag: {t}</option>)}
@@ -264,8 +264,8 @@ export default function CampaignComposer({ initial, onClose }) {
           </div>
 
           {recipients.length === 0 && (
-            <a href="/crm/contacts" className="block rounded-xl border border-gray-200 bg-white p-4 text-sm text-center text-blue-600 font-medium hover:bg-blue-50 transition-colors">
-              Import contacts first →
+            <a href="/crm/contacts" className="crm-link block rounded-xl border border-gray-200 bg-white p-4 text-center text-sm font-medium hover:bg-crm-subtle transition-colors">
+              Import contacts first
             </a>
           )}
         </div>
@@ -275,8 +275,8 @@ export default function CampaignComposer({ initial, onClose }) {
       {step === 3 && (
         <div className="space-y-6">
           <StepHeader
-            title="Write Your Email"
-            sub="Personalize with variables — each recipient gets their own version."
+            title="Write your email"
+            sub="Use variables to personalize each message automatically."
           />
 
           {/* Sender */}
@@ -285,7 +285,7 @@ export default function CampaignComposer({ initial, onClose }) {
               <select
                 value={selectedSenderId}
                 onChange={e => setSelectedSenderId(e.target.value)}
-                className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-crm/25"
               >
                 <option value="">— Platform email (Resend) —</option>
                 {senders.map(s => (
@@ -330,7 +330,7 @@ export default function CampaignComposer({ initial, onClose }) {
                   key={v.token}
                   type="button"
                   onClick={() => insertVariable(v.token)}
-                  className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                  className="rounded-full border border-crm/20 bg-crm-light px-2.5 py-0.5 text-xs font-medium text-crm hover:bg-crm-light transition-colors"
                 >
                   {v.token}
                 </button>
@@ -352,10 +352,10 @@ export default function CampaignComposer({ initial, onClose }) {
       {step === 4 && (
         <div className="space-y-6">
           <StepHeader
-            title="Preview Your Email"
-            sub={`Showing how it looks for ${previewContact.first_name || previewContact.email || 'your first lead'}.`}
+            title="Review before sending"
+            sub={`Preview for ${previewContact.first_name || previewContact.email || 'your first lead'}.`}
           />
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="crm-card overflow-hidden">
             <div className="border-b border-gray-100 px-5 py-4 bg-gray-50">
               <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
                 <span className="font-medium">From:</span>
@@ -376,7 +376,7 @@ export default function CampaignComposer({ initial, onClose }) {
                   <p key={i} className={`text-sm text-gray-800 leading-relaxed ${line === '' ? 'h-4' : ''}`}>{line}</p>
                 ))
               ) : (
-                <p className="text-sm text-gray-400 italic">No body written yet — go back to Step 3.</p>
+                <p className="text-sm italic text-gray-400">No body written yet. Go back to step 3.</p>
               )}
               <div className="mt-6 border-t border-gray-100 pt-4">
                 <p className="text-xs text-gray-400">
@@ -395,8 +395,8 @@ export default function CampaignComposer({ initial, onClose }) {
       {step === 5 && (
         <div className="space-y-6">
           <StepHeader
-            title="Ready to Launch?"
-            sub="Review your campaign before sending. Once launched, emails go out immediately."
+            title="Ready to send"
+            sub="Double-check everything. Emails go out immediately once you launch."
           />
 
           {/* Summary cards */}
@@ -411,7 +411,7 @@ export default function CampaignComposer({ initial, onClose }) {
 
           {/* Pre-flight checks */}
           <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-5">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Pre-flight checks</p>
+            <p className="mb-3 text-sm font-semibold text-gray-700">Before you send</p>
             <ul className="space-y-2">
               {[
                 { ok: step1OK,  label: 'Campaign has a name'              },
@@ -434,18 +434,18 @@ export default function CampaignComposer({ initial, onClose }) {
           {usingOwnInbox && (
             <div className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 flex items-center gap-2">
               <CheckCircle2 size={15} className="shrink-0 text-emerald-500" />
-              Sends from <strong>{selectedSender.email}</strong> — replies land in your Gmail inbox.
+              Sends from <strong>{selectedSender.email}</strong>. Replies land in your Gmail inbox.
             </div>
           )}
 
           <button
             onClick={handleSend}
             disabled={!canLaunch}
-            className="w-full flex items-center justify-center gap-2 rounded-md bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+            className="crm-btn-primary w-full py-3"
           >
             {sending
-              ? <><Loader2 size={18} className="animate-spin" /> Sending to {capped.length} people…</>
-              : <><Send size={18} /> Launch Campaign — {capped.length} emails</>}
+              ? <><Loader2 size={18} className="animate-spin" /> Sending to {capped.length} people</>
+              : <><Send size={18} /> Launch campaign ({capped.length} emails)</>}
           </button>
         </div>
       )}
@@ -454,17 +454,11 @@ export default function CampaignComposer({ initial, onClose }) {
       <div className="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">
         <div className="flex items-center gap-2">
           {step > 1 && (
-            <button
-              onClick={() => setStep(s => s - 1)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
+            <button onClick={() => setStep(s => s - 1)} className="crm-btn-ghost">
               <ChevronLeft size={15} /> Back
             </button>
           )}
-          <button
-            onClick={onClose}
-            className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors"
-          >
+          <button onClick={onClose} className="crm-btn-ghost border-transparent shadow-none text-gray-500">
             <X size={15} /> Cancel
           </button>
         </div>
@@ -473,10 +467,10 @@ export default function CampaignComposer({ initial, onClose }) {
           <button
             onClick={handleSaveDraft}
             disabled={saveDraftMut.isPending}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="crm-btn-ghost"
           >
             {saveDraftMut.isPending ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-            Save Draft
+            Save draft
           </button>
           {step < 5 && (
             <button
@@ -486,7 +480,7 @@ export default function CampaignComposer({ initial, onClose }) {
                 (step === 2 && !step2OK) ||
                 (step === 3 && !step3OK)
               }
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+              className="crm-btn-primary px-5"
             >
               Continue <ChevronRight size={15} />
             </button>
@@ -501,9 +495,9 @@ export default function CampaignComposer({ initial, onClose }) {
 
 function StepHeader({ title, sub }) {
   return (
-    <div className="mb-2">
-      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-      <p className="mt-1 text-sm text-gray-500">{sub}</p>
+    <div className="mb-4">
+      <h2 className="text-xl font-semibold tracking-tight text-gray-900">{title}</h2>
+      <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{sub}</p>
     </div>
   );
 }
@@ -515,23 +509,23 @@ function ChannelCard({ icon: Icon, label, active, disabled, onClick }) {
       onClick={onClick}
       disabled={disabled}
       className={`relative flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left transition-all ${
-        active   ? 'border-blue-500 bg-blue-50 text-blue-700'   :
+        active   ? 'border-crm bg-crm-light text-crm'   :
         disabled ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' :
-                   'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/40'
+                   'border-gray-200 bg-white text-gray-700 hover:border-crm/30 hover:bg-crm-light/40'
       }`}
     >
       <Icon size={18} />
       <span className="text-sm font-medium">{label}</span>
-      {active && <CheckCircle2 size={16} className="absolute right-3 text-blue-600" />}
+      {active && <CheckCircle2 size={16} className="absolute right-3 text-crm" />}
     </button>
   );
 }
 
 function SummaryCard({ label, value }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white px-4 py-3.5">
+    <div className="crm-stat px-4 py-3.5">
       <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">{label}</p>
-      <p className="mt-1 text-sm font-medium text-gray-900 truncate" title={value}>{value}</p>
+      <p className="mt-1 truncate text-sm font-medium text-gray-900" title={value}>{value}</p>
     </div>
   );
 }
@@ -585,7 +579,7 @@ function SendResult({ result, name, onClose }) {
 
       <button
         onClick={onClose}
-        className="mt-5 w-full rounded-md bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+        className="crm-btn-primary mt-5 w-full py-2.5"
       >
         Done
       </button>

@@ -76,6 +76,18 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
+  			},
+  			crm: {
+  				DEFAULT: '#4158A7',
+  				hover: '#354889',
+  				light: '#EEF0FA',
+  				subtle: '#F7F8FC',
+  				border: '#DDE2F0',
+  				muted: '#6B7280'
+  			},
+  			fl: {
+  				subtle: '#F7FAF8',
+  				light: '#EDF5F0',
   			}
   		},
   		fontFamily: {

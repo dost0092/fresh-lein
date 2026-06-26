@@ -60,15 +60,10 @@ export default function LoggedInDashboard() {
           />
           <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {platformFeatures.map(({ icon: Icon, title, detail }) => (
-              <div
-                key={title}
-                className="flex h-full flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card"
-              >
-                <span className="icon-surface mb-3 h-10 w-10">
-                  <Icon className="h-4 w-4" />
-                </span>
+              <div key={title} className="fl-card flex h-full flex-col p-6">
+                <Icon className="mb-3 h-5 w-5 text-primary" strokeWidth={1.75} />
                 <p className="text-sm font-semibold text-foreground">{title}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{detail}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{detail}</p>
               </div>
             ))}
           </div>
@@ -85,16 +80,10 @@ export default function LoggedInDashboard() {
             Filter by county, sale date, and status, then export or save what matters.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/dashboard/foreclosures"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
-            >
+            <Link to="/dashboard/foreclosures" className="fl-btn-primary px-6 py-2.5">
               Open foreclosure explorer <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              to="/dashboard/foreclosures?view=map"
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-neutral-50"
-            >
+            <Link to="/dashboard/foreclosures?view=map" className="fl-btn-ghost px-6 py-2.5">
               Map view
             </Link>
           </div>

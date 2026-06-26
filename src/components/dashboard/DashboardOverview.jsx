@@ -16,7 +16,6 @@ import { fetchDashboardStats } from '@/lib/foreclosureService';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import { CoverageStatsGrid } from '@/components/landing/CoverageStats';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
-import { cn } from '@/lib/utils';
 
 const metricMeta = [
   {
@@ -140,8 +139,8 @@ export default function DashboardOverview() {
   }));
 
   return (
-    <section className="border-b border-border bg-[#FAFAFA]">
-      <LandingContainer className="py-12 lg:py-16">
+    <section className="border-b border-border bg-fl-subtle">
+      <LandingContainer className="py-16 lg:py-20">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <LandingSectionHeader
             eyebrow="Platform overview"
@@ -162,21 +161,17 @@ export default function DashboardOverview() {
 
         <CoverageStatsGrid stats={liveStats} loading={loading} gridClassName="max-w-none" />
 
-        <div className="grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {actions.map(({ icon: Icon, title, description, href, cta }) => (
             <Link
               key={href}
               to={href}
-              className={cn(
-                'group flex h-full flex-col rounded-lg border border-border/80 bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover'
-              )}
+              className="fl-card fl-card-hover group flex h-full flex-col p-5"
             >
-              <span className="icon-surface mb-3 h-9 w-9">
-                <Icon className="h-4 w-4" />
-              </span>
+              <Icon className="mb-3 h-5 w-5 text-primary" strokeWidth={1.75} />
               <p className="text-sm font-semibold text-foreground">{title}</p>
-              <p className="mt-1 flex-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
-              <span className="mt-3 inline-flex items-center text-xs font-semibold text-primary">
+              <p className="mt-1.5 flex-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+              <span className="mt-4 inline-flex items-center text-xs font-semibold text-primary">
                 {cta}
                 <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </span>
@@ -184,7 +179,7 @@ export default function DashboardOverview() {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 bg-white px-4 py-3">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/80 bg-white px-5 py-4 shadow-sm">
           <p className="text-xs text-muted-foreground">
             <span className="font-medium text-foreground">Need account settings?</span>{' '}
             Profile, billing, and notification preferences

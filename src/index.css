@@ -88,76 +88,241 @@
 
 @layer components {
   .page-title {
-    @apply font-display text-lg font-semibold text-foreground tracking-tight;
+    @apply text-xl font-semibold tracking-tight text-foreground;
   }
 
   .page-subtitle {
-    @apply text-xs text-muted-foreground mt-0.5;
+    @apply mt-1 text-sm leading-relaxed text-muted-foreground;
   }
 
   .saas-card {
-    @apply bg-white rounded-lg border border-border/80 shadow-card;
+    @apply rounded-xl border border-border/90 bg-white shadow-sm;
   }
 
   .saas-card-body {
-    @apply p-5;
+    @apply p-6;
   }
 
   .form-field {
-    @apply w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm transition-colors
-      focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary;
+    @apply w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm shadow-sm transition-all duration-150
+      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
   }
 
   .section-subtle {
-    @apply bg-[#FAFAFA];
+    @apply bg-fl-subtle;
   }
 
   .icon-surface {
-    @apply flex items-center justify-center rounded-lg bg-neutral-100 text-primary;
+    @apply flex items-center justify-center rounded-lg bg-gray-100 text-gray-600;
   }
 
   .control-bar {
-    @apply bg-white border-b border-border px-4 sm:px-5 py-3.5;
+    @apply border-b border-border/80 bg-white px-5 py-5 sm:px-6;
   }
 
   .search-input {
-    @apply w-full h-10 pl-10 pr-3 text-sm border border-border rounded-lg bg-white
+    @apply h-11 w-full rounded-lg border border-border bg-white pl-10 pr-3 text-sm shadow-sm
       placeholder:text-muted-foreground/70
-      focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary transition-colors;
+      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-150;
   }
 
   .filter-chip {
-    @apply h-9 min-h-9 text-xs bg-white border-border shadow-sm;
+    @apply h-10 min-h-10 rounded-lg border-border bg-white text-xs shadow-sm;
   }
 
-  /* ── CRM UI primitives ──────────────────────────────────────────────── */
-  .crm-input {
-    @apply w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
-      placeholder:text-gray-400
-      focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400
-      transition-colors duration-150;
+  /* ── FreshLien app design system (brand green) ─────────────────────── */
+  .fl-app {
+    --fl-subtle: #F7FAF8;
+    --fl-light: #EDF5F0;
   }
 
-  .crm-label {
-    @apply block text-xs font-medium text-gray-600 mb-1.5;
+  .fl-title {
+    @apply text-2xl font-semibold tracking-tight text-foreground;
   }
 
-  .crm-btn-primary {
-    @apply inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white
-      hover:bg-blue-700 disabled:opacity-40 transition-colors duration-150;
+  .fl-subtitle {
+    @apply mt-1 text-sm leading-relaxed text-muted-foreground;
   }
 
-  .crm-btn-ghost {
-    @apply inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-4 py-2
-      text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 transition-colors duration-150;
+  .fl-page-header {
+    @apply mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between;
   }
 
-  .crm-card {
-    @apply rounded-lg border border-gray-200 bg-white;
+  .fl-input {
+    @apply w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-foreground shadow-sm
+      placeholder:text-muted-foreground/60
+      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
+      transition-all duration-150;
+  }
+
+  .fl-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground
+      shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .fl-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-fl-light px-4 py-2.5
+      text-sm font-semibold text-primary shadow-sm hover:border-primary/35 hover:bg-primary/5 active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .fl-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white px-4 py-2.5
+      text-sm font-medium text-muted-foreground shadow-sm hover:border-border hover:bg-neutral-50 active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .fl-link {
+    @apply text-sm font-medium text-primary transition-colors hover:text-primary/80;
+  }
+
+  .fl-card {
+    @apply rounded-xl border border-border/90 bg-white shadow-sm;
+  }
+
+  .fl-card-hover {
+    @apply transition-all duration-200 hover:border-border hover:shadow-md;
+  }
+
+  .fl-stat {
+    @apply rounded-xl border border-border/90 bg-white px-5 py-5 shadow-sm;
+  }
+
+  .fl-table-wrap {
+    @apply overflow-hidden rounded-xl border border-border/90 bg-white shadow-sm;
+  }
+
+  .fl-empty {
+    @apply flex flex-col items-center justify-center px-6 py-20 text-center;
+  }
+
+  .fl-nav-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground
+      transition-all duration-150 hover:bg-neutral-50 hover:text-foreground;
+  }
+
+  .fl-nav-item-active {
+    @apply bg-fl-light font-semibold text-primary shadow-sm;
+  }
+
+  .fl-callout {
+    @apply rounded-xl border border-primary/15 bg-fl-subtle px-5 py-4 text-sm leading-relaxed text-muted-foreground;
+  }
+
+  .fl-marketing-section {
+    @apply border-b border-border/60 bg-white py-16 lg:py-24;
+  }
+
+  .fl-marketing-section-muted {
+    @apply border-b border-border/60 bg-fl-subtle py-16 lg:py-24;
+  }
+
+  /* ── FreshLien CRM design system (#4158A7) ─────────────────────────── */
+  .crm-app {
+    --crm: #4158A7;
+    --crm-hover: #354889;
+    --crm-light: #EEF0FA;
+    --crm-subtle: #F7F8FC;
+  }
+
+  .crm-title {
+    @apply text-2xl font-semibold tracking-tight text-gray-900;
+  }
+
+  .crm-subtitle {
+    @apply mt-1 text-sm leading-relaxed text-gray-500;
   }
 
   .crm-page-header {
-    @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6;
+    @apply mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .crm-input {
+    @apply w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900
+      placeholder:text-gray-400 shadow-sm
+      focus:outline-none focus:ring-2 focus:ring-crm/25 focus:border-crm
+      transition-all duration-150;
+  }
+
+  .crm-label {
+    @apply mb-1.5 block text-xs font-medium text-gray-600;
+  }
+
+  .crm-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-crm px-4 py-2.5 text-sm font-semibold text-white
+      shadow-sm hover:bg-crm-hover hover:shadow-md active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .crm-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-crm/25 bg-crm-light px-4 py-2.5
+      text-sm font-semibold text-crm shadow-sm hover:border-crm/40 hover:bg-crm/10 active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .crm-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5
+      text-sm font-medium text-gray-600 shadow-sm hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]
+      disabled:pointer-events-none disabled:opacity-40 transition-all duration-150;
+  }
+
+  .crm-link {
+    @apply text-sm font-medium text-crm transition-colors hover:text-crm-hover;
+  }
+
+  .crm-card {
+    @apply rounded-xl border border-gray-200/90 bg-white shadow-sm;
+  }
+
+  .crm-card-hover {
+    @apply transition-all duration-200 hover:border-gray-300 hover:shadow-md;
+  }
+
+  .crm-stat {
+    @apply rounded-xl border border-gray-200/90 bg-white px-5 py-5 shadow-sm;
+  }
+
+  .crm-table-wrap {
+    @apply overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm;
+  }
+
+  .crm-empty {
+    @apply flex flex-col items-center justify-center px-6 py-20 text-center;
+  }
+
+  .crm-nav-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-500
+      transition-all duration-150 hover:bg-gray-50 hover:text-gray-800;
+  }
+
+  .crm-nav-item-active {
+    @apply bg-crm-light font-semibold text-crm shadow-sm;
+  }
+
+  .crm-chip-active {
+    @apply border-crm bg-crm text-white shadow-sm;
+  }
+
+  .crm-chip {
+    @apply rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600
+      transition-all duration-150 hover:border-crm/30 hover:bg-crm-light hover:text-crm;
+  }
+
+  .crm-bulk-bar {
+    @apply flex flex-wrap items-center gap-2 rounded-xl border border-crm/20 bg-crm-light px-4 py-3;
+  }
+
+  .crm-callout {
+    @apply rounded-xl border border-crm/20 bg-crm-subtle px-5 py-4 text-sm leading-relaxed text-gray-700;
+  }
+
+  .crm-progress {
+    @apply h-1.5 overflow-hidden rounded-full bg-gray-100;
+  }
+
+  .crm-progress-bar {
+    @apply h-full rounded-full bg-crm transition-all duration-300;
   }
 }
 

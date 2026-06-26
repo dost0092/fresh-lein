@@ -1,13 +1,13 @@
-import { Search, Map, FileText, Bell, Download, Briefcase } from 'lucide-react';
+import { Search, Map, FileText, Bell, Download, Briefcase, Send } from 'lucide-react';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import StatusBadge from '@/components/landing/StatusBadge';
 import { CORE_WORKFLOWS } from '@/data/marketingContent';
 
-const ICONS = [Search, Map, FileText, Bell, Download, Briefcase];
+const ICONS = [Send, Search, Map, FileText, Bell, Download, Briefcase];
 
 export default function CoreWorkflowsSection() {
   return (
-    <section id="workflows" className="border-y border-border bg-[#FAFAFA] py-14 lg:py-20">
+    <section id="workflows" className="fl-marketing-section-muted border-y">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Workflows"
@@ -20,17 +20,12 @@ export default function CoreWorkflowsSection() {
           {CORE_WORKFLOWS.map(({ title, description, status }, i) => {
             const Icon = ICONS[i];
             return (
-              <div
-                key={title}
-                className="flex h-full flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card"
-              >
+              <div key={title} className="fl-card flex h-full flex-col p-6">
                 <div className="mb-3 flex items-start justify-between gap-2">
-                  <div className="icon-surface h-10 w-10 shrink-0">
-                    <Icon className="h-4 w-4" />
-                  </div>
+                  <Icon className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
                   <StatusBadge status={status} />
                 </div>
-                <h3 className="font-display text-sm font-semibold text-foreground">{title}</h3>
+                <h3 className="text-sm font-semibold text-foreground">{title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
               </div>
             );

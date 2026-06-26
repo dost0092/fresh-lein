@@ -22,7 +22,7 @@ export default function LandingPageContent({ topSlot = null }) {
   const [pricingType, setPricingType] = useState('platform');
 
   return (
-    <>
+    <div className="fl-app">
       {topSlot}
       <CrmShowcaseSection />
       <HeroSection />
@@ -39,33 +39,24 @@ export default function LandingPageContent({ topSlot = null }) {
       <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
       <PricingCompareTable pricingType={pricingType} />
 
-      <section className="border-t border-border bg-white py-14 lg:py-20">
+      <section className="fl-marketing-section border-t">
         <LandingContainer innerClassName="text-center">
-          <h2 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
             Find distressed deals before the crowd
           </h2>
-          <p className="mx-auto mt-3 mb-8 max-w-lg text-base leading-[1.65] text-muted-foreground">
+          <p className="mx-auto mt-3 mb-8 max-w-lg text-base leading-relaxed text-muted-foreground">
             Start free, search live county filings, and upgrade when you need more coverage.
           </p>
           {isAuthenticated ? (
-            <Link
-              to="/dashboard/foreclosures"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
-            >
+            <Link to="/dashboard/foreclosures" className="fl-btn-primary px-6 py-2.5">
               Open app <ArrowRight className="h-4 w-4" />
             </Link>
           ) : (
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                to="/register"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
-              >
+              <Link to="/register" className="fl-btn-primary px-6 py-2.5">
                 Get started free <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                to="/dashboard/foreclosures"
-                className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-neutral-50"
-              >
+              <Link to="/dashboard/foreclosures" className="fl-btn-ghost px-6 py-2.5">
                 Preview live data
               </Link>
             </div>
@@ -74,6 +65,6 @@ export default function LandingPageContent({ topSlot = null }) {
       </section>
 
       <MarketingFooter />
-    </>
+    </div>
   );
 }

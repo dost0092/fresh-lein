@@ -235,24 +235,24 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
 
   return (
     <AppLayout>
-      <div className="flex-1 flex flex-col overflow-hidden bg-white">
-        <div className="control-bar space-y-3">
-          <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-1 flex-col overflow-hidden bg-white">
+        <div className="control-bar space-y-4">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="page-title">{title}</h1>
-              <p className="page-subtitle">
+              <h1 className="fl-title text-xl">{title}</h1>
+              <p className="fl-subtitle text-sm">
                 {totalCount.toLocaleString()} listings
                 {hasFilters && ' · filtered'}
                 {isUsingLiveData() && totalCount > 0 && ' · live data'}
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <div className="flex h-9 items-center rounded-md border border-border/80 bg-muted/40 p-0.5">
+              <div className="flex h-10 items-center rounded-lg border border-border/80 bg-muted/30 p-0.5">
                 <button
                   type="button"
                   onClick={() => setView('list')}
                   className={cn(
-                    'flex h-full items-center gap-1.5 rounded px-3 text-xs font-medium transition-all',
+                    'flex h-full items-center gap-1.5 rounded-md px-3.5 text-xs font-medium transition-all duration-150',
                     view === 'list'
                       ? 'bg-white text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
@@ -264,7 +264,7 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                   type="button"
                   onClick={() => setView('map')}
                   className={cn(
-                    'flex h-full items-center gap-1.5 rounded px-3 text-xs font-medium transition-all',
+                    'flex h-full items-center gap-1.5 rounded-md px-3.5 text-xs font-medium transition-all duration-150',
                     view === 'map'
                       ? 'bg-white text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
@@ -273,15 +273,14 @@ export default function ForeclosureExplorer({ title = 'Foreclosures' }) {
                   <Map className="h-3.5 w-3.5" /> Map
                 </button>
               </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="h-9 text-xs"
+              <button
+                type="button"
+                className="fl-btn-ghost h-10 px-3 text-xs"
                 onClick={handleExport}
                 disabled={exporting || totalCount === 0}
               >
-                <Download className="mr-1 h-3.5 w-3.5" /> {exporting ? 'Exporting…' : 'Export'}
-              </Button>
+                <Download className="h-3.5 w-3.5" /> {exporting ? 'Exporting' : 'Export'}
+              </button>
             </div>
           </div>
 

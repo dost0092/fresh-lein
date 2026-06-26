@@ -3,7 +3,7 @@ import { coverageIntroTitleClass, coverageIntroSubtitleClass } from '@/component
 
 export const LANDING_MAX = 'max-w-7xl';
 export const LANDING_PAD = 'px-4 sm:px-6 lg:px-8';
-export const LANDING_SECTION = 'py-14 lg:py-20';
+export const LANDING_SECTION = 'py-16 lg:py-24';
 
 /** Fixed marketing header height — keep in sync with MarketingNav */
 export const MARKETING_NAV_HEIGHT_CLASS = 'h-[4.25rem] sm:h-[4.5rem]';

@@ -1,38 +1,36 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Globe, Code2, Database } from 'lucide-react';
+import { ArrowRight, Globe, Code2, Database, Send } from 'lucide-react';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import StatusBadge from '@/components/landing/StatusBadge';
 import { PLATFORM_SURFACES } from '@/data/marketingContent';
 
-const ICONS = { web: Globe, api: Code2, export: Database };
+const ICONS = { crm: Send, web: Globe, api: Code2, export: Database };
 
 export default function PlatformOverviewSection() {
   return (
-    <section id="platform" className="bg-white py-14 lg:py-20">
+    <section id="platform" className="fl-marketing-section">
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Platform"
-          title="Three ways to access"
-          titleHighlight="distressed property data"
-          description="One normalized dataset in the web app, through the API, or as bulk exports for your team."
+          title="Data and outreach"
+          titleHighlight="in one place"
+          description="Search live filings, export lists, connect the API, and reach property owners from your own inbox."
         />
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PLATFORM_SURFACES.map(({ id, title, description, href, status }) => {
             const Icon = ICONS[id];
             return (
               <Link
                 key={id}
                 to={href}
-                className="group flex flex-col rounded-lg border border-border/80 bg-white p-6 shadow-card transition-all hover:shadow-card-hover"
+                className="fl-card fl-card-hover group flex flex-col p-6"
               >
                 <div className="mb-4 flex items-start justify-between gap-3">
-                  <div className="icon-surface h-10 w-10">
-                    <Icon className="h-5 w-5" />
-                  </div>
+                  <Icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
                   <StatusBadge status={status} />
                 </div>
-                <h3 className="font-display text-base font-semibold text-foreground group-hover:text-primary">
+                <h3 className="text-base font-semibold text-foreground group-hover:text-primary">
                   {title}
                 </h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
