@@ -5,8 +5,7 @@
  * Bearer token, builds the recipient list from THEIR contacts (RLS-safe via
  * user_id), renders a personalized message per recipient, enqueues them in
  * crm_messages, then drains the queue inline (demo batch <= 50 fits well within
- * the serverless window). Larger campaigns are finished by the Vercel Cron
- * worker, so the request never times out.
+ * the serverless window. Demo sends (<= 50) are drained inline in this request.
  */
 
 const { getAdminClient } = require('../../_lib/supabaseAdmin');
@@ -148,18 +147,12 @@ module.exports = async (req, res) => {
   const { error: insertErr } = await supabase.from('crm_messages').insert(messages);
   if (insertErr) return json(res, 500, { error: insertErr.message });
 
-  // Drain this campaign inline (safe for <= 50). Larger lists finish via cron.
+  // Demo: drain all recipients inline (<= 50 fits within the serverless window).
   let result = { sent: 0, failed: 0, provider: cfg.provider };
   try {
     result = await drainMessages(supabase, { campaignId, limit: DEMO_LIMIT });
   } catch (err) {
-    // Messages remain 'pending'; the cron worker will pick them up.
-    return json(res, 200, {
-      campaignId,
-      total: recipients.length,
-      queued: true,
-      error: err?.message || 'inline_drain_failed',
-    });
+    return json(res, 500, { error: err?.message || 'send_failed', campaignId });
   }
 
   return json(res, 200, {

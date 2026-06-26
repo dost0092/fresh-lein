@@ -132,7 +132,7 @@ export default function CrmDashboardPage() {
             <p className="text-sm font-semibold text-primary">Demo plan</p>
             <p className="mt-1 text-xs text-muted-foreground">
               You can send up to <span className="font-semibold text-foreground">{DEMO_SEND_LIMIT} emails</span> per
-              campaign while testing. Upgrade to scale to 10,000+ with queued delivery.
+              campaign while testing. Sends complete immediately — no background worker needed.
             </p>
           </div>
         </div>
