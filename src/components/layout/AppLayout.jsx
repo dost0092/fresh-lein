@@ -17,6 +17,9 @@ import {
   Receipt,
   MessageSquare,
   LogIn,
+  LayoutDashboard,
+  Users,
+  Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
@@ -29,11 +32,17 @@ import { APP_HOME } from '@/lib/routes';
 
 const navGroups = [
   {
-    items: [{ icon: Gavel, label: 'Search & map', path: APP_HOME }],
+    title: 'CRM',
+    items: [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/crm' },
+      { icon: Users, label: 'Contacts', path: '/crm/contacts' },
+      { icon: Send, label: 'Campaigns', path: '/crm/campaigns' },
+    ],
   },
   {
-    title: 'Data types',
+    title: 'Property data',
     items: [
+      { icon: Gavel, label: 'Search & map', path: APP_HOME },
       { icon: Clock, label: 'Pre-foreclosures', path: '/dashboard/pre-foreclosures', comingSoon: true },
       { icon: Landmark, label: 'Probate', path: '/dashboard/probate', comingSoon: true },
       { icon: Receipt, label: 'Tax delinquency', path: '/dashboard/tax', comingSoon: true },
@@ -78,6 +87,10 @@ function NavContent({ collapsed, onNavClick }) {
   const isActive = (path) => {
     if (path === APP_HOME) {
       return location.pathname === APP_HOME || location.pathname.startsWith(`${APP_HOME}/`);
+    }
+    // `/crm` is an index route; match it exactly so sub-pages don't keep it active.
+    if (path === '/crm') {
+      return location.pathname === '/crm';
     }
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };

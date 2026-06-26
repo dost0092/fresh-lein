@@ -28,6 +28,10 @@ import AlertsPage from './pages/AlertsPage';
 import SavedSearchesPage from './pages/SavedSearchesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
+import CrmDashboardPage from './pages/crm/CrmDashboardPage';
+import CrmContactsPage from './pages/crm/CrmContactsPage';
+import CrmCampaignsPage from './pages/crm/CrmCampaignsPage';
+import UnsubscribePage from './pages/UnsubscribePage';
 import RequireAuth from '@/components/RequireAuth';
 import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
 import RequireEntitlement from '@/components/RequireEntitlement';
@@ -57,6 +61,32 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/unsubscribe" element={<UnsubscribePage />} />
+
+        <Route
+          path="/crm"
+          element={
+            <RequireAuth>
+              <CrmDashboardPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/crm/contacts"
+          element={
+            <RequireAuth>
+              <CrmContactsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/crm/campaigns"
+          element={
+            <RequireAuth>
+              <CrmCampaignsPage />
+            </RequireAuth>
+          }
+        />
 
         <Route path="/dashboard" element={<Navigate to="/dashboard/foreclosures" replace />} />
         <Route

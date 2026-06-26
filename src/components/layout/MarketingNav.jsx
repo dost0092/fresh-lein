@@ -108,6 +108,16 @@ function MobileNav({ open, onOpenChange }) {
         </SheetHeader>
         <nav className="mt-6 flex flex-col gap-0.5 border-b border-border pb-5">
           <Link to={HOME_PATH} onClick={close} className={linkClass(HOME_PATH)}>Home</Link>
+          <Link
+            to="/crm"
+            onClick={close}
+            className={cn(
+              'rounded-md px-3 py-2.5 text-[15px] font-semibold transition-colors hover:bg-neutral-50',
+              location.pathname.startsWith('/crm') ? 'text-primary' : 'text-foreground'
+            )}
+          >
+            CRM
+          </Link>
           <Link to="/pricing" onClick={close} className={linkClass('/pricing')}>Pricing</Link>
           <Link to="/about" onClick={close} className={linkClass('/about')}>About</Link>
           <Link to={APP_HOME} onClick={close} className={linkClass(APP_HOME)}>
@@ -158,6 +168,12 @@ export default function MarketingNav() {
 
           <div className="flex min-w-0 flex-1 items-center justify-end gap-0">
             <nav className="hidden items-center gap-0.5 lg:flex lg:pr-5 lg:mr-5 lg:border-r lg:border-border/70">
+              <Link
+                to="/crm"
+                className={cn(navLinkClass, location.pathname.startsWith('/crm') && 'font-semibold text-primary')}
+              >
+                CRM
+              </Link>
               <ProductMenu triggerClassName="px-3" />
               <ResourcesMenu triggerClassName="px-3" />
               <Link
@@ -178,7 +194,7 @@ export default function MarketingNav() {
               {isAuthenticated ? (
                 <>
                   <Button asChild className="h-10 rounded-md px-5 text-[15px] font-semibold shadow-none">
-                    <Link to={APP_HOME}>Open app</Link>
+                    <Link to="/crm">Open CRM</Link>
                   </Button>
                   <UserMenu />
                 </>

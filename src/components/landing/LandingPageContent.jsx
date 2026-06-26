@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HeroSection from '@/components/landing/HeroSection';
+import CrmShowcaseSection from '@/components/landing/CrmShowcaseSection';
 import LandingMapExplorer from '@/components/landing/LandingMapExplorer';
 import DataCoverageSection from '@/components/landing/DataCoverageSection';
 import PlatformOverviewSection from '@/components/landing/PlatformOverviewSection';
@@ -23,6 +24,7 @@ export default function LandingPageContent({ topSlot = null }) {
   return (
     <>
       {topSlot}
+      <CrmShowcaseSection />
       <HeroSection />
       <DataCoverageSection />
       <LandingMapExplorer />
