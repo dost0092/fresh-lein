@@ -31,6 +31,7 @@ import SettingsPage from './pages/SettingsPage';
 import CrmDashboardPage from './pages/crm/CrmDashboardPage';
 import CrmContactsPage from './pages/crm/CrmContactsPage';
 import CrmCampaignsPage from './pages/crm/CrmCampaignsPage';
+import CrmSendersPage from './pages/crm/CrmSendersPage';
 import UnsubscribePage from './pages/UnsubscribePage';
 import RequireAuth from '@/components/RequireAuth';
 import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
@@ -84,6 +85,14 @@ function AppRoutes() {
           element={
             <RequireAuth>
               <CrmCampaignsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/crm/senders"
+          element={
+            <RequireAuth>
+              <CrmSendersPage />
             </RequireAuth>
           }
         />

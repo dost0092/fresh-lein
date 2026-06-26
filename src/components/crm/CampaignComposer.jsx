@@ -11,6 +11,8 @@ import {
   Loader2,
   X,
   Sparkles,
+  Inbox,
+  Link2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +21,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { deriveTags, audienceFor, DEMO_SEND_LIMIT } from '@/lib/crm/crmService';
-import { useContacts, useSuppressions, useSendCampaign, useSaveDraft } from '@/lib/crm/useCrmQueries';
+import {
+  useContacts,
+  useSuppressions,
+  useSendCampaign,
+  useSaveDraft,
+  useSenders,
+  useSendCampaignViaSmtp,
+} from '@/lib/crm/useCrmQueries';
 import { TEMPLATE_VARIABLES, renderTemplate, smsSegments } from '@/lib/crm/template';
 import { useAuth } from '@/lib/AuthContext';
 
@@ -36,8 +45,10 @@ export default function CampaignComposer({ initial, onClose }) {
   const { profile } = useAuth();
   const { data: contacts = [] } = useContacts();
   const { data: suppressionList = [] } = useSuppressions();
+  const { data: senders = [] } = useSenders();
   const tags = useMemo(() => deriveTags(contacts), [contacts]);
   const sendMut = useSendCampaign();
+  const smtpSendMut = useSendCampaignViaSmtp();
   const saveDraftMut = useSaveDraft();
 
   const [name, setName] = useState(initial?.name || '');
@@ -45,11 +56,17 @@ export default function CampaignComposer({ initial, onClose }) {
   const [audienceTag, setAudienceTag] = useState(initial?.audienceTag || 'all');
   const [subject, setSubject] = useState(initial?.subject || '');
   const [body, setBody] = useState(initial?.body || '');
+  // Sender account: prefer connected inbox
+  const [selectedSenderId, setSelectedSenderId] = useState(initial?.senderAccountId || '');
+  // Fallback fields (used when no inbox is connected)
   const [senderName, setSenderName] = useState(initial?.senderName || profile?.full_name || '');
   const [replyToEmail, setReplyToEmail] = useState(initial?.replyToEmail || profile?.email || '');
   const [result, setResult] = useState(null);
   const bodyRef = useRef(null);
-  const sending = sendMut.isPending;
+  const sending = sendMut.isPending || smtpSendMut.isPending;
+
+  const selectedSender = senders.find(s => s.id === selectedSenderId);
+  const usingOwnInbox = !!selectedSender;
 
   const recipients = useMemo(
     () => audienceFor(contacts, suppressionList, audienceTag),
@@ -81,31 +98,74 @@ export default function CampaignComposer({ initial, onClose }) {
       : { label: 'Message written', ok: body.trim().length > 0 },
     { label: 'Message body written', ok: body.trim().length > 0 },
     { label: 'At least one recipient', ok: recipients.length > 0 },
-    {
-      label: 'Reply-to email added',
-      ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail.trim()),
-    },
-    {
-      label: 'Sender name added',
-      ok: senderName.trim().length > 0,
-    },
+    usingOwnInbox
+      ? { label: `Sending via ${selectedSender.email}`, ok: true, auto: true }
+      : {
+          label: 'Sender name added',
+          ok: senderName.trim().length > 0,
+        },
+    !usingOwnInbox
+      ? {
+          label: 'Reply-to email added',
+          ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail.trim()),
+        }
+      : null,
     {
       label: 'One-click unsubscribe included automatically',
       ok: true,
       auto: true,
     },
     {
-      label: `Within demo limit of ${DEMO_SEND_LIMIT} recipients`,
-      ok: recipients.length <= DEMO_SEND_LIMIT,
-      warn: recipients.length > DEMO_SEND_LIMIT,
+      label: usingOwnInbox
+        ? `Within Gmail limit (${selectedSender?.daily_limit ?? 500}/day)`
+        : `Within demo limit of ${DEMO_SEND_LIMIT} recipients`,
+      ok: usingOwnInbox
+        ? recipients.length <= (selectedSender?.daily_limit ?? 500)
+        : recipients.length <= DEMO_SEND_LIMIT,
+      warn: usingOwnInbox
+        ? recipients.length > (selectedSender?.daily_limit ?? 500)
+        : recipients.length > DEMO_SEND_LIMIT,
     },
-  ];
+  ].filter(Boolean);
 
   const canSend = checks.every((c) => c.ok) && channel === 'email' && !sending;
 
   const handleSend = () => {
     if (!canSend) return;
     setResult(null);
+
+    // If user has connected their own inbox — use SMTP path
+    if (usingOwnInbox) {
+      smtpSendMut.mutate(
+        {
+          payload: {
+            campaignId: initial?.id,
+            name,
+            subject,
+            body,
+          },
+          senderAccountId: selectedSenderId,
+          recipients: capped.map(c => ({
+            email: c.email,
+            name: c.first_name ? `${c.first_name} ${c.last_name || ''}`.trim() : c.email,
+            ...c,
+          })),
+        },
+        {
+          onSuccess: (data) => {
+            setResult({ ...data, total: data.total ?? capped.length, smtpMode: true });
+            toast({
+              title: 'Campaign sent via your inbox',
+              description: `${data.sent} emails sent from ${selectedSender.email}${data.failed ? ` · ${data.failed} failed` : ''}.`,
+            });
+          },
+          onError: (err) => toast({ title: 'Send failed', description: err?.message || 'Something went wrong.' }),
+        }
+      );
+      return;
+    }
+
+    // Fallback: Resend relay (platform email)
     sendMut.mutate(
       {
         campaignId: initial?.id,
@@ -206,33 +266,68 @@ export default function CampaignComposer({ initial, onClose }) {
 
         {channel === 'email' && (
           <div className="space-y-3 rounded-lg border border-border bg-neutral-50/60 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sender identity</p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="camp-sender-name">Your name (shown to recipients)</Label>
-                <Input
-                  id="camp-sender-name"
-                  value={senderName}
-                  onChange={(e) => setSenderName(e.target.value)}
-                  placeholder="e.g. Mike Avery · ABC Realty"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="camp-reply-to">Reply-to email (where replies go)</Label>
-                <Input
-                  id="camp-reply-to"
-                  type="email"
-                  value={replyToEmail}
-                  onChange={(e) => setReplyToEmail(e.target.value)}
-                  placeholder="you@yourbrokerage.com"
-                />
-              </div>
-            </div>
-            <p className="text-[11px] leading-relaxed text-muted-foreground">
-              Recipients see <strong>{senderName.trim() || 'Your name'}</strong> as the sender. Replies go to{' '}
-              <strong>{replyToEmail.trim() || 'your email'}</strong>. The technical sending address uses your verified
-              FreshLien domain (set in Vercel) so mail lands in the inbox, not spam.
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
+              <Inbox size={13} /> Sender inbox
             </p>
+
+            {senders.length > 0 ? (
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="camp-sender-account">Send from</Label>
+                  <select
+                    id="camp-sender-account"
+                    value={selectedSenderId}
+                    onChange={(e) => setSelectedSenderId(e.target.value)}
+                    className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  >
+                    <option value="">— Use platform email (Resend) —</option>
+                    {senders.map((s) => (
+                      <option key={s.id} value={s.id} disabled={s.status !== 'active'}>
+                        {s.display_name} &lt;{s.email}&gt;{s.status !== 'active' ? ` (${s.status})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {usingOwnInbox ? (
+                  <p className="text-[11px] text-emerald-700 flex items-center gap-1">
+                    <CheckCircle2 size={12} />
+                    Emails will be sent directly from <strong>{selectedSender.email}</strong> — replies land in your inbox.
+                    Daily quota: {selectedSender.sent_today}/{selectedSender.daily_limit} used.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="camp-sender-name">Sender name</Label>
+                      <Input id="camp-sender-name" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="Mike Avery · ABC Realty" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="camp-reply-to">Reply-to email</Label>
+                      <Input id="camp-reply-to" type="email" value={replyToEmail} onChange={(e) => setReplyToEmail(e.target.value)} placeholder="you@yourbrokerage.com" />
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                  <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                  <div className="text-xs text-amber-800">
+                    <strong>Connect your Gmail for best deliverability.</strong> Right now emails send from the shared FreshLien domain.{' '}
+                    <a href="/crm/senders" className="underline font-medium">Connect your inbox →</a>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="camp-sender-name">Your name (shown to recipients)</Label>
+                    <Input id="camp-sender-name" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="e.g. Mike Avery · ABC Realty" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="camp-reply-to">Reply-to email (where replies go)</Label>
+                    <Input id="camp-reply-to" type="email" value={replyToEmail} onChange={(e) => setReplyToEmail(e.target.value)} placeholder="you@yourbrokerage.com" />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -362,8 +457,9 @@ export default function CampaignComposer({ initial, onClose }) {
           </div>
           {channel === 'email' && (
             <p className="text-center text-[11px] text-muted-foreground">
-              Sends through a vetted relay (Resend/SendGrid) with SPF, DKIM &amp; unsubscribe headers. No key configured runs
-              in safe simulation mode.
+              {usingOwnInbox
+                ? `Sent directly from ${selectedSender.email} via Gmail SMTP — best inbox placement, zero platform cost.`
+                : 'Sends through the shared FreshLien platform email. Connect your Gmail for better deliverability.'}
             </p>
           )}
         </div>
@@ -394,7 +490,7 @@ function ChannelButton({ active, icon: Icon, label, onClick, soon }) {
 }
 
 function SendResult({ result, name, onClose }) {
-  const failedRows = (result.results || []).filter((r) => !r.ok);
+  const failedRows = (result.results || result.failedDetails || []).filter((r) => !r.ok || r.error);
   const resendTestLimit =
     result.failed > 0 &&
     result.provider === 'resend' &&
@@ -411,6 +507,12 @@ function SendResult({ result, name, onClose }) {
       <p className="mt-1 text-sm text-muted-foreground">
         “{name}” {result.simulated ? 'was simulated successfully' : 'is on its way'}.
       </p>
+      {result.smtpMode && (
+        <p className="mx-auto mt-3 max-w-sm rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-800 text-left">
+          ✅ Sent directly from your connected Gmail inbox — replies arrive in your Gmail.
+          {result.message && <><br /><span className="font-medium mt-1 block">{result.message}</span></>}
+        </p>
+      )}
       {result.simulated && (
         <p className="mx-auto mt-3 max-w-sm rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
           Simulation mode: no email provider key is configured, so no real emails were sent. Add a RESEND_API_KEY (or

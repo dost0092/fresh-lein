@@ -20,6 +20,7 @@ import {
   LayoutDashboard,
   Users,
   Send,
+  Inbox,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
@@ -34,9 +35,10 @@ const navGroups = [
   {
     title: 'CRM',
     items: [
-      { icon: LayoutDashboard, label: 'Dashboard', path: '/crm' },
-      { icon: Users, label: 'Contacts', path: '/crm/contacts' },
-      { icon: Send, label: 'Campaigns', path: '/crm/campaigns' },
+      { icon: LayoutDashboard, label: 'Dashboard',    path: '/crm' },
+      { icon: Inbox,           label: 'My Inboxes',   path: '/crm/senders' },
+      { icon: Users,           label: 'Contacts',     path: '/crm/contacts' },
+      { icon: Send,            label: 'Campaigns',    path: '/crm/campaigns' },
     ],
   },
   {

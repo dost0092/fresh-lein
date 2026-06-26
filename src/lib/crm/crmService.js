@@ -353,6 +353,82 @@ export async function sendCampaign(payload) {
   return stats;
 }
 
+/* --------------------------- Sender Accounts --------------------------- */
+
+/** List the user's connected Gmail/Outlook inboxes. */
+export async function listSenders() {
+  const { mode, token } = await getMode();
+  if (mode !== 'supabase') return [];
+  const resp = await fetch('/api/crm/senders', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!resp.ok) throw new Error('Failed to load senders');
+  return resp.json();
+}
+
+/** Test an SMTP connection without saving. */
+export async function verifySmtpConnection({ email, password, smtp_host, smtp_port }) {
+  const { mode, token } = await getMode();
+  if (mode !== 'supabase') throw new Error('Sign in to connect an inbox');
+  const resp = await fetch('/api/crm/senders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ action: 'verify', email, password, smtp_host, smtp_port }),
+  });
+  const data = await parseJsonResponse(resp);
+  if (!resp.ok) throw new Error(data?.error || 'Verification failed');
+  return data;
+}
+
+/** Connect (save) a new sender inbox. */
+export async function connectSender({ email, display_name, provider, password, smtp_host, smtp_port }) {
+  const { mode, token } = await getMode();
+  if (mode !== 'supabase') throw new Error('Sign in to connect an inbox');
+  const resp = await fetch('/api/crm/senders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ action: 'connect', email, display_name, provider, password, smtp_host, smtp_port }),
+  });
+  const data = await parseJsonResponse(resp);
+  if (!resp.ok) throw new Error(data?.error || 'Failed to connect inbox');
+  return data;
+}
+
+/** Delete a sender account. */
+export async function deleteSender(senderId) {
+  const { mode, token } = await getMode();
+  if (mode !== 'supabase') throw new Error('Sign in to manage inboxes');
+  const resp = await fetch(`/api/crm/senders?id=${senderId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!resp.ok) throw new Error('Failed to delete sender');
+}
+
+/**
+ * Send campaign via the user's own connected SMTP inbox.
+ * Falls back to Resend relay if no sender selected.
+ */
+export async function sendCampaignViaSmtp(payload, senderAccountId, recipients) {
+  const { mode, token } = await getMode();
+  if (mode !== 'supabase') throw new Error('Sign in to send via your inbox');
+  const resp = await fetch('/api/crm/smtp-send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({
+      senderAccountId,
+      subject: payload.subject,
+      body: payload.body,
+      recipients,
+      campaignName: payload.name,
+      campaignId: payload.campaignId,
+    }),
+  });
+  const data = await parseJsonResponse(resp);
+  if (!resp.ok) throw new Error(data?.error || 'SMTP send failed');
+  return data;
+}
+
 /* -------------------------------- Helpers ------------------------------- */
 
 export function deriveTags(contacts = []) {
