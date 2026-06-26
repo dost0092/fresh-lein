@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Plus, Send, Mail, FileEdit, Trash2, ArrowLeft, Clock } from 'lucide-react';
-import AppLayout from '@/components/layout/AppLayout';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Plus, Send, Mail, Pencil, Trash2, ArrowLeft, Clock, Users, ChevronRight } from 'lucide-react';
+import CrmLayout from '@/components/layout/CrmLayout';
 import { toast } from '@/components/ui/use-toast';
 import CampaignComposer from '@/components/crm/CampaignComposer';
 import { audienceFor } from '@/lib/crm/crmService';
@@ -13,135 +11,211 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+const STATUS_CONFIG = {
+  sent:    { label: 'Sent',    bg: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
+  draft:   { label: 'Draft',   bg: 'bg-gray-100 text-gray-600',      dot: 'bg-gray-400'    },
+  sending: { label: 'Sending', bg: 'bg-blue-50 text-blue-700',       dot: 'bg-blue-500'    },
+  failed:  { label: 'Failed',  bg: 'bg-red-50 text-red-700',         dot: 'bg-red-500'     },
+  partial: { label: 'Partial', bg: 'bg-amber-50 text-amber-700',     dot: 'bg-amber-500'   },
+};
+
+function StatusBadge({ status }) {
+  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.draft;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${cfg.bg}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
+      {cfg.label}
+    </span>
+  );
+}
+
 export default function CrmCampaignsPage() {
-  const { data: campaigns = [] } = useCampaigns();
-  const { data: contacts = [] } = useContacts();
-  const { data: suppressionList = [] } = useSuppressions();
+  const { data: campaigns = []      } = useCampaigns();
+  const { data: contacts = []       } = useContacts();
+  const { data: suppressionList = []} = useSuppressions();
   const audienceCount = useMemo(
     () => audienceFor(contacts, suppressionList, 'all').length,
     [contacts, suppressionList]
   );
   const deleteMut = useDeleteCampaign();
-  const [composing, setComposing] = useState(null); // null | {} | campaign
+  const [composing, setComposing] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
-  if (composing) {
+  if (composing !== null) {
     return (
-      <AppLayout>
-      <div className="flex-1 overflow-y-auto">
-      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-        <button
-          type="button"
-          onClick={() => setComposing(null)}
-          className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to campaigns
-        </button>
-        <h1 className="mb-5 text-2xl font-semibold tracking-tight">
-          {composing.id ? 'Edit campaign' : 'New campaign'}
-        </h1>
-        <CampaignComposer initial={composing.id ? composing : undefined} onClose={() => setComposing(null)} />
-      </div>
-      </div>
-      </AppLayout>
+      <CrmLayout>
+        <div className="flex-1 overflow-y-auto bg-gray-50/40">
+          <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+            <div className="mb-6 flex items-center justify-between">
+              <button
+                onClick={() => setComposing(null)}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft size={16} /> Back to Campaigns
+              </button>
+              <span className="text-sm font-semibold text-gray-400">
+                {composing.id ? 'Edit Campaign' : 'New Campaign'}
+              </span>
+            </div>
+            <CampaignComposer
+              initial={composing.id ? composing : undefined}
+              onClose={() => setComposing(null)}
+            />
+          </div>
+        </div>
+      </CrmLayout>
     );
   }
 
   return (
-    <AppLayout>
-    <div className="flex-1 overflow-y-auto">
-    <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Campaigns</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Send personalized email broadcasts to your segmented contacts.
-          </p>
+    <CrmLayout>
+      <div className="flex-1 overflow-y-auto bg-gray-50/40">
+        <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+
+          {/* Header */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900">Campaigns</h1>
+              <p className="mt-0.5 text-sm text-gray-500">
+                Send personalized email broadcasts to your leads.
+              </p>
+            </div>
+            <button
+              onClick={() => setComposing({})}
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors"
+            >
+              <Plus size={16} /> New Campaign
+            </button>
+          </div>
+
+          {/* Warning: no contacts */}
+          {audienceCount === 0 && contacts.length > 0 && (
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5">
+              <Users size={16} className="text-amber-600 shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-800">
+                No opted-in contacts yet. <a href="/crm/contacts" className="font-semibold underline">Import leads</a> first so your campaign has an audience.
+              </p>
+            </div>
+          )}
+
+          {/* Campaign list */}
+          <div className="mt-6">
+            {campaigns.length === 0 ? (
+              <EmptyState onNew={() => setComposing({})} />
+            ) : (
+              <div className="space-y-3">
+                {campaigns.map(c => (
+                  <CampaignCard
+                    key={c.id}
+                    campaign={c}
+                    confirmDelete={confirmDelete}
+                    onEdit={() => setComposing(c)}
+                    onDelete={() => {
+                      if (confirmDelete === c.id) {
+                        deleteMut.mutate(c.id, {
+                          onSuccess: () => { toast({ title: 'Campaign deleted' }); setConfirmDelete(null); },
+                          onError: (err) => toast({ title: 'Delete failed', description: err?.message }),
+                        });
+                      } else {
+                        setConfirmDelete(c.id);
+                        setTimeout(() => setConfirmDelete(null), 3000);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <Button className="gap-2" onClick={() => setComposing({})}>
-          <Plus className="h-4 w-4" /> New campaign
-        </Button>
+      </div>
+    </CrmLayout>
+  );
+}
+
+function CampaignCard({ campaign: c, onEdit, onDelete, confirmDelete }) {
+  const sent = c.stats?.sent ?? c.sent_count ?? 0;
+  const pct  = c.total > 0 ? Math.min(100, Math.round((sent / c.total) * 100)) : 0;
+
+  return (
+    <div className="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:border-blue-200 hover:shadow-md transition-all sm:flex-row sm:items-center">
+      {/* Icon */}
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+        <Mail size={18} />
       </div>
 
-      {audienceCount === 0 && (
-        <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          You have no opted-in contacts yet. Import contacts first so your campaign has an audience.
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap items-center gap-2 mb-0.5">
+          <p className="font-semibold text-gray-900 truncate">{c.name}</p>
+          <StatusBadge status={c.status} />
         </div>
-      )}
-
-      <div className="mt-5 space-y-2.5">
-        {campaigns.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card px-6 py-16 text-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Send className="h-6 w-6" />
+        <p className="text-sm text-gray-500 truncate">{c.subject || 'No subject'}</p>
+        <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-gray-400">
+          <span className="flex items-center gap-1">
+            <Clock size={11} />
+            {c.status === 'sent' ? `Sent ${formatDate(c.sent_at)}` : `Created ${formatDate(c.created_at)}`}
+          </span>
+          {c.status === 'sent' && (
+            <span className="flex items-center gap-1">
+              <Send size={11} /> {sent.toLocaleString()} sent
             </span>
-            <h3 className="mt-3 text-base font-semibold">No campaigns yet</h3>
-            <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-              Create your first campaign to send a personalized broadcast to your contacts.
-            </p>
-            <Button className="mt-4 gap-2" onClick={() => setComposing({})}>
-              <Plus className="h-4 w-4" /> New campaign
-            </Button>
-          </div>
-        ) : (
-          campaigns.map((c) => (
-            <div
-              key={c.id}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="flex min-w-0 items-start gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Mail className="h-4.5 w-4.5" />
-                </span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate font-medium">{c.name}</p>
-                    {c.status === 'sent' ? (
-                      <Badge variant="secondary" className="bg-emerald-50 text-emerald-700">
-                        Sent
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="gap-1">
-                        <FileEdit className="h-3 w-3" /> Draft
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {c.subject || 'No subject'} · Audience: {c.audienceTag === 'all' ? 'All contacts' : c.audienceTag}
-                  </p>
-                  <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground/80">
-                    <Clock className="h-3 w-3" />
-                    {c.status === 'sent'
-                      ? `${c.stats?.sent ?? 0} sent · ${formatDate(c.sent_at)}`
-                      : `Created ${formatDate(c.created_at)}`}
-                  </p>
-                </div>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                {c.status !== 'sent' && (
-                  <Button size="sm" variant="outline" onClick={() => setComposing(c)}>
-                    Edit
-                  </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-rose-600"
-                  onClick={() =>
-                    deleteMut.mutate(c.id, {
-                      onSuccess: () => toast({ title: 'Campaign deleted' }),
-                      onError: (err) => toast({ title: 'Delete failed', description: err?.message }),
-                    })
-                  }
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+          )}
+          <span className="flex items-center gap-1">
+            <Users size={11} />
+            {c.audienceTag === 'all' ? 'All contacts' : c.audienceTag}
+          </span>
+        </div>
+        {c.status === 'sent' && c.total > 0 && (
+          <div className="mt-2">
+            <div className="h-1 w-full max-w-[200px] rounded-full bg-gray-100 overflow-hidden">
+              <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
             </div>
-          ))
+          </div>
         )}
       </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2 shrink-0">
+        {c.status !== 'sent' && (
+          <button
+            onClick={onEdit}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <Pencil size={12} /> Edit
+          </button>
+        )}
+        <button
+          onClick={onDelete}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            confirmDelete === c.id
+              ? 'bg-red-600 text-white hover:bg-red-700'
+              : 'border border-gray-200 bg-white text-red-500 hover:bg-red-50 hover:border-red-200'
+          }`}
+        >
+          <Trash2 size={12} />
+          {confirmDelete === c.id ? 'Confirm?' : 'Delete'}
+        </button>
+      </div>
     </div>
+  );
+}
+
+function EmptyState({ onNew }) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-20 text-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+        <Send size={28} />
+      </div>
+      <h3 className="mt-4 text-lg font-bold text-gray-900">No campaigns yet</h3>
+      <p className="mt-1.5 max-w-sm text-sm text-gray-500">
+        Create your first campaign to start reaching your leads with personalized emails.
+      </p>
+      <button
+        onClick={onNew}
+        className="mt-5 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+      >
+        <Plus size={15} /> Create Campaign
+      </button>
     </div>
-    </AppLayout>
   );
 }

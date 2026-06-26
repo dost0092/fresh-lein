@@ -1,149 +1,140 @@
 import { useMemo, useRef, useState } from 'react';
 import {
-  Mail,
-  MessageSquareText,
-  Users,
-  Eye,
-  Send,
-  Save,
-  CheckCircle2,
-  AlertTriangle,
-  Loader2,
-  X,
-  Sparkles,
-  Inbox,
-  Link2,
+  Mail, Users, Send, Save, CheckCircle2, AlertTriangle,
+  Loader2, X, ChevronRight, ChevronLeft, Inbox, Eye, Sparkles,
+  MessageSquareText, CircleCheck, CircleDot,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { deriveTags, audienceFor, DEMO_SEND_LIMIT } from '@/lib/crm/crmService';
 import {
-  useContacts,
-  useSuppressions,
-  useSendCampaign,
-  useSaveDraft,
-  useSenders,
-  useSendCampaignViaSmtp,
+  useContacts, useSuppressions, useSendCampaign, useSaveDraft,
+  useSenders, useSendCampaignViaSmtp,
 } from '@/lib/crm/useCrmQueries';
-import { TEMPLATE_VARIABLES, renderTemplate, smsSegments } from '@/lib/crm/template';
+import { TEMPLATE_VARIABLES, renderTemplate } from '@/lib/crm/template';
 import { useAuth } from '@/lib/AuthContext';
 
 const SAMPLE_CONTACT = {
-  first_name: 'Jordan',
-  last_name: 'Avery',
-  email: 'jordan@example.com',
-  neighborhood: 'Maple Heights',
-  property_type: 'a 3-bed colonial',
-  budget: '$450k',
+  first_name: 'Jordan', last_name: 'Avery', email: 'jordan@example.com',
+  neighborhood: 'Maple Heights', property_type: 'a 3-bed colonial', budget: '$450k',
 };
 
+const STEPS = [
+  { n: 1, label: 'Details'  },
+  { n: 2, label: 'Audience' },
+  { n: 3, label: 'Compose'  },
+  { n: 4, label: 'Preview'  },
+  { n: 5, label: 'Launch'   },
+];
+
+/* ─── Step Progress Bar ──────────────────────────────────────────────────── */
+function StepBar({ current }) {
+  return (
+    <div className="flex items-center gap-0 mb-8">
+      {STEPS.map((s, i) => {
+        const done   = s.n < current;
+        const active = s.n === current;
+        return (
+          <div key={s.n} className="flex items-center flex-1 min-w-0">
+            <div className="flex flex-col items-center shrink-0">
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                done   ? 'bg-blue-600 text-white'          :
+                active ? 'bg-blue-600 text-white ring-4 ring-blue-100' :
+                         'bg-gray-100 text-gray-400'
+              }`}>
+                {done ? <CheckCircle2 size={16} /> : s.n}
+              </div>
+              <span className={`mt-1.5 text-[11px] font-medium whitespace-nowrap ${
+                active ? 'text-blue-700' : done ? 'text-gray-600' : 'text-gray-400'
+              }`}>{s.label}</span>
+            </div>
+            {i < STEPS.length - 1 && (
+              <div className={`h-px flex-1 mx-2 mb-4 transition-all ${done ? 'bg-blue-400' : 'bg-gray-200'}`} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── Field wrapper ──────────────────────────────────────────────────────── */
+function Field({ label, helper, children }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-gray-800">{label}</Label>
+      {children}
+      {helper && <p className="text-xs text-gray-500">{helper}</p>}
+    </div>
+  );
+}
+
+/* ─── Main Component ─────────────────────────────────────────────────────── */
 export default function CampaignComposer({ initial, onClose }) {
   const { profile } = useAuth();
-  const { data: contacts = [] } = useContacts();
-  const { data: suppressionList = [] } = useSuppressions();
-  const { data: senders = [] } = useSenders();
-  const tags = useMemo(() => deriveTags(contacts), [contacts]);
-  const sendMut = useSendCampaign();
+  const { data: contacts = []       } = useContacts();
+  const { data: suppressionList = []} = useSuppressions();
+  const { data: senders = []        } = useSenders();
+  const tags        = useMemo(() => deriveTags(contacts), [contacts]);
+  const sendMut     = useSendCampaign();
   const smtpSendMut = useSendCampaignViaSmtp();
-  const saveDraftMut = useSaveDraft();
+  const saveDraftMut= useSaveDraft();
 
+  // Form state — logic unchanged
+  const [step, setStep] = useState(1);
   const [name, setName] = useState(initial?.name || '');
-  const [channel, setChannel] = useState(initial?.channel || 'email');
-  const [audienceTag, setAudienceTag] = useState(initial?.audienceTag || 'all');
-  const [subject, setSubject] = useState(initial?.subject || '');
-  const [body, setBody] = useState(initial?.body || '');
-  // Sender account: prefer connected inbox
+  const [channel, setChannel]             = useState(initial?.channel || 'email');
+  const [audienceTag, setAudienceTag]     = useState(initial?.audienceTag || 'all');
+  const [subject, setSubject]             = useState(initial?.subject || '');
+  const [body, setBody]                   = useState(initial?.body || '');
   const [selectedSenderId, setSelectedSenderId] = useState(initial?.senderAccountId || '');
-  // Fallback fields (used when no inbox is connected)
-  const [senderName, setSenderName] = useState(initial?.senderName || profile?.full_name || '');
-  const [replyToEmail, setReplyToEmail] = useState(initial?.replyToEmail || profile?.email || '');
-  const [result, setResult] = useState(null);
+  const [senderName, setSenderName]       = useState(initial?.senderName || profile?.full_name || '');
+  const [replyToEmail, setReplyToEmail]   = useState(initial?.replyToEmail || profile?.email || '');
+  const [result, setResult]               = useState(null);
   const bodyRef = useRef(null);
   const sending = sendMut.isPending || smtpSendMut.isPending;
 
   const selectedSender = senders.find(s => s.id === selectedSenderId);
-  const usingOwnInbox = !!selectedSender;
+  const usingOwnInbox  = !!selectedSender;
 
   const recipients = useMemo(
     () => audienceFor(contacts, suppressionList, audienceTag),
     [contacts, suppressionList, audienceTag]
   );
-  const capped = recipients.slice(0, DEMO_SEND_LIMIT);
+  const capped         = recipients.slice(0, DEMO_SEND_LIMIT);
   const previewContact = recipients[0] || SAMPLE_CONTACT;
 
   const insertVariable = (token) => {
     const el = bodyRef.current;
-    if (!el) {
-      setBody((b) => b + token);
-      return;
-    }
+    if (!el) { setBody(b => b + token); return; }
     const start = el.selectionStart ?? body.length;
-    const end = el.selectionEnd ?? body.length;
-    const next = body.slice(0, start) + token + body.slice(end);
-    setBody(next);
+    const end   = el.selectionEnd   ?? body.length;
+    setBody(body.slice(0, start) + token + body.slice(end));
     requestAnimationFrame(() => {
       el.focus();
       el.selectionStart = el.selectionEnd = start + token.length;
     });
   };
 
-  const checks = [
-    { label: 'Campaign has a name', ok: name.trim().length > 0 },
-    channel === 'email'
-      ? { label: 'Subject line added', ok: subject.trim().length > 0 }
-      : { label: 'Message written', ok: body.trim().length > 0 },
-    { label: 'Message body written', ok: body.trim().length > 0 },
-    { label: 'At least one recipient', ok: recipients.length > 0 },
-    usingOwnInbox
-      ? { label: `Sending via ${selectedSender.email}`, ok: true, auto: true }
-      : {
-          label: 'Sender name added',
-          ok: senderName.trim().length > 0,
-        },
-    !usingOwnInbox
-      ? {
-          label: 'Reply-to email added',
-          ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail.trim()),
-        }
-      : null,
-    {
-      label: 'One-click unsubscribe included automatically',
-      ok: true,
-      auto: true,
-    },
-    {
-      label: usingOwnInbox
-        ? `Within Gmail limit (${selectedSender?.daily_limit ?? 500}/day)`
-        : `Within demo limit of ${DEMO_SEND_LIMIT} recipients`,
-      ok: usingOwnInbox
-        ? recipients.length <= (selectedSender?.daily_limit ?? 500)
-        : recipients.length <= DEMO_SEND_LIMIT,
-      warn: usingOwnInbox
-        ? recipients.length > (selectedSender?.daily_limit ?? 500)
-        : recipients.length > DEMO_SEND_LIMIT,
-    },
-  ].filter(Boolean);
-
-  const canSend = checks.every((c) => c.ok) && channel === 'email' && !sending;
+  // Step validation
+  const step1OK = name.trim().length > 0;
+  const step2OK = recipients.length > 0;
+  const step3OK = subject.trim().length > 0 && body.trim().length > 0;
+  const senderOK = usingOwnInbox || senderName.trim().length > 0;
+  const replyOK  = usingOwnInbox || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyToEmail.trim());
+  const canLaunch = step1OK && step2OK && step3OK && senderOK && replyOK && !sending;
 
   const handleSend = () => {
-    if (!canSend) return;
+    if (!canLaunch) return;
     setResult(null);
 
-    // If user has connected their own inbox — use SMTP path
     if (usingOwnInbox) {
       smtpSendMut.mutate(
         {
-          payload: {
-            campaignId: initial?.id,
-            name,
-            subject,
-            body,
-          },
+          payload: { campaignId: initial?.id, name, subject, body },
           senderAccountId: selectedSenderId,
           recipients: capped.map(c => ({
             email: c.email,
@@ -154,29 +145,17 @@ export default function CampaignComposer({ initial, onClose }) {
         {
           onSuccess: (data) => {
             setResult({ ...data, total: data.total ?? capped.length, smtpMode: true });
-            toast({
-              title: 'Campaign sent via your inbox',
-              description: `${data.sent} emails sent from ${selectedSender.email}${data.failed ? ` · ${data.failed} failed` : ''}.`,
-            });
+            toast({ title: 'Campaign sent', description: `${data.sent} emails sent from ${selectedSender.email}.` });
           },
-          onError: (err) => toast({ title: 'Send failed', description: err?.message || 'Something went wrong.' }),
+          onError: (err) => toast({ title: 'Send failed', description: err?.message }),
         }
       );
       return;
     }
 
-    // Fallback: Resend relay (platform email)
     sendMut.mutate(
-      {
-        campaignId: initial?.id,
-        name,
-        channel,
-        subject,
-        body,
-        audienceTag,
-        senderName: senderName.trim(),
-        replyToEmail: replyToEmail.trim(),
-      },
+      { campaignId: initial?.id, name, channel, subject, body, audienceTag,
+        senderName: senderName.trim(), replyToEmail: replyToEmail.trim() },
       {
         onSuccess: (data) => {
           setResult({ ...data, total: data.total ?? capped.length });
@@ -185,282 +164,330 @@ export default function CampaignComposer({ initial, onClose }) {
             description: `${data.sent} delivered${data.failed ? ` · ${data.failed} failed` : ''}.`,
           });
         },
-        onError: (err) => toast({ title: 'Send failed', description: err?.message || 'Something went wrong.' }),
+        onError: (err) => toast({ title: 'Send failed', description: err?.message }),
       }
     );
   };
 
   const handleSaveDraft = () => {
     saveDraftMut.mutate(
-      { id: initial?.id, name: name || 'Untitled campaign', channel, subject, body, audienceTag },
+      { id: initial?.id, name: name || 'Untitled', channel, subject, body, audienceTag },
       {
-        onSuccess: () => {
-          toast({ title: 'Draft saved' });
-          onClose?.();
-        },
-        onError: (err) => toast({ title: 'Could not save draft', description: err?.message }),
+        onSuccess: () => { toast({ title: 'Draft saved' }); onClose?.(); },
+        onError:   (err) => toast({ title: 'Could not save draft', description: err?.message }),
       }
     );
   };
 
-  if (result) {
-    return <SendResult result={result} name={name} onClose={onClose} />;
-  }
+  if (result) return <SendResult result={result} name={name} onClose={onClose} />;
 
   return (
-    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_minmax(320px,420px)]">
-      {/* Editor */}
-      <div className="space-y-5">
-        <div className="space-y-1.5">
-          <Label htmlFor="camp-name">Campaign name</Label>
-          <Input
-            id="camp-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. March new listings — Buyers"
+    <div className="mx-auto max-w-2xl">
+      <StepBar current={step} />
+
+      {/* ── Step 1: Details ─────────────────────────────────────────────── */}
+      {step === 1 && (
+        <div className="space-y-6">
+          <StepHeader
+            title="Campaign Details"
+            sub="Give your campaign a name and choose the sending channel."
           />
-        </div>
 
-        <div className="space-y-1.5">
-          <Label>Channel</Label>
-          <div className="grid grid-cols-2 gap-2">
-            <ChannelButton
-              active={channel === 'email'}
-              icon={Mail}
-              label="Email"
-              onClick={() => setChannel('email')}
+          <Field label="Campaign Name" helper="Only visible to you.">
+            <Input
+              autoFocus
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="e.g. Motivated Sellers — Texas June"
+              className="h-11 text-base"
             />
-            <ChannelButton
-              active={channel === 'sms'}
-              icon={MessageSquareText}
-              label="SMS"
-              soon
-              onClick={() => toast({ title: 'SMS coming soon', description: 'SMS requires A2P 10DLC carrier registration. Email is live now.' })}
-            />
-          </div>
-        </div>
+          </Field>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="camp-audience">Audience</Label>
-          <select
-            id="camp-audience"
-            value={audienceTag}
-            onChange={(e) => setAudienceTag(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          >
-            <option value="all">All opted-in contacts</option>
-            {tags.map((t) => (
-              <option key={t} value={t}>
-                Tag: {t}
-              </option>
-            ))}
-          </select>
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Users className="h-3.5 w-3.5" />
-            {recipients.length} eligible recipient{recipients.length === 1 ? '' : 's'}
+          <Field label="Channel" helper="Email campaigns are live. SMS requires A2P registration.">
+            <div className="grid grid-cols-2 gap-3">
+              <ChannelCard
+                icon={Mail} label="Email" active={channel === 'email'}
+                onClick={() => setChannel('email')}
+              />
+              <ChannelCard
+                icon={MessageSquareText} label="SMS (Coming Soon)" active={false} disabled
+                onClick={() => toast({ title: 'SMS coming soon' })}
+              />
+            </div>
+          </Field>
+        </div>
+      )}
+
+      {/* ── Step 2: Audience ─────────────────────────────────────────────── */}
+      {step === 2 && (
+        <div className="space-y-6">
+          <StepHeader
+            title="Choose Your Audience"
+            sub="Select which contacts will receive this campaign."
+          />
+
+          <Field label="Send To" helper="Only opted-in, unsuppressed contacts receive the campaign.">
+            <select
+              value={audienceTag}
+              onChange={e => setAudienceTag(e.target.value)}
+              className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All opted-in contacts</option>
+              {tags.map(t => <option key={t} value={t}>Tag: {t}</option>)}
+            </select>
+          </Field>
+
+          <div className={`rounded-2xl border p-5 ${recipients.length === 0 ? 'border-amber-200 bg-amber-50' : 'border-blue-100 bg-blue-50'}`}>
+            <div className="flex items-center gap-3">
+              <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${recipients.length === 0 ? 'bg-amber-100' : 'bg-blue-100'}`}>
+                <Users size={22} className={recipients.length === 0 ? 'text-amber-600' : 'text-blue-600'} />
+              </div>
+              <div>
+                <p className={`text-2xl font-bold tabular-nums ${recipients.length === 0 ? 'text-amber-700' : 'text-blue-700'}`}>
+                  {recipients.length.toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {recipients.length === 0
+                    ? 'No eligible contacts — import leads first'
+                    : `eligible recipient${recipients.length === 1 ? '' : 's'}`}
+                </p>
+              </div>
+            </div>
             {recipients.length > DEMO_SEND_LIMIT && (
-              <span className="text-amber-600">· only the first {DEMO_SEND_LIMIT} will send on the demo plan</span>
+              <p className="mt-3 text-xs text-amber-700 flex items-center gap-1.5">
+                <AlertTriangle size={13} />
+                Only the first {DEMO_SEND_LIMIT} will be sent on the demo plan.
+              </p>
             )}
+          </div>
+
+          {recipients.length === 0 && (
+            <a href="/crm/contacts" className="block rounded-xl border border-gray-200 bg-white p-4 text-sm text-center text-blue-600 font-medium hover:bg-blue-50 transition-colors">
+              Import contacts first →
+            </a>
+          )}
+        </div>
+      )}
+
+      {/* ── Step 3: Compose ─────────────────────────────────────────────── */}
+      {step === 3 && (
+        <div className="space-y-6">
+          <StepHeader
+            title="Write Your Email"
+            sub="Personalize with variables — each recipient gets their own version."
+          />
+
+          {/* Sender */}
+          <Field label="Send From" helper={usingOwnInbox ? `Replies go to ${selectedSender.email}` : 'Connect your Gmail for better deliverability'}>
+            {senders.length > 0 ? (
+              <select
+                value={selectedSenderId}
+                onChange={e => setSelectedSenderId(e.target.value)}
+                className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">— Platform email (Resend) —</option>
+                {senders.map(s => (
+                  <option key={s.id} value={s.id} disabled={s.status !== 'active'}>
+                    {s.display_name} &lt;{s.email}&gt;{s.status !== 'active' ? ` (${s.status})` : ''}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+                <p className="text-sm text-amber-800">No inbox connected yet.</p>
+                <a href="/crm/senders" className="text-sm font-semibold text-amber-800 underline hover:no-underline">Connect Gmail →</a>
+              </div>
+            )}
+          </Field>
+
+          {!usingOwnInbox && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field label="Your Name" helper="Shown to recipients as the sender.">
+                <Input value={senderName} onChange={e => setSenderName(e.target.value)} placeholder="Jane Smith — RE Investor" className="h-11" />
+              </Field>
+              <Field label="Reply-To Email" helper="Where replies land.">
+                <Input type="email" value={replyToEmail} onChange={e => setReplyToEmail(e.target.value)} placeholder="you@youremail.com" className="h-11" />
+              </Field>
+            </div>
+          )}
+
+          <Field label="Subject Line" helper="Keep it short and personal — under 50 characters works best.">
+            <Input
+              value={subject}
+              onChange={e => setSubject(e.target.value)}
+              placeholder="Quick question about your property on {{neighborhood}}"
+              className="h-11"
+            />
+          </Field>
+
+          <Field label="Email Body" helper="Use variables below to personalize each email automatically.">
+            {/* Variable pills */}
+            <div className="mb-2 flex flex-wrap gap-1.5">
+              {TEMPLATE_VARIABLES.filter(v => v.category === 'contact').map(v => (
+                <button
+                  key={v.token}
+                  type="button"
+                  onClick={() => insertVariable(v.token)}
+                  className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                >
+                  {v.token}
+                </button>
+              ))}
+            </div>
+            <Textarea
+              ref={bodyRef}
+              value={body}
+              onChange={e => setBody(e.target.value)}
+              placeholder={`Hi {{first_name}},\n\nI noticed your property at {{neighborhood}} and wanted to reach out...\n\n— ${senderName || 'Your name'}`}
+              rows={10}
+              className="text-sm leading-relaxed resize-none font-mono"
+            />
+          </Field>
+        </div>
+      )}
+
+      {/* ── Step 4: Preview ─────────────────────────────────────────────── */}
+      {step === 4 && (
+        <div className="space-y-6">
+          <StepHeader
+            title="Preview Your Email"
+            sub={`Showing how it looks for ${previewContact.first_name || previewContact.email || 'your first lead'}.`}
+          />
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div className="border-b border-gray-100 px-5 py-4 bg-gray-50">
+              <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <span className="font-medium">From:</span>
+                <span>{usingOwnInbox ? `${selectedSender.display_name} <${selectedSender.email}>` : (senderName || 'Your Name')}</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <span className="font-medium">To:</span>
+                <span>{previewContact.email}</span>
+              </div>
+              <div className="flex items-start gap-2 text-sm text-gray-900">
+                <span className="text-xs font-medium text-gray-500 mt-0.5">Subject:</span>
+                <span className="font-semibold">{renderTemplate(subject, previewContact) || '(no subject)'}</span>
+              </div>
+            </div>
+            <div className="px-5 py-5">
+              {body ? (
+                renderTemplate(body, previewContact).split('\n').map((line, i) => (
+                  <p key={i} className={`text-sm text-gray-800 leading-relaxed ${line === '' ? 'h-4' : ''}`}>{line}</p>
+                ))
+              ) : (
+                <p className="text-sm text-gray-400 italic">No body written yet — go back to Step 3.</p>
+              )}
+              <div className="mt-6 border-t border-gray-100 pt-4">
+                <p className="text-xs text-gray-400">
+                  You received this because you own property at the address mentioned above. <span className="underline">Unsubscribe</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <p className="text-center text-xs text-gray-500">
+            Every recipient gets a personalized version. Unsubscribe link is added automatically.
           </p>
         </div>
+      )}
 
-        {channel === 'email' && (
-          <div className="space-y-3 rounded-lg border border-border bg-neutral-50/60 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
-              <Inbox size={13} /> Sender inbox
-            </p>
-
-            {senders.length > 0 ? (
-              <>
-                <div className="space-y-1.5">
-                  <Label htmlFor="camp-sender-account">Send from</Label>
-                  <select
-                    id="camp-sender-account"
-                    value={selectedSenderId}
-                    onChange={(e) => setSelectedSenderId(e.target.value)}
-                    className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  >
-                    <option value="">— Use platform email (Resend) —</option>
-                    {senders.map((s) => (
-                      <option key={s.id} value={s.id} disabled={s.status !== 'active'}>
-                        {s.display_name} &lt;{s.email}&gt;{s.status !== 'active' ? ` (${s.status})` : ''}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {usingOwnInbox ? (
-                  <p className="text-[11px] text-emerald-700 flex items-center gap-1">
-                    <CheckCircle2 size={12} />
-                    Emails will be sent directly from <strong>{selectedSender.email}</strong> — replies land in your inbox.
-                    Daily quota: {selectedSender.sent_today}/{selectedSender.daily_limit} used.
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="camp-sender-name">Sender name</Label>
-                      <Input id="camp-sender-name" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="Mike Avery · ABC Realty" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="camp-reply-to">Reply-to email</Label>
-                      <Input id="camp-reply-to" type="email" value={replyToEmail} onChange={(e) => setReplyToEmail(e.target.value)} placeholder="you@yourbrokerage.com" />
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
-                  <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />
-                  <div className="text-xs text-amber-800">
-                    <strong>Connect your Gmail for best deliverability.</strong> Right now emails send from the shared FreshLien domain.{' '}
-                    <a href="/crm/senders" className="underline font-medium">Connect your inbox →</a>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="camp-sender-name">Your name (shown to recipients)</Label>
-                    <Input id="camp-sender-name" value={senderName} onChange={(e) => setSenderName(e.target.value)} placeholder="e.g. Mike Avery · ABC Realty" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="camp-reply-to">Reply-to email (where replies go)</Label>
-                    <Input id="camp-reply-to" type="email" value={replyToEmail} onChange={(e) => setReplyToEmail(e.target.value)} placeholder="you@yourbrokerage.com" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {channel === 'email' && (
-          <div className="space-y-1.5">
-            <Label htmlFor="camp-subject">Subject line</Label>
-            <Input
-              id="camp-subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="A new {{property_type}} just hit {{neighborhood}}"
-            />
-          </div>
-        )}
-
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="camp-body">Message</Label>
-            {channel === 'sms' && (
-              <span className="text-xs text-muted-foreground">
-                {body.length} chars · {smsSegments(body)} segment(s)
-              </span>
-            )}
-          </div>
-          <Textarea
-            id="camp-body"
-            ref={bodyRef}
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder={'Hi {{first_name}},\n\nA new home just came up in {{neighborhood}} that fits what you were looking for...'}
-            className="min-h-[180px]"
+      {/* ── Step 5: Launch ──────────────────────────────────────────────── */}
+      {step === 5 && (
+        <div className="space-y-6">
+          <StepHeader
+            title="Ready to Launch?"
+            sub="Review your campaign before sending. Once launched, emails go out immediately."
           />
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5" /> Insert:
-            </span>
-            {TEMPLATE_VARIABLES.map((v) => (
-              <button
-                key={v.token}
-                type="button"
-                onClick={() => insertVariable(v.token)}
-                className="rounded-md border border-border bg-white px-2 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
-              >
-                {v.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      {/* Side: preview + compliance + actions */}
-      <div className="space-y-4">
-        <div className="rounded-xl border border-border bg-card">
-          <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 text-sm font-medium">
-            <Eye className="h-4 w-4 text-muted-foreground" /> Live preview
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <SummaryCard label="Campaign"    value={name}                                               />
+            <SummaryCard label="Recipients"  value={`${capped.length} contacts`}                       />
+            <SummaryCard label="Send From"   value={usingOwnInbox ? selectedSender.email : 'Platform'} />
+            <SummaryCard label="Subject"     value={subject || '—'}                                    />
+            <SummaryCard label="Channel"     value="Email"                                              />
+            <SummaryCard label="Unsubscribe" value="Auto-included ✓"                                   />
           </div>
-          <div className="p-4">
-            {channel === 'email' ? (
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Subject</p>
-                <p className="text-sm font-semibold">
-                  {renderTemplate(subject, previewContact) || (
-                    <span className="text-muted-foreground/60">Your subject line…</span>
-                  )}
-                </p>
-                <div className="mt-2 rounded-lg bg-neutral-50 p-3 text-sm leading-relaxed text-foreground">
-                  {renderTemplate(body, previewContact) ? (
-                    renderTemplate(body, previewContact)
-                      .split('\n')
-                      .map((line, i) => <p key={i} className={line ? '' : 'h-3'}>{line}</p>)
-                  ) : (
-                    <span className="text-muted-foreground/60">Your message will appear here…</span>
-                  )}
-                  <p className="mt-3 border-t border-border pt-2 text-[11px] text-muted-foreground">
-                    Unsubscribe in one click · sent via FreshLien CRM
-                  </p>
-                </div>
-                <p className="text-[11px] text-muted-foreground">
-                  Preview personalized for {previewContact.first_name || previewContact.email}
-                </p>
-              </div>
-            ) : (
-              <div className="mx-auto max-w-[240px] rounded-2xl bg-neutral-100 p-3">
-                <div className="rounded-2xl rounded-bl-sm bg-primary px-3 py-2 text-sm text-primary-foreground">
-                  {renderTemplate(body, previewContact) || 'Your text message…'}
-                </div>
-              </div>
-            )}
+
+          {/* Pre-flight checks */}
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Pre-flight checks</p>
+            <ul className="space-y-2">
+              {[
+                { ok: step1OK,  label: 'Campaign has a name'              },
+                { ok: step2OK,  label: `${capped.length} recipients ready`},
+                { ok: !!subject.trim(), label: 'Subject line written'     },
+                { ok: !!body.trim(),    label: 'Email body written'       },
+                { ok: senderOK, label: usingOwnInbox ? `Sending from ${selectedSender.email}` : 'Sender name set' },
+                { ok: true,     label: 'Unsubscribe link auto-included'   },
+              ].map(c => (
+                <li key={c.label} className="flex items-center gap-2.5 text-sm">
+                  {c.ok
+                    ? <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+                    : <AlertTriangle size={16} className="text-amber-500 shrink-0" />}
+                  <span className={c.ok ? 'text-gray-700' : 'text-amber-700 font-medium'}>{c.label}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
 
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="mb-2 text-sm font-medium">Compliance & deliverability</p>
-          <ul className="space-y-1.5">
-            {checks.map((c) => (
-              <li key={c.label} className="flex items-start gap-2 text-xs">
-                {c.warn ? (
-                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-                ) : c.ok ? (
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
-                ) : (
-                  <span className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded-full border border-muted-foreground/40" />
-                )}
-                <span className={c.ok ? 'text-muted-foreground' : 'text-foreground'}>
-                  {c.label}
-                  {c.auto && <span className="ml-1 text-emerald-600">(auto)</span>}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+          {usingOwnInbox && (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 flex items-center gap-2">
+              <CheckCircle2 size={16} className="shrink-0" />
+              Emails will be sent directly from <strong>{selectedSender.email}</strong>. Replies land in your Gmail inbox.
+            </div>
+          )}
 
-        <div className="flex flex-col gap-2">
-          <Button onClick={handleSend} disabled={!canSend} className="w-full gap-2">
-            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          <button
+            onClick={handleSend}
+            disabled={!canLaunch}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-base font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors shadow-sm"
+          >
             {sending
-              ? `Sending to ${capped.length}…`
-              : `Send to ${capped.length} recipient${capped.length === 1 ? '' : 's'}`}
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleSaveDraft} className="flex-1 gap-2">
-              <Save className="h-4 w-4" /> Save draft
-            </Button>
-            <Button variant="ghost" onClick={onClose} className="gap-2">
-              <X className="h-4 w-4" /> Cancel
-            </Button>
-          </div>
-          {channel === 'email' && (
-            <p className="text-center text-[11px] text-muted-foreground">
-              {usingOwnInbox
-                ? `Sent directly from ${selectedSender.email} via Gmail SMTP — best inbox placement, zero platform cost.`
-                : 'Sends through the shared FreshLien platform email. Connect your Gmail for better deliverability.'}
-            </p>
+              ? <><Loader2 size={18} className="animate-spin" /> Sending to {capped.length} people…</>
+              : <><Send size={18} /> Launch Campaign — {capped.length} emails</>}
+          </button>
+        </div>
+      )}
+
+      {/* ── Navigation ──────────────────────────────────────────────────── */}
+      <div className="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">
+        <div className="flex items-center gap-2">
+          {step > 1 && (
+            <button
+              onClick={() => setStep(s => s - 1)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <ChevronLeft size={15} /> Back
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <X size={15} /> Cancel
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSaveDraft}
+            disabled={saveDraftMut.isPending}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            {saveDraftMut.isPending ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+            Save Draft
+          </button>
+          {step < 5 && (
+            <button
+              onClick={() => setStep(s => s + 1)}
+              disabled={
+                (step === 1 && !step1OK) ||
+                (step === 2 && !step2OK) ||
+                (step === 3 && !step3OK)
+              }
+              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+            >
+              Continue <ChevronRight size={15} />
+            </button>
           )}
         </div>
       </div>
@@ -468,99 +495,98 @@ export default function CampaignComposer({ initial, onClose }) {
   );
 }
 
-function ChannelButton({ active, icon: Icon, label, onClick, soon }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`relative flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
-        active
-          ? 'border-primary bg-primary/5 text-primary'
-          : 'border-border bg-white text-muted-foreground hover:bg-neutral-50'
-      }`}
-    >
-      <Icon className="h-4 w-4" /> {label}
-      {soon && (
-        <span className="absolute -right-1.5 -top-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">
-          Soon
-        </span>
-      )}
-    </button>
-  );
-}
+/* ─── Sub-components ─────────────────────────────────────────────────────── */
 
-function SendResult({ result, name, onClose }) {
-  const failedRows = (result.results || result.failedDetails || []).filter((r) => !r.ok || r.error);
-  const resendTestLimit =
-    result.failed > 0 &&
-    result.provider === 'resend' &&
-    failedRows.some((r) => /only send testing emails|verify a domain/i.test(r.error || ''));
-
+function StepHeader({ title, sub }) {
   return (
-    <div className="mx-auto max-w-md py-8 text-center">
-      <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-        <CheckCircle2 className="h-7 w-7" />
-      </span>
-      <h3 className="mt-4 text-xl font-semibold">
-        {result.failed > 0 ? 'Campaign partially sent' : 'Campaign sent'}
-      </h3>
-      <p className="mt-1 text-sm text-muted-foreground">
-        “{name}” {result.simulated ? 'was simulated successfully' : 'is on its way'}.
-      </p>
-      {result.smtpMode && (
-        <p className="mx-auto mt-3 max-w-sm rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-800 text-left">
-          ✅ Sent directly from your connected Gmail inbox — replies arrive in your Gmail.
-          {result.message && <><br /><span className="font-medium mt-1 block">{result.message}</span></>}
-        </p>
-      )}
-      {result.simulated && (
-        <p className="mx-auto mt-3 max-w-sm rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
-          Simulation mode: no email provider key is configured, so no real emails were sent. Add a RESEND_API_KEY (or
-          SENDGRID_API_KEY) in your environment to send for real.
-        </p>
-      )}
-      {resendTestLimit && (
-        <p className="mx-auto mt-3 max-w-sm rounded-lg bg-amber-50 px-3 py-2 text-left text-xs text-amber-800">
-          <strong>Resend test mode:</strong> with <code className="text-[11px]">onboarding@resend.dev</code>, only your
-          Resend signup email can receive mail. The other {result.failed} address
-          {result.failed === 1 ? '' : 'es'} were rejected. Verify your domain in Resend and set{' '}
-          <code className="text-[11px]">CRM_FROM_EMAIL</code> to e.g.{' '}
-          <code className="text-[11px]">agents@mail.freshlien.com</code> to send to anyone.
-        </p>
-      )}
-      {result.failed > 0 && !resendTestLimit && failedRows.length > 0 && (
-        <div className="mx-auto mt-3 max-w-sm rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-left text-xs text-rose-800">
-          <p className="font-medium">Failed recipients:</p>
-          <ul className="mt-1 list-inside list-disc">
-            {failedRows.slice(0, 5).map((r) => (
-              <li key={r.to}>{r.to}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        <ResultStat label="Recipients" value={result.total} />
-        <ResultStat label="Sent" value={result.sent} good />
-        <ResultStat label="Failed" value={result.failed} bad={result.failed > 0} />
-      </div>
-      <Button className="mt-6 w-full" onClick={onClose}>
-        Done
-      </Button>
+    <div className="mb-2">
+      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+      <p className="mt-1 text-sm text-gray-500">{sub}</p>
     </div>
   );
 }
 
-function ResultStat({ label, value, good, bad }) {
+function ChannelCard({ icon: Icon, label, active, disabled, onClick }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-3">
-      <p
-        className={`text-2xl font-semibold tabular-nums ${
-          good ? 'text-emerald-600' : bad ? 'text-rose-600' : ''
-        }`}
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`relative flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left transition-all ${
+        active   ? 'border-blue-500 bg-blue-50 text-blue-700'   :
+        disabled ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' :
+                   'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/40'
+      }`}
+    >
+      <Icon size={18} />
+      <span className="text-sm font-medium">{label}</span>
+      {active && <CheckCircle2 size={16} className="absolute right-3 text-blue-600" />}
+    </button>
+  );
+}
+
+function SummaryCard({ label, value }) {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-gray-900 truncate" title={value}>{value}</p>
+    </div>
+  );
+}
+
+/* ─── Send Result Screen ─────────────────────────────────────────────────── */
+function SendResult({ result, name, onClose }) {
+  const failedRows = (result.results || result.failedDetails || []).filter(r => !r.ok || r.error);
+  const resendTestLimit =
+    result.failed > 0 && result.provider === 'resend' &&
+    failedRows.some(r => /only send testing emails|verify a domain/i.test(r.error || ''));
+
+  return (
+    <div className="mx-auto max-w-md py-10 text-center">
+      <div className="flex h-20 w-20 mx-auto items-center justify-center rounded-full bg-emerald-100">
+        <CheckCircle2 size={40} className="text-emerald-600" />
+      </div>
+      <h2 className="mt-5 text-2xl font-bold text-gray-900">
+        {result.failed > 0 && !result.smtpMode ? 'Partially Sent' : 'Campaign Sent! 🎉'}
+      </h2>
+      <p className="mt-2 text-gray-500">"{name}" is on its way to your leads.</p>
+
+      {result.smtpMode && (
+        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 text-left">
+          ✅ Sent directly from your Gmail — replies will arrive in your inbox.
+          {result.message && <p className="mt-1 font-medium">{result.message}</p>}
+        </div>
+      )}
+      {result.simulated && (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 text-left">
+          <strong>Simulation mode</strong> — no email key configured. Add RESEND_API_KEY in Vercel to send for real.
+        </div>
+      )}
+      {resendTestLimit && (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 text-left">
+          <strong>Resend test mode:</strong> only your signup email can receive. Verify your domain in Resend and update CRM_FROM_EMAIL to send to anyone.
+        </div>
+      )}
+
+      <div className="mt-6 grid grid-cols-3 gap-3">
+        {[
+          { label: 'Total',  value: result.total,  color: 'text-gray-900' },
+          { label: 'Sent',   value: result.sent,   color: 'text-emerald-600' },
+          { label: 'Failed', value: result.failed || 0, color: result.failed ? 'text-red-500' : 'text-gray-400' },
+        ].map(s => (
+          <div key={s.label} className="rounded-xl border border-gray-200 bg-white p-4">
+            <p className={`text-3xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
+            <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={onClose}
+        className="mt-6 w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
       >
-        {value}
-      </p>
-      <p className="text-xs text-muted-foreground">{label}</p>
+        Done
+      </button>
     </div>
   );
 }

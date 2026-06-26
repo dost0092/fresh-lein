@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import AppLayout from '../../components/layout/AppLayout';
+import CrmLayout from '../../components/layout/CrmLayout';
 import { useSenders, useConnectSender, useDeleteSender, useVerifySender } from '../../lib/crm/useCrmQueries';
-import { Mail, Plus, Trash2, CheckCircle, XCircle, Loader2, Eye, EyeOff, Inbox, Zap } from 'lucide-react';
+import { Mail, Plus, Trash2, CheckCircle, XCircle, Loader2, Eye, EyeOff, Inbox, Zap, Settings } from 'lucide-react';
 
 const TABS = [
-  { id: 'gmail',   label: 'Gmail',        icon: '🔴', host: 'smtp.gmail.com',      port: 587 },
-  { id: 'outlook', label: 'Outlook / 365', icon: '🔵', host: 'smtp.office365.com', port: 587 },
-  { id: 'smtp',    label: 'Custom SMTP',   icon: '⚙️', host: '',                   port: 587 },
+  { id: 'gmail',   label: 'Gmail',        Icon: Mail,     host: 'smtp.gmail.com',      port: 587 },
+  { id: 'outlook', label: 'Outlook / 365', Icon: Inbox,   host: 'smtp.office365.com', port: 587 },
+  { id: 'smtp',    label: 'Custom SMTP',   Icon: Settings, host: '',                   port: 587 },
 ];
 
 const STATUS_COLORS = {
-  active: 'bg-emerald-100 text-emerald-700',
+  active: 'bg-emerald-100 text-blue-700',
   paused: 'bg-yellow-100 text-yellow-700',
   error:  'bg-red-100 text-red-700',
 };
@@ -99,7 +99,7 @@ function ConnectForm({ tab, onSuccess }) {
             type="email" required
             value={email} onChange={e => setEmail(e.target.value)}
             placeholder="you@gmail.com"
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
@@ -108,7 +108,7 @@ function ConnectForm({ tab, onSuccess }) {
             type="text" required
             value={displayName} onChange={e => setDisplayName(e.target.value)}
             placeholder="Jane Smith — Real Estate Investor"
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
@@ -121,7 +121,7 @@ function ConnectForm({ tab, onSuccess }) {
               type="text" required
               value={smtpHost} onChange={e => setSmtpHost(e.target.value)}
               placeholder="smtp.yourdomain.com"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -129,7 +129,7 @@ function ConnectForm({ tab, onSuccess }) {
             <input
               type="number"
               value={smtpPort} onChange={e => setSmtpPort(Number(e.target.value))}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -144,7 +144,7 @@ function ConnectForm({ tab, onSuccess }) {
             type={showPass ? 'text' : 'password'} required
             value={password} onChange={e => setPassword(e.target.value)}
             placeholder={tab.id === 'gmail' ? 'xxxx xxxx xxxx xxxx' : '••••••••'}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button" onClick={() => setShowPass(p => !p)}
@@ -159,7 +159,7 @@ function ConnectForm({ tab, onSuccess }) {
       </div>
 
       {verifyStatus === 'ok' && (
-        <div className="flex items-center gap-2 text-emerald-700 text-sm font-medium">
+        <div className="flex items-center gap-2 text-blue-700 text-sm font-medium">
           <CheckCircle size={16} /> Connection verified successfully
         </div>
       )}
@@ -182,7 +182,7 @@ function ConnectForm({ tab, onSuccess }) {
         <button
           type="submit"
           disabled={!ready || connectMut.isPending || verifyStatus === 'error'}
-          className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40"
         >
           {connectMut.isPending ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
           Connect Inbox
@@ -210,7 +210,7 @@ function SenderCard({ sender, onDelete }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 shrink-0">
           <Inbox size={20} />
         </div>
         <div className="min-w-0">
@@ -227,7 +227,7 @@ function SenderCard({ sender, onDelete }) {
         </div>
         <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-emerald-500 rounded-full transition-all"
+            className="h-full bg-blue-500 rounded-full transition-all"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -266,7 +266,7 @@ export default function CrmSendersPage() {
   const tab = TABS.find(t => t.id === activeTab) || TABS[0];
 
   return (
-    <AppLayout>
+    <CrmLayout>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
         {/* Header */}
@@ -279,7 +279,7 @@ export default function CrmSendersPage() {
           </div>
           <button
             onClick={() => setShowForm(p => !p)}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             <Plus size={15} />
             {showForm ? 'Cancel' : 'Connect Inbox'}
@@ -288,11 +288,11 @@ export default function CrmSendersPage() {
 
         {/* Why BYOI banner */}
         {senders.length === 0 && !showForm && (
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 flex gap-4">
-            <Mail className="text-emerald-600 shrink-0 mt-0.5" size={28} />
+          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6 flex gap-4">
+            <Mail className="text-blue-600 shrink-0 mt-0.5" size={28} />
             <div>
-              <h2 className="font-semibold text-emerald-900 mb-1">Why connect your own inbox?</h2>
-              <ul className="text-sm text-emerald-800 space-y-1 list-disc list-inside">
+              <h2 className="font-semibold text-blue-900 mb-1">Why connect your own inbox?</h2>
+              <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                 <li>Emails come from <strong>your real Gmail</strong> — land in primary inbox, not spam</li>
                 <li>Replies go directly to <strong>your Gmail inbox</strong> — no third-party relay</li>
                 <li>Your reputation stays clean — no shared sending pool</li>
@@ -322,7 +322,7 @@ export default function CrmSendersPage() {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <span>{t.icon}</span> {t.label}
+                  <t.Icon size={13} /> {t.label}
                 </button>
               ))}
             </div>
@@ -347,7 +347,7 @@ export default function CrmSendersPage() {
               <p>No inboxes connected yet.</p>
               <button
                 onClick={() => setShowForm(true)}
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 <Plus size={14} /> Connect Your First Inbox
               </button>
@@ -358,6 +358,6 @@ export default function CrmSendersPage() {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </CrmLayout>
   );
 }

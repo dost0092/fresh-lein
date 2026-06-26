@@ -17,10 +17,8 @@ import {
   Receipt,
   MessageSquare,
   LogIn,
-  LayoutDashboard,
-  Users,
   Send,
-  Inbox,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
@@ -32,15 +30,6 @@ import { getGuestDaysRemaining } from '@/lib/guestAccess';
 import { APP_HOME } from '@/lib/routes';
 
 const navGroups = [
-  {
-    title: 'CRM',
-    items: [
-      { icon: LayoutDashboard, label: 'Dashboard',    path: '/crm' },
-      { icon: Inbox,           label: 'My Inboxes',   path: '/crm/senders' },
-      { icon: Users,           label: 'Contacts',     path: '/crm/contacts' },
-      { icon: Send,            label: 'Campaigns',    path: '/crm/campaigns' },
-    ],
-  },
   {
     title: 'Property data',
     items: [
@@ -170,6 +159,21 @@ function NavContent({ collapsed, onNavClick }) {
       </nav>
 
       <div className="space-y-0.5 border-t border-border px-3 py-4">
+        {/* CRM shortcut */}
+        <Link
+          to="/crm"
+          title={collapsed ? 'Open CRM' : undefined}
+          className={cn(
+            navItemBase,
+            'bg-blue-600 text-white hover:bg-blue-700 mb-2',
+            collapsed && 'justify-center'
+          )}
+        >
+          <Send className="h-4 w-4 shrink-0" />
+          {!collapsed && <span className="font-semibold">Open CRM</span>}
+          {!collapsed && <ExternalLink className="ml-auto h-3.5 w-3.5 opacity-70" />}
+        </Link>
+
         {!collapsed && isAuthenticated && profile && (
           <p className="mb-2 truncate px-3 text-xs text-muted-foreground">{profile.email}</p>
         )}
