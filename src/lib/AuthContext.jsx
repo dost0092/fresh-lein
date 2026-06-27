@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
-import { APP_HOME } from '@/lib/routes';
+import { APP_HOME, authCallbackUrl, pathFromRedirectUrl } from '@/lib/routes';
 
 const AuthContext = createContext(null);
 
@@ -175,19 +175,14 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signInWithGoogle = async (redirectTo = `${window.location.origin}${APP_HOME}`) => {
+  const signInWithGoogle = async (postAuthRedirect = `${window.location.origin}${APP_HOME}`) => {
     if (!isSupabaseConfigured) {
       throw new Error('Configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local');
     }
-    try {
-      const url = new URL(redirectTo, window.location.origin);
-      sessionStorage.setItem('auth_redirect', `${url.pathname}${url.search}` || APP_HOME);
-    } catch {
-      sessionStorage.setItem('auth_redirect', APP_HOME);
-    }
+    sessionStorage.setItem('auth_redirect', pathFromRedirectUrl(postAuthRedirect));
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo },
+      options: { redirectTo: authCallbackUrl() },
     });
     if (error) throw error;
     return data;

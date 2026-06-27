@@ -22,6 +22,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 import ForeclosuresPage from './pages/ForeclosuresPage';
 import ForeclosureDetailPage from './pages/ForeclosureDetailPage';
 import AlertsPage from './pages/AlertsPage';
@@ -62,6 +63,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/unsubscribe" element={<UnsubscribePage />} />
 
         <Route
