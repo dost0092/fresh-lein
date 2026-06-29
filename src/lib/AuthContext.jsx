@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, isSupabaseKeyMisconfigured } from '@/lib/supabase';
 import { APP_HOME, authCallbackUrl, pathFromRedirectUrl } from '@/lib/routes';
+import { getSiteOrigin } from '@/lib/siteUrl';
 
 const AuthContext = createContext(null);
 
@@ -152,13 +153,21 @@ export const AuthProvider = ({ children }) => {
   }, [applySession]);
 
   const signUp = async ({ email, password, fullName }) => {
+    if (isSupabaseKeyMisconfigured) {
+      throw new Error(
+        'VITE_SUPABASE_ANON_KEY is wrong (service role key detected). Use the anon public key in Vercel env vars.'
+      );
+    }
     if (!isSupabaseConfigured) {
       throw new Error('Configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local');
     }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: {
+        data: { full_name: fullName },
+        emailRedirectTo: authCallbackUrl(),
+      },
     });
     if (error) throw error;
     if (data.session) await applySessionAndWait(data.session);
@@ -207,7 +216,7 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Configure Supabase in .env.local to reset passwords.');
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${getSiteOrigin()}/reset-password`,
     });
     if (error) throw error;
   };
@@ -256,6 +265,7 @@ export const AuthProvider = ({ children }) => {
         isLoadingAuth,
         isProfileReady,
         isSupabaseConfigured,
+        isSupabaseKeyMisconfigured,
         isTrialActive,
         trialEndsAt,
         isSuperAdmin,

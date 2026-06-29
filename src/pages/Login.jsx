@@ -16,7 +16,7 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signInWithGoogle, isSupabaseConfigured } = useAuth();
+  const { signIn, signInWithGoogle, isSupabaseConfigured, isSupabaseKeyMisconfigured } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -68,7 +68,14 @@ function LoginForm() {
         </>
       }
     >
-      {!isSupabaseConfigured && (
+      {isSupabaseKeyMisconfigured && (
+        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+          Auth is misconfigured: <code className="text-xs">VITE_SUPABASE_ANON_KEY</code> must be the{' '}
+          <strong>anon</strong> key, not the service role key. Fix this in Vercel → Environment Variables.
+        </div>
+      )}
+
+      {!isSupabaseConfigured && !isSupabaseKeyMisconfigured && (
         <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-900">
           Add <code className="text-xs">VITE_SUPABASE_URL</code> and <code className="text-xs">VITE_SUPABASE_ANON_KEY</code> to{' '}
           <code className="text-xs">.env.local</code> to enable login.

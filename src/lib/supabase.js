@@ -17,10 +17,31 @@ function isValidUrl(value) {
   }
 }
 
+function jwtRole(key) {
+  try {
+    const payload = key.split('.')[1];
+    if (!payload) return null;
+    const json = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    return json.role ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const supabaseUrl = normalizeEnvValue(import.meta.env.VITE_SUPABASE_URL);
 const supabaseAnonKey = normalizeEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY);
+const anonKeyRole = supabaseAnonKey ? jwtRole(supabaseAnonKey) : null;
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl));
+export const isSupabaseKeyMisconfigured = anonKeyRole === 'service_role';
+
+export const isSupabaseConfigured =
+  Boolean(supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl)) && !isSupabaseKeyMisconfigured;
+
+if (isSupabaseKeyMisconfigured) {
+  console.error(
+    '[FreshLien] VITE_SUPABASE_ANON_KEY is a service role key. Use the anon (public) key from Supabase → Settings → API.'
+  );
+}
 
 export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey, {

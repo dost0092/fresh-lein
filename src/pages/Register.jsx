@@ -9,7 +9,7 @@ import RedirectIfAuthed from '@/components/RedirectIfAuthed';
 import { useAuth } from '@/lib/AuthContext';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { isCheckoutPlanId, CHECKOUT_PLAN_LABELS } from '@/lib/checkoutPlans';
-import { APP_HOME } from '@/lib/routes';
+import { APP_HOME, authCallbackUrl } from '@/lib/routes';
 
 function RegisterForm() {
   const [fullName, setFullName] = useState('');
@@ -20,7 +20,7 @@ function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendMessage, setResendMessage] = useState('');
-  const { signUp, signInWithGoogle, isSupabaseConfigured } = useAuth();
+  const { signUp, signInWithGoogle, isSupabaseConfigured, isSupabaseKeyMisconfigured } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get('plan');
@@ -61,7 +61,7 @@ function RegisterForm() {
         const { error: resendError } = await supabase.auth.resend({
           type: 'signup',
           email,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+          options: { emailRedirectTo: authCallbackUrl() },
         });
         if (resendError) throw resendError;
         setResendMessage('Confirmation email sent again. Check your inbox and spam folder.');
@@ -144,7 +144,14 @@ function RegisterForm() {
         </>
       }
     >
-      {!isSupabaseConfigured && (
+      {isSupabaseKeyMisconfigured && (
+        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+          Auth is misconfigured: <code className="text-xs">VITE_SUPABASE_ANON_KEY</code> must be the{' '}
+          <strong>anon</strong> key, not the service role key. Fix this in Vercel → Environment Variables.
+        </div>
+      )}
+
+      {!isSupabaseConfigured && !isSupabaseKeyMisconfigured && (
         <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-100 text-sm text-amber-900">
           Configure Supabase in <code className="text-xs">.env.local</code> before signing up.
         </div>
