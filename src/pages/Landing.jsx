@@ -1,5 +1,5 @@
 import MarketingNav from '@/components/layout/MarketingNav';
-import LandingPageContent from '@/components/landing/LandingPageContent';
+import ServicesLandingContent from '@/components/landing/ServicesLandingContent';
 import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 import Seo, { BASE_URL } from '@/components/seo/Seo';
 import { COMPANY } from '@/data/company';
@@ -10,41 +10,46 @@ const orgSchema = {
   name: COMPANY.name,
   url: BASE_URL,
   logo: `${BASE_URL}/freshlien-logo.png`,
-  description: COMPANY.description,
+  description:
+    'FreshLien is a real estate automation consultancy. We consult and build lead delivery, skip trace, SMS, CRM sync, offer systems, dashboards, and custom software for distressed deal teams.',
   sameAs: [
     'https://www.linkedin.com/company/freshlien',
     'https://www.facebook.com/people/FreshLien/61590612976427/',
   ],
 };
 
-const siteSchema = {
+const serviceSchema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
+  '@type': 'ProfessionalService',
   name: COMPANY.name,
   url: BASE_URL,
-  description: COMPANY.description,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${BASE_URL}/dashboard/foreclosures?q={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
+  description:
+    'Real estate automation consultancy: we advise and build acquisition systems for distressed deal teams.',
+  areaServed: 'US',
+  serviceType: [
+    'Acquisition automation consulting',
+    'Distressed lead delivery',
+    'Skip trace and owner contact setups',
+    'SMS and email outreach systems',
+    'CRM and pipeline automation',
+    'Offer and contract document systems',
+    'Buyer matching systems',
+    'Custom real estate software development',
+  ],
 };
 
 export default function Landing() {
   return (
     <div className="fl-app min-h-screen bg-white">
       <Seo
-        title="Same-day distressed property data for investors"
-        description="FreshLien pulls county and court records into one searchable platform. Search 100K+ foreclosure filings across 250+ counties with same-day updates, alerts, exports, and an API."
+        title="Real estate automation consultancy"
+        description="FreshLien consults and builds acquisition systems for real estate teams: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, AI workflows, and custom software. Book a free consult."
         path="/"
-        jsonLd={[orgSchema, siteSchema]}
+        jsonLd={[orgSchema, serviceSchema]}
       />
       <MarketingNav />
       <div className={MARKETING_NAV_OFFSET_CLASS}>
-        <LandingPageContent />
+        <ServicesLandingContent />
       </div>
     </div>
   );

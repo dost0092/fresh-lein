@@ -15,16 +15,16 @@ export default function AboutPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'About FreshLien: County-Direct Distressed Property Data',
+        title: 'About FreshLien: Real Estate Automation Consultancy',
         description:
-          'FreshLien pulls county and court records into one searchable platform. Learn our mission, coverage (100K+ filings, 250+ counties), and how we help investors find distressed deals.',
+          'FreshLien consults and builds acquisition systems for distressed deal teams. Learn our mission, coverage, and how we help with skip trace, SMS, CRM, offers, and custom software.',
         path: '/about',
       }}
     >
       <MarketingPageHero
         eyebrow="About FreshLien"
-        title="Same-day distressed property data"
-        titleHighlight="for investors who move first"
+        title="Real estate automation"
+        titleHighlight="consultancy"
         description={BRAND.positioning}
       />
 
@@ -33,8 +33,8 @@ export default function AboutPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <LandingSectionHeader
               eyebrow="Our mission"
-              title="Unify county data into"
-              titleHighlight="one platform"
+              title="Advise and build systems for"
+              titleHighlight="distressed deal teams"
               description={ABOUT.mission}
             />
             <div className="rounded-lg border border-border/80 bg-[#FAFAFA] p-6 lg:p-8">

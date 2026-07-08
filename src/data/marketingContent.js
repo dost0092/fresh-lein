@@ -7,7 +7,7 @@ export const BRAND = {
     'FreshLien pulls county and court records into one place. Search filings, set alerts, export lists, or plug in our API.',
   trustLine: '100K+ filings indexed · 250+ counties · Same-day on priority markets',
   positioning:
-    'FreshLien helps investors and B2B teams find distressed deals faster. We index 100K+ foreclosure filings across 250+ counties today, with same-day updates on priority markets. Probate and expanded court coverage are rolling out county by county.',
+    'FreshLien is a real estate automation consultancy. We help distressed-deal teams design and build their systems (lead delivery, skip trace, SMS, CRM, offers, dashboards), backed by our own county-direct data platform with 100K+ filings across 250+ counties.',
 };
 
 export const PLATFORM_SURFACES = [
@@ -275,25 +275,25 @@ export const DASHBOARD_IA = [
 
 export const ABOUT = {
   mission:
-    'FreshLien pulls county and court records into one searchable product. Today that means 100K+ foreclosure filings across 250+ counties, with map search, alerts, exports, and an API.',
+    'FreshLien helps real estate teams automate distressed-deal workflows. We consult, then build lead delivery, skip trace, SMS, CRM sync, offer systems, and custom software. Our own county-direct platform (100K+ filings, 250+ counties) is how we prove we know this data.',
   story:
-    'We started FreshLien because investors waste time jumping between county websites and stale lists. We publish what is live today, label what is still rolling out, and update priority counties same-day when the source allows it.',
+    'We started with county foreclosure data because investors were wasting hours on county sites and stale lists. Teams then asked us to wire that data into skip trace, SMS, CRM, and offer workflows. Today FreshLien is a consultancy that designs and builds those systems, with an optional self-serve platform for teams that only need the data.',
   values: [
     {
-      title: 'Speed matters',
-      text: 'Foreclosure windows are short. Priority counties refresh same-day or next business day.',
+      title: 'Consult first',
+      text: 'We map your process and recommend what to build vs buy before writing code.',
     },
     {
-      title: 'Honest numbers',
-      text: 'We show what is indexed now and what is still coming. No inflated “nationwide” claims.',
+      title: 'Build for your stack',
+      text: 'Twilio, skip-trace vendors, your CRM, your templates. You keep the accounts. We wire them.',
     },
     {
-      title: 'Works in the field',
-      text: 'Map search, county filters, CSV export, and API access for teams that move fast.',
+      title: 'We know this data',
+      text: 'We run a live county-direct foreclosure pipeline. Distressed real estate is not new to us.',
     },
     {
-      title: 'Full picture over time',
-      text: 'Foreclosure is live today. Probate, pre-foreclosure, and tax data are rolling out county by county.',
+      title: 'Fixed scope',
+      text: 'Clear proposals, fixed prices, and handoff with training. Optional retainers after launch.',
     },
   ],
 };

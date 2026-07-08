@@ -8,6 +8,7 @@ import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from '@/components/ScrollToTop';
 
 import Landing from './pages/Landing';
+import PlatformPage from './pages/PlatformPage';
 import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
@@ -33,6 +34,7 @@ import CrmDashboardPage from './pages/crm/CrmDashboardPage';
 import CrmContactsPage from './pages/crm/CrmContactsPage';
 import CrmCampaignsPage from './pages/crm/CrmCampaignsPage';
 import CrmSendersPage from './pages/crm/CrmSendersPage';
+import PipelineDashboardPage from './pages/pipeline/PipelineDashboardPage';
 import UnsubscribePage from './pages/UnsubscribePage';
 import RequireAuth from '@/components/RequireAuth';
 import RequireAuthOrGuest from '@/components/RequireAuthOrGuest';
@@ -49,6 +51,8 @@ function AppRoutes() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/platform" element={<PlatformPage />} />
+        <Route path="/services" element={<Navigate to="/#services" replace />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
@@ -95,6 +99,14 @@ function AppRoutes() {
           element={
             <RequireAuth>
               <CrmSendersPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/pipeline"
+          element={
+            <RequireAuth>
+              <PipelineDashboardPage />
             </RequireAuth>
           }
         />

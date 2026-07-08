@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Mail,
   BarChart3,
+  Monitor,
   Newspaper,
   Send,
 } from 'lucide-react';
@@ -23,6 +24,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const PRODUCT_LINKS = [
+  {
+    icon: Monitor,
+    label: 'FreshLien Platform',
+    description: 'Same-day distressed property data. Our product.',
+    href: '/platform',
+  },
   {
     icon: Send,
     label: 'Outreach CRM',
@@ -57,7 +64,7 @@ const PRODUCT_LINKS = [
     icon: Map,
     label: 'Data coverage',
     description: 'Counties, states, and freshness',
-    href: '/#coverage',
+    href: '/platform#coverage',
   },
 ];
 
@@ -78,7 +85,7 @@ const RESOURCE_LINKS = [
     icon: BarChart3,
     label: 'Coverage dashboard',
     description: 'Where we have data, county by county',
-    href: '/#coverage',
+    href: '/platform#coverage',
   },
   {
     icon: HelpCircle,

@@ -11,7 +11,7 @@ const contactOptions = [
   {
     icon: Mail,
     title: 'Email us',
-    text: 'Best for sales, partnerships, and general questions.',
+    text: 'Best for consulting inquiries, custom builds, and partnerships.',
     action: (
       <a
         href={CONTACT_MAILTO}
@@ -24,7 +24,7 @@ const contactOptions = [
   {
     icon: MessageSquare,
     title: 'Product feedback',
-    text: 'Report a bug, request a feature, or tell us what to build next.',
+    text: 'Bug reports or ideas for the optional FreshLien platform.',
     action: (
       <FeedbackDialog
         trigger={
@@ -39,20 +39,20 @@ const contactOptions = [
   {
     icon: Clock,
     title: 'Response time',
-    text: 'We typically reply within 1–2 business days. Enterprise inquiries get priority.',
+    text: 'We typically reply within 1–2 business days. Custom build inquiries get priority.',
     action: (
       <a
-        href={CONTACT_MAILTO_SUBJECT('Enterprise inquiry')}
+        href={CONTACT_MAILTO_SUBJECT('FreshLien consultancy inquiry')}
         className="text-sm font-medium text-primary hover:underline"
       >
-        Contact sales
+        Start a consulting inquiry
       </a>
     ),
   },
   {
     icon: Share2,
     title: 'Follow us',
-    text: 'Stay updated on product news, county coverage, and foreclosure investing tips.',
+    text: 'Updates on real estate automation, coverage, and client builds.',
     action: <SocialLinks />,
   },
 ];
@@ -61,16 +61,16 @@ export default function ContactPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'Contact FreshLien: Sales, Support & Partnerships',
+        title: 'Contact FreshLien: Consulting & Custom Builds',
         description:
-          'Contact FreshLien for sales, enterprise plans, API access, county coverage requests, and product support. We reply within 1 to 2 business days.',
+          'Book a consult with FreshLien for acquisition automation: skip trace setup, SMS, CRM sync, offer PDFs, dashboards, and custom real estate software.',
         path: '/contact',
       }}
     >
       <MarketingPageHero
         eyebrow="Contact"
-        title="We'd love to hear from you"
-        description={`Questions about plans, data coverage, or partnerships? Reach us at ${COMPANY.contactEmail} or use the form below.`}
+        title="Tell us what you need built"
+        description={`Consulting and custom builds for distressed deal teams. Reach us at ${COMPANY.contactEmail} or use the form below.`}
       />
 
       <section className="py-11 lg:py-14">

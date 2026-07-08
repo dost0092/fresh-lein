@@ -107,7 +107,11 @@ function MobileNav({ open, onOpenChange }) {
           <SheetTitle className="sr-only">Menu</SheetTitle>
         </SheetHeader>
         <nav className="mt-6 flex flex-col gap-0.5 border-b border-border pb-5">
-          <Link to={HOME_PATH} onClick={close} className={linkClass(HOME_PATH)}>Home</Link>
+          <Link to="/#services" onClick={close} className={linkClass(HOME_PATH)}>Services</Link>
+          <Link to="/platform" onClick={close} className={linkClass('/platform')}>Platform</Link>
+          {isAuthenticated && (
+            <Link to="/pipeline" onClick={close} className={linkClass('/pipeline')}>Pipeline</Link>
+          )}
           <Link
             to="/crm"
             onClick={close}
@@ -120,6 +124,7 @@ function MobileNav({ open, onOpenChange }) {
           </Link>
           <Link to="/pricing" onClick={close} className={linkClass('/pricing')}>Pricing</Link>
           <Link to="/about" onClick={close} className={linkClass('/about')}>About</Link>
+          <Link to="/contact" onClick={close} className={linkClass('/contact')}>Contact</Link>
           <Link to={APP_HOME} onClick={close} className={linkClass(APP_HOME)}>
             {isAuthenticated ? 'Open app' : 'Preview live data'}
           </Link>
@@ -169,11 +174,25 @@ export default function MarketingNav() {
           <div className="flex min-w-0 flex-1 items-center justify-end gap-0">
             <nav className="hidden items-center gap-0.5 lg:flex lg:pr-5 lg:mr-5 lg:border-r lg:border-border/70">
               <Link
-                to="/crm"
-                className={cn(navLinkClass, location.pathname.startsWith('/crm') && 'font-semibold text-primary')}
+                to="/#services"
+                className={cn(navLinkClass, location.pathname === '/' && 'font-semibold text-primary')}
               >
-                CRM
+                Services
               </Link>
+              <Link
+                to="/platform"
+                className={cn(navLinkClass, location.pathname === '/platform' && 'font-semibold text-primary')}
+              >
+                Platform
+              </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/pipeline"
+                  className={cn(navLinkClass, location.pathname.startsWith('/pipeline') && 'font-semibold text-primary')}
+                >
+                  Pipeline
+                </Link>
+              )}
               <ProductMenu triggerClassName="px-3" />
               <ResourcesMenu triggerClassName="px-3" />
               <Link
@@ -207,7 +226,7 @@ export default function MarketingNav() {
                     Sign in
                   </Link>
                   <Button asChild className="fl-btn-primary h-10 px-5 shadow-none">
-                    <Link to="/register">Get started</Link>
+                    <Link to="/contact">Book a call</Link>
                   </Button>
                 </>
               )}

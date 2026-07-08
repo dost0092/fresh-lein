@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Inbox, Users, Send, Settings,
   LogOut, Menu, X, ChevronLeft, ChevronRight,
-  MessageSquare, CreditCard, Gavel,
+  MessageSquare, CreditCard, Gavel, Kanban,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/AuthContext';
@@ -12,6 +12,7 @@ import FreshLienLogo, { HOME_PATH } from '@/components/brand/FreshLienLogo';
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard',  path: '/crm'           },
+  { icon: Kanban,          label: 'Pipeline',   path: '/pipeline'      },
   { icon: Inbox,           label: 'My Inboxes', path: '/crm/senders'   },
   { icon: Users,           label: 'Contacts',   path: '/crm/contacts'  },
   { icon: Send,            label: 'Campaigns',  path: '/crm/campaigns' },
