@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Gavel, Sparkles, Handshake, Monitor } from 'lucide-react';
+import {
+  ArrowRight, Check, CheckCircle2, Gavel, Sparkles, Handshake, Monitor,
+} from 'lucide-react';
 import {
   LandingContainer,
   LandingEyebrow,
@@ -14,40 +16,159 @@ import {
   SERVICE_CAPABILITIES,
 } from '@/data/services';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
-import { CONTACT_MAILTO_SUBJECT } from '@/data/company';
+import { COMPANY, CONTACT_MAILTO_SUBJECT } from '@/data/company';
+import { cn } from '@/lib/utils';
+
+const HERO_PIPELINE = [
+  { label: 'Lead delivery', status: 'Live', tone: 'bg-emerald-500' },
+  { label: 'Skip trace', status: 'Wired', tone: 'bg-emerald-500' },
+  { label: 'SMS outreach', status: 'In build', tone: 'bg-amber-400' },
+  { label: 'CRM sync', status: 'Scoped', tone: 'bg-primary' },
+  { label: 'Offer PDFs', status: 'Next', tone: 'bg-gray-300' },
+];
+
+function ServicesSystemPreview() {
+  return (
+    <div className="relative mx-auto w-full max-w-[540px] lg:max-w-none">
+      <div className="overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-[0_24px_64px_-12px_rgba(0,0,0,0.12)]">
+        <div className="flex items-center gap-2 border-b border-gray-100 bg-gray-50/80 px-4 py-3">
+          <div className="flex gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+            <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+            <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+          </div>
+          <div className="mx-auto flex h-7 min-w-0 max-w-[260px] flex-1 items-center justify-center rounded-md bg-white px-3 text-[11px] text-gray-400">
+            freshlien.com — client system
+          </div>
+        </div>
+
+        <div className="bg-fl-subtle p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+                Engagement
+              </p>
+              <p className="mt-1 text-sm font-semibold text-gray-900">Atlantic Acquisition OS</p>
+              <p className="mt-0.5 text-[11px] text-gray-400">Scope → build → handoff</p>
+            </div>
+            <span className="shrink-0 rounded-md bg-primary px-2 py-1 text-[10px] font-semibold text-white">
+              In progress
+            </span>
+          </div>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {[
+              { v: MARKETING_COVERAGE.foreclosureFilingsLive, l: 'Filings' },
+              { v: MARKETING_COVERAGE.counties, l: 'Counties' },
+              { v: MARKETING_COVERAGE.dataRefresh, l: 'Refresh' },
+            ].map((s) => (
+              <div key={s.l} className="rounded-lg border border-gray-200/80 bg-white px-3 py-2.5">
+                <p className="text-base font-semibold tabular-nums text-gray-900 sm:text-lg">{s.v}</p>
+                <p className="text-[10px] text-gray-400">{s.l}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 overflow-hidden rounded-lg border border-gray-200/80 bg-white">
+            <div className="border-b border-gray-100 px-3 py-2">
+              <p className="text-[11px] font-semibold text-gray-700">Services we deliver</p>
+            </div>
+            {HERO_PIPELINE.map((row) => (
+              <div
+                key={row.label}
+                className="flex items-center justify-between border-b border-gray-50 px-3 py-2.5 last:border-0"
+              >
+                <p className="text-[11px] font-medium text-gray-900">{row.label}</p>
+                <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
+                  <span className={cn('h-1.5 w-1.5 rounded-full', row.tone)} />
+                  {row.status}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-primary/15 bg-white px-3 py-2.5">
+            <div className="min-w-0">
+              <p className="truncate text-[11px] text-gray-600">
+                You keep Twilio, skip-trace, and CRM accounts
+              </p>
+            </div>
+            <span className="shrink-0 text-[10px] font-semibold text-primary">We wire them</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ServicesHero() {
   return (
-    <section className="border-b border-border/60 bg-fl-subtle">
-      <LandingContainer className="py-16 lg:py-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <LandingEyebrow className="text-center">Consultancy and custom builds</LandingEyebrow>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
-            We help real estate teams{' '}
-            <span
-              className="inline box-decoration-clone rounded-sm px-1.5 py-0.5 text-primary"
-              style={highlightMarkStyle}
-            >
-              automate distressed deals
-            </span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            FreshLien is a real estate automation consultancy. We advise your team, then build the
-            systems you need: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, and
-            full custom software. You keep the vendors and the process. We make it work.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/contact" className="fl-btn-primary px-6 py-3 text-base">
-              Book a free consult <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a href="#services" className="fl-btn-ghost px-6 py-3 text-base">
-              See our services
-            </a>
+    <section className="relative overflow-hidden border-b border-border/60 bg-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_15%,rgba(19,81,51,0.07),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_5%_85%,rgba(19,81,51,0.045),transparent)]" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(19,81,51,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(19,81,51,0.04) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent)',
+        }}
+      />
+
+      <LandingContainer className="relative py-16 sm:py-20 lg:py-28">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
+            <LandingEyebrow>Real estate automation services</LandingEyebrow>
+
+            <p className="font-display mb-4 text-[2.35rem] font-semibold leading-none tracking-[-0.04em] text-foreground sm:text-[3rem] lg:text-[3.35rem]">
+              {COMPANY.name}
+            </p>
+
+            <h1 className="font-display font-semibold leading-[1.05] tracking-[-0.03em] text-foreground">
+              <span className="block text-[1.85rem] text-muted-foreground sm:text-[2.2rem] lg:text-[2.45rem]">
+                We help real estate teams
+              </span>
+              <span className="mt-1.5 block text-[2.1rem] sm:text-[2.55rem] lg:text-[2.9rem]">
+                <span
+                  className="inline box-decoration-clone rounded-md px-2 py-0.5 text-primary"
+                  style={highlightMarkStyle}
+                >
+                  automate distressed deals
+                </span>
+              </span>
+            </h1>
+
+            <p className="mt-6 max-w-md text-lg leading-[1.6] text-muted-foreground">
+              We build the systems you need: lead delivery, skip trace, SMS, CRM sync, offer PDFs,
+              dashboards, and full custom software. You keep the vendors and the process. We make
+              it work.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link to="/contact" className="fl-btn-primary h-11 px-6 text-[15px]">
+                Book a free call <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="#services"
+                className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-foreground transition-colors hover:text-primary"
+              >
+                See our services
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </a>
+            </div>
+
+            <p className="mt-5 flex items-center gap-1.5 text-sm text-muted-foreground">
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+              Backed by our own data platform: {MARKETING_COVERAGE.foreclosureFilingsLive} filings ·{' '}
+              {MARKETING_COVERAGE.counties} counties · {MARKETING_COVERAGE.dataRefresh.toLowerCase()}{' '}
+              refresh
+            </p>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Backed by our own data platform: {MARKETING_COVERAGE.foreclosureRecords} filings,{' '}
-            {MARKETING_COVERAGE.counties} counties, {MARKETING_COVERAGE.dataRefresh.toLowerCase()} refresh
-          </p>
+
+          <div className="animate-in fade-in slide-in-from-right-4 duration-700 delay-150 fill-mode-both">
+            <ServicesSystemPreview />
+          </div>
         </div>
       </LandingContainer>
     </section>
@@ -59,7 +180,7 @@ function CapabilitiesStrip() {
     <section className="border-b border-border/60 bg-white py-8">
       <LandingContainer>
         <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          What we consult on and build for you
+          What we build and deliver for you
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           {SERVICE_CAPABILITIES.map((label) => (
@@ -82,7 +203,7 @@ function ServicesGrid() {
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Services"
-          title="Consultancy and builds for"
+          title="Everything we build for"
           titleHighlight="the full deal workflow"
           description="We do not sell skip-trace or SMS as a SaaS box. We design and build those systems for your team, using the tools and vendors you choose."
         />
@@ -146,9 +267,9 @@ function ProcessSection() {
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="How we work"
-          title="Consult first. Build second."
-          titleHighlight="Clear every step"
-          description="You always know what we recommend, what we will build, when it ships, and what it costs."
+          title="From first call to"
+          titleHighlight="live systems"
+          description="You always know what we will build, when it ships, and what it costs."
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICE_PROCESS.map(({ step, title, description }) => (
@@ -175,7 +296,7 @@ function ProductTeaser() {
               Proof we ship real estate software
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              We run our own county-direct platform with {MARKETING_COVERAGE.foreclosureRecords}{' '}
+              We run our own county-direct platform with {MARKETING_COVERAGE.foreclosureFilingsLive}{' '}
               filings across {MARKETING_COVERAGE.counties} counties. Many client builds start from
               that foundation. You can also use the product on its own if you want self-serve data.
             </p>
@@ -207,7 +328,7 @@ function ProductTeaser() {
               </div>
               <div className="grid grid-cols-3 gap-3 text-center">
                 {[
-                  { value: MARKETING_COVERAGE.foreclosureRecords, label: 'Filings' },
+                  { value: MARKETING_COVERAGE.foreclosureFilingsLive, label: 'Filings' },
                   { value: MARKETING_COVERAGE.counties, label: 'Counties' },
                   { value: MARKETING_COVERAGE.states, label: 'States' },
                 ].map(({ value, label }) => (
@@ -230,8 +351,8 @@ function WhyUsSection() {
   const points = [
     {
       icon: Handshake,
-      title: 'Consultancy, not a black-box SaaS sell',
-      text: 'We advise first, then build for your process. Skip trace, SMS, CRM sync, and offers are services we deliver into your stack, not features you rent from us forever.',
+      title: 'Services built for your stack',
+      text: 'Skip trace, SMS, CRM sync, and offers are services we deliver into your tools, not features you rent from us forever.',
     },
     {
       icon: Gavel,
@@ -250,8 +371,8 @@ function WhyUsSection() {
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Why FreshLien"
-          title="A partner that designs and builds,"
-          titleHighlight="then steps aside"
+          title="A partner that builds,"
+          titleHighlight="then hands off"
         />
         <div className="grid gap-5 lg:grid-cols-3">
           {points.map(({ icon: Icon, title, text }) => (
@@ -277,15 +398,15 @@ function FinalCta() {
           Tell us what your team needs built
         </h2>
         <p className="mx-auto mt-3 mb-8 max-w-lg text-base leading-relaxed text-muted-foreground">
-          A short consult is enough to sketch most projects. Skip trace, SMS, CRM, offers, dashboards,
+          A short call is enough to sketch most projects. Skip trace, SMS, CRM, offers, dashboards,
           or a full acquisition system. If we are not the right fit, we will say so.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link to="/contact" className="fl-btn-primary px-6 py-2.5">
-            Book a free consult <ArrowRight className="h-4 w-4" />
+            Book a free call <ArrowRight className="h-4 w-4" />
           </Link>
           <a
-            href={CONTACT_MAILTO_SUBJECT('FreshLien consultancy inquiry')}
+            href={CONTACT_MAILTO_SUBJECT('FreshLien services inquiry')}
             className="fl-btn-ghost px-6 py-2.5"
           >
             Email us instead

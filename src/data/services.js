@@ -10,29 +10,13 @@ import {
   FileText,
   Handshake,
   Users,
-  Compass,
 } from 'lucide-react';
 
 /**
- * FreshLien service menu — what we consult on and build for clients.
- * We are a real estate automation consultancy. The platform is proof of work
- * and an optional product, not the main offer on this site.
+ * FreshLien services menu — what we build and deliver for clients.
+ * The platform is an optional product; services are the main offer.
  */
 export const SERVICES = [
-  {
-    icon: Compass,
-    id: 'consulting',
-    name: 'Acquisition automation consulting',
-    tagline: 'Figure out what to build, then build it',
-    description:
-      'We map your current process from lead to close, find where hours are wasted, and design a clear plan. Strategy first, then we build what you need.',
-    includes: [
-      'Workflow audit for your team',
-      'Tool and vendor recommendations',
-      'Fixed-scope proposal and timeline',
-      'Ongoing advisory if you want it',
-    ],
-  },
   {
     icon: Database,
     id: 'lead-delivery',
@@ -197,12 +181,12 @@ export const SERVICE_PROCESS = [
   },
   {
     step: '02',
-    title: 'Advice and proposal',
-    description: 'We recommend what to build vs buy, then a fixed scope, timeline, and price.',
+    title: 'Scope and proposal',
+    description: 'Clear deliverables, timeline, and price. Fixed scope so you know what you are getting.',
   },
   {
     step: '03',
-    title: 'Build for your team',
+    title: 'Build and deliver',
     description: 'We set up vendors, wire data, and build the dashboards and workflows you need.',
   },
   {
@@ -239,9 +223,8 @@ export const SERVICE_AUDIENCES = [
   },
 ];
 
-/** Short capability chips for the landing page (consultancy we sell). */
+/** Short capability chips for the landing page. */
 export const SERVICE_CAPABILITIES = [
-  'Consulting',
   'Lead delivery',
   'Skip trace setup',
   'SMS / Twilio',

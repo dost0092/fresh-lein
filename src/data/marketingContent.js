@@ -7,7 +7,7 @@ export const BRAND = {
     'FreshLien pulls county and court records into one place. Search filings, set alerts, export lists, or plug in our API.',
   trustLine: '100K+ filings indexed · 250+ counties · Same-day on priority markets',
   positioning:
-    'FreshLien is a real estate automation consultancy. We help distressed-deal teams design and build their systems (lead delivery, skip trace, SMS, CRM, offers, dashboards), backed by our own county-direct data platform with 100K+ filings across 250+ counties.',
+    'FreshLien builds real estate automation for distressed deal teams: lead delivery, skip trace, SMS, CRM, offers, and dashboards, backed by our own county-direct data platform with 100K+ filings across 250+ counties.',
 };
 
 export const PLATFORM_SURFACES = [
@@ -275,13 +275,13 @@ export const DASHBOARD_IA = [
 
 export const ABOUT = {
   mission:
-    'FreshLien helps real estate teams automate distressed-deal workflows. We consult, then build lead delivery, skip trace, SMS, CRM sync, offer systems, and custom software. Our own county-direct platform (100K+ filings, 250+ counties) is how we prove we know this data.',
+    'FreshLien helps real estate teams automate distressed-deal workflows. We build lead delivery, skip trace, SMS, CRM sync, offer systems, and custom software. Our own county-direct platform (100K+ filings, 250+ counties) is how we prove we know this data.',
   story:
-    'We started with county foreclosure data because investors were wasting hours on county sites and stale lists. Teams then asked us to wire that data into skip trace, SMS, CRM, and offer workflows. Today FreshLien is a consultancy that designs and builds those systems, with an optional self-serve platform for teams that only need the data.',
+    'We started with county foreclosure data because investors were wasting hours on county sites and stale lists. Teams then asked us to wire that data into skip trace, SMS, CRM, and offer workflows. Today FreshLien delivers those systems as services, with an optional self-serve platform for teams that only need the data.',
   values: [
     {
-      title: 'Consult first',
-      text: 'We map your process and recommend what to build vs buy before writing code.',
+      title: 'Services first',
+      text: 'We scope what you need, then build and hand it off. Clear deliverables, fixed prices.',
     },
     {
       title: 'Build for your stack',

@@ -15,16 +15,16 @@ export default function AboutPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'About FreshLien: Real Estate Automation Consultancy',
+        title: 'About FreshLien: Real Estate Automation Services',
         description:
-          'FreshLien consults and builds acquisition systems for distressed deal teams. Learn our mission, coverage, and how we help with skip trace, SMS, CRM, offers, and custom software.',
+          'FreshLien builds acquisition systems for distressed deal teams. Learn our mission, coverage, and how we help with skip trace, SMS, CRM, offers, and custom software.',
         path: '/about',
       }}
     >
       <MarketingPageHero
         eyebrow="About FreshLien"
         title="Real estate automation"
-        titleHighlight="consultancy"
+        titleHighlight="services"
         description={BRAND.positioning}
       />
 
@@ -33,7 +33,7 @@ export default function AboutPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <LandingSectionHeader
               eyebrow="Our mission"
-              title="Advise and build systems for"
+              title="We build systems for"
               titleHighlight="distressed deal teams"
               description={ABOUT.mission}
             />

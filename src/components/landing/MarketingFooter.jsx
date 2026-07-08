@@ -8,7 +8,6 @@ import FreshLienLogo from '@/components/brand/FreshLienLogo';
 import SocialLinks from '@/components/brand/SocialLinks';
 
 const serviceLinks = [
-  { label: 'Consulting', to: '/#services' },
   { label: 'Lead delivery', to: '/#services' },
   { label: 'Skip trace setup', to: '/#services' },
   { label: 'SMS and outreach', to: '/#services' },
@@ -49,7 +48,7 @@ export default function MarketingFooter() {
           <div className="sm:col-span-2 lg:col-span-4">
             <FreshLienLogo to="/" variant="footer" onDark />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
-              Real estate automation consultancy. We advise and build lead delivery, skip trace, SMS, CRM sync, offers, dashboards, and custom software for distressed deal teams.
+              Real estate automation services. We build lead delivery, skip trace, SMS, CRM sync, offers, dashboards, and custom software for distressed deal teams.
             </p>
             <a
               href={CONTACT_MAILTO}

@@ -11,7 +11,7 @@ const orgSchema = {
   url: BASE_URL,
   logo: `${BASE_URL}/freshlien-logo.png`,
   description:
-    'FreshLien is a real estate automation consultancy. We consult and build lead delivery, skip trace, SMS, CRM sync, offer systems, dashboards, and custom software for distressed deal teams.',
+    'FreshLien builds real estate automation for distressed deal teams: lead delivery, skip trace, SMS, CRM sync, offer systems, dashboards, and custom software.',
   sameAs: [
     'https://www.linkedin.com/company/freshlien',
     'https://www.facebook.com/people/FreshLien/61590612976427/',
@@ -24,10 +24,9 @@ const serviceSchema = {
   name: COMPANY.name,
   url: BASE_URL,
   description:
-    'Real estate automation consultancy: we advise and build acquisition systems for distressed deal teams.',
+    'Real estate automation services: we build acquisition systems for distressed deal teams.',
   areaServed: 'US',
   serviceType: [
-    'Acquisition automation consulting',
     'Distressed lead delivery',
     'Skip trace and owner contact setups',
     'SMS and email outreach systems',
@@ -42,8 +41,8 @@ export default function Landing() {
   return (
     <div className="fl-app min-h-screen bg-white">
       <Seo
-        title="Real estate automation consultancy"
-        description="FreshLien consults and builds acquisition systems for real estate teams: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, AI workflows, and custom software. Book a free consult."
+        title="Real estate automation services"
+        description="FreshLien builds acquisition systems for real estate teams: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, AI workflows, and custom software. Book a free call."
         path="/"
         jsonLd={[orgSchema, serviceSchema]}
       />

@@ -11,7 +11,7 @@ const contactOptions = [
   {
     icon: Mail,
     title: 'Email us',
-    text: 'Best for consulting inquiries, custom builds, and partnerships.',
+    text: 'Best for service inquiries, custom builds, and partnerships.',
     action: (
       <a
         href={CONTACT_MAILTO}
@@ -42,10 +42,10 @@ const contactOptions = [
     text: 'We typically reply within 1–2 business days. Custom build inquiries get priority.',
     action: (
       <a
-        href={CONTACT_MAILTO_SUBJECT('FreshLien consultancy inquiry')}
+        href={CONTACT_MAILTO_SUBJECT('FreshLien services inquiry')}
         className="text-sm font-medium text-primary hover:underline"
       >
-        Start a consulting inquiry
+        Start a services inquiry
       </a>
     ),
   },
@@ -61,16 +61,16 @@ export default function ContactPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'Contact FreshLien: Consulting & Custom Builds',
+        title: 'Contact FreshLien: Services & Custom Builds',
         description:
-          'Book a consult with FreshLien for acquisition automation: skip trace setup, SMS, CRM sync, offer PDFs, dashboards, and custom real estate software.',
+          'Talk to FreshLien about acquisition automation services: skip trace setup, SMS, CRM sync, offer PDFs, dashboards, and custom real estate software.',
         path: '/contact',
       }}
     >
       <MarketingPageHero
         eyebrow="Contact"
         title="Tell us what you need built"
-        description={`Consulting and custom builds for distressed deal teams. Reach us at ${COMPANY.contactEmail} or use the form below.`}
+        description={`Services and custom builds for distressed deal teams. Reach us at ${COMPANY.contactEmail} or use the form below.`}
       />
 
       <section className="py-11 lg:py-14">
