@@ -9,6 +9,13 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 import Landing from './pages/Landing';
 import PlatformPage from './pages/PlatformPage';
+import ServicesPage from './pages/ServicesPage';
+import SolutionsIndexPage from './pages/SolutionsIndexPage';
+import SolutionDetailPage from './pages/SolutionDetailPage';
+import HowItWorksPage from './pages/HowItWorksPage';
+import BookAuditPage from './pages/BookAuditPage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
+import ResourcesPage from './pages/ResourcesPage';
 import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
@@ -52,7 +59,13 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/platform" element={<PlatformPage />} />
-        <Route path="/services" element={<Navigate to="/#services" replace />} />
+        <Route path="/solutions" element={<SolutionsIndexPage />} />
+        <Route path="/solutions/:slug" element={<SolutionDetailPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        <Route path="/case-studies" element={<CaseStudiesPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/book-audit" element={<BookAuditPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />

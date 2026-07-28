@@ -1,8 +1,10 @@
 import MarketingNav from '@/components/layout/MarketingNav';
-import ServicesLandingContent from '@/components/landing/ServicesLandingContent';
+import HomePageContent from '@/components/landing/HomePageContent';
 import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 import Seo, { BASE_URL } from '@/components/seo/Seo';
 import { COMPANY } from '@/data/company';
+import { POSITIONING } from '@/data/sitePositioning';
+import { SITE_FAQS } from '@/data/solutionsContent';
 
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -10,8 +12,7 @@ const orgSchema = {
   name: COMPANY.name,
   url: BASE_URL,
   logo: `${BASE_URL}/freshlien-logo.png`,
-  description:
-    'FreshLien builds real estate automation for distressed deal teams: lead delivery, skip trace, SMS, CRM sync, offer systems, dashboards, and custom software.',
+  description: POSITIONING.positioning,
   sameAs: [
     'https://www.linkedin.com/company/freshlien',
     'https://www.facebook.com/people/FreshLien/61590612976427/',
@@ -23,32 +24,40 @@ const serviceSchema = {
   '@type': 'ProfessionalService',
   name: COMPANY.name,
   url: BASE_URL,
-  description:
-    'Real estate automation services: we build acquisition systems for distressed deal teams.',
+  description: POSITIONING.fiveSecond,
   areaServed: 'US',
   serviceType: [
-    'Distressed lead delivery',
-    'Skip trace and owner contact setups',
-    'SMS and email outreach systems',
-    'CRM and pipeline automation',
-    'Offer and contract document systems',
-    'Buyer matching systems',
-    'Custom real estate software development',
+    'Real estate data automation',
+    'Public records workflow automation',
+    'Acquisition automation',
+    'Disposition workflows',
+    'Property research systems',
+    'CRM integration for real estate',
   ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: SITE_FAQS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
 };
 
 export default function Landing() {
   return (
     <div className="fl-app min-h-screen bg-white">
       <Seo
-        title="Real estate automation services"
-        description="FreshLien builds acquisition systems for real estate teams: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, AI workflows, and custom software. Book a free call."
+        title="Turn fragmented property data into qualified seller opportunities"
+        description="FreshLien collects, cleans, enriches, and connects public records, property data, CRM workflows, follow-up, and offers—so real estate teams spend more time speaking with sellers and less time managing spreadsheets."
         path="/"
-        jsonLd={[orgSchema, serviceSchema]}
+        jsonLd={[orgSchema, serviceSchema, faqSchema]}
       />
       <MarketingNav />
       <div className={MARKETING_NAV_OFFSET_CLASS}>
-        <ServicesLandingContent />
+        <HomePageContent />
       </div>
     </div>
   );

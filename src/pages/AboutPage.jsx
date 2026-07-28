@@ -1,101 +1,107 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Clock, Shield, MapPin, Layers } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import MarketingPageHero from '@/components/landing/MarketingPageHero';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
-import { Button } from '@/components/ui/button';
-import { COMPANY } from '@/data/company';
+import { POSITIONING } from '@/data/sitePositioning';
 import { MARKETING_COVERAGE } from '@/data/marketingStats';
-import DataCoverageSection from '@/components/landing/DataCoverageSection';
-import { ABOUT, BRAND } from '@/data/marketingContent';
 
-const valueIcons = [Clock, Shield, MapPin, Layers];
+const VALUES = [
+  {
+    title: 'Useful automation over unnecessary complexity',
+    text: 'Start with one measurable bottleneck. Expand only after the pilot is validated.',
+  },
+  {
+    title: 'Measurable outcomes over buzzwords',
+    text: 'Baselines, targets, and operational reporting—not vague AI claims.',
+  },
+  {
+    title: 'Source traceability',
+    text: 'Preserve where records came from and what changed during processing.',
+  },
+  {
+    title: 'Human review where judgment matters',
+    text: 'Uncertain matches and exceptions can be routed for review.',
+  },
+  {
+    title: 'Reliable workflows',
+    text: 'Logging, monitoring, retries, and documented handoffs.',
+  },
+  {
+    title: 'Honest data limitations',
+    text: 'Public records vary by jurisdiction. Material facts should be verified before decisions.',
+  },
+];
 
 export default function AboutPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'About FreshLien: Real Estate Automation Services',
+        title: 'About FreshLien',
         description:
-          'FreshLien builds acquisition systems for distressed deal teams. Learn our mission, coverage, and how we help with skip trace, SMS, CRM, offers, and custom software.',
+          'FreshLien was created around a simple observation: real estate companies lose enormous time between receiving property information and acting on it.',
         path: '/about',
       }}
     >
       <MarketingPageHero
         eyebrow="About FreshLien"
-        title="Real estate automation"
-        titleHighlight="services"
-        description={BRAND.positioning}
+        title="Built for the gap between property information and"
+        titleHighlight="action"
+        description="FreshLien was created around a simple observation: real estate companies lose enormous time between receiving property information and acting on it."
       />
 
       <section className="py-14 lg:py-20">
         <LandingContainer>
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-            <LandingSectionHeader
-              eyebrow="Our mission"
-              title="We build systems for"
-              titleHighlight="distressed deal teams"
-              description={ABOUT.mission}
-            />
-            <div className="rounded-lg border border-border/80 bg-[#FAFAFA] p-6 lg:p-8">
-              <p className="text-sm leading-relaxed text-muted-foreground">{ABOUT.story}</p>
+          <div className="grid gap-10 lg:grid-cols-2">
+            <div>
+              <LandingSectionHeader
+                eyebrow="Mission"
+                title="Remove repetitive work from"
+                titleHighlight="real estate operations"
+                description="So teams can focus on judgment, relationships, and transactions."
+              />
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                Today we index {MARKETING_COVERAGE.foreclosureFilingsLiveFull} searchable foreclosure filings
-                across {MARKETING_COVERAGE.counties} counties in {MARKETING_COVERAGE.states} states, with{' '}
-                {MARKETING_COVERAGE.propertiesLinkedFull} properties linked. Probate, pre-foreclosure, and
-                tax categories are rolling out with clear live or coming-soon labels.
+                {POSITIONING.positioning}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {POSITIONING.promise}
+              </p>
+            </div>
+            <div className="fl-card p-6 lg:p-8">
+              <p className="text-sm font-semibold text-foreground">What we combine</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                FreshLien brings together experience across real estate data, public records,
+                geospatial systems, parcel matching, data engineering, CRM workflows, automation,
+                document processing, AI-assisted extraction, and operational analytics.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                Our own foreclosure data product indexes {MARKETING_COVERAGE.foreclosureFilingsLiveFull}{' '}
+                filings across {MARKETING_COVERAGE.counties} counties—proof that we work with messy
+                county and court sources every day.
               </p>
             </div>
           </div>
-        </LandingContainer>
-      </section>
 
-      <DataCoverageSection />
-
-      <section className="py-14 lg:py-20">
-        <LandingContainer>
-          <LandingSectionHeader
-            eyebrow="What we believe"
-            title="How we build"
-            description="Every product decision starts with one question: does this help an investor find and close a better deal?"
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {ABOUT.values.map(({ title, text }, i) => {
-              const Icon = valueIcons[i];
-              return (
-                <div
-                  key={title}
-                  className="rounded-lg border border-border/80 bg-white p-6 shadow-card"
-                >
-                  <div className="icon-surface mb-3 h-10 w-10">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="font-display text-base font-semibold text-foreground">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+          <div className="mt-14">
+            <LandingSectionHeader title="Values" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {VALUES.map((v) => (
+                <div key={v.title} className="fl-card p-5">
+                  <h3 className="text-sm font-semibold text-foreground">{v.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{v.text}</p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </LandingContainer>
-      </section>
 
-      <section className="border-t border-border bg-white py-14 lg:py-20">
-        <LandingContainer innerClassName="text-center">
-          <h2 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
-            Ready to explore distressed property data?
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-            Start free or browse live filings on the map. {COMPANY.name} covers foreclosure today, with probate and tax data rolling out.
+          <p className="mt-10 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+            {POSITIONING.disclaimer}
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg">
-              <Link to="/register">
-                Start free <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to="/contact">Contact us</Link>
-            </Button>
+
+          <div className="mt-8">
+            <Link to="/book-audit" className="fl-btn-primary px-6">
+              Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </LandingContainer>
       </section>

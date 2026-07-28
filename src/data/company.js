@@ -1,11 +1,12 @@
 export const COMPANY = {
   name: 'FreshLien',
-  tagline: 'Real estate automation services',
+  tagline: 'Real estate data and workflow automation',
   description:
-    'FreshLien builds real estate automation for distressed deal teams: lead delivery, skip trace, SMS, CRM sync, offer PDFs, dashboards, and custom software, backed by our own county-direct data platform.',
+    'FreshLien builds real estate data and automation systems that turn fragmented property records into qualified opportunities, automated workflows, and measurable business results.',
   contactEmail: 'waqasdostdost0092@gmail.com',
   website: 'https://freshlien.com',
   apiBaseUrl: 'https://freshlien.com/api',
+  /** Prefer FRESHLIEN_LEADS_EMAIL / VITE_LEADS_EMAIL when set for form routing docs. */
   year: new Date().getFullYear(),
 };
 
