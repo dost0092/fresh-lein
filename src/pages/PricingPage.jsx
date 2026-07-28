@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import MarketingNav from '@/components/layout/MarketingNav';
 import Seo from '@/components/seo/Seo';
 import PricingSection from '@/components/landing/PricingSection';
 import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import CompetitorTable from '@/components/landing/CompetitorTable';
-import { LandingContainer } from '@/components/landing/LandingLayout';
+import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import MarketingFooter from '@/components/landing/MarketingFooter';
 import { MARKETING_NAV_OFFSET_CLASS } from '@/components/landing/LandingLayout';
 import { useAuth } from '@/lib/AuthContext';
 import { APP_HOME } from '@/lib/routes';
+import { SERVICE_PACKAGES, PRICING_DISCLAIMER } from '@/data/servicePackages';
 
 function PricingPageHeader() {
   const { isAuthenticated, isTrialActive, trialEndsAt, subscription } = useAuth();
@@ -63,23 +65,57 @@ function PricingPageHeader() {
   );
 }
 
+function ServicesPricingBlock() {
+  return (
+    <section className="border-b border-border/60 bg-fl-subtle py-14 lg:py-20">
+      <LandingContainer>
+        <LandingSectionHeader
+          eyebrow="Implementation services"
+          title="Start with an audit. Expand into"
+          titleHighlight="automation systems"
+          description="Service pricing is starting guidance. Product SaaS plans for live foreclosure data are listed below."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICE_PACKAGES.map((pkg) => (
+            <div key={pkg.id} className="fl-card flex h-full flex-col p-5">
+              <h2 className="text-sm font-semibold text-foreground">{pkg.name}</h2>
+              <p className="mt-1 text-lg font-bold text-primary">{pkg.priceLabel}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{pkg.priceNote}</p>
+              <p className="mt-3 flex-1 text-xs leading-relaxed text-muted-foreground">{pkg.description}</p>
+              <Link to={pkg.href} className="fl-link mt-4 inline-flex items-center gap-1 text-xs">
+                {pkg.cta} <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-xs text-muted-foreground">{PRICING_DISCLAIMER}</p>
+        <div className="mt-6">
+          <Link to="/book-audit" className="fl-btn-primary px-5">
+            Get a Workflow Assessment <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </LandingContainer>
+    </section>
+  );
+}
+
 export default function PricingPage() {
   const [pricingType, setPricingType] = useState('platform');
 
   return (
     <div className="min-h-screen bg-white">
       <Seo
-        title="Pricing: Foreclosure Data Plans from Free to Enterprise"
-        description="FreshLien pricing: free county search, Starter at $15/mo, Professional at $25/mo, plus API and Enterprise plans for foreclosure data, exports, and alerts."
+        title="Pricing: Services and Foreclosure Data Plans"
+        description="FreshLien workflow audit from $750, lead pipeline sprints from $4,000, acquisition automation from $8,000, plus self-serve foreclosure data plans."
         path="/pricing"
       />
       <MarketingNav />
       <div className={MARKETING_NAV_OFFSET_CLASS}>
         <PricingPageHeader />
+        <ServicesPricingBlock />
         <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
         <PricingCompareTable pricingType={pricingType} />
         <CompetitorTable />
-
         <MarketingFooter />
       </div>
     </div>
