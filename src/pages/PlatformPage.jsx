@@ -84,8 +84,8 @@ export default function PlatformPage() {
   return (
     <div className="fl-app min-h-screen bg-white">
       <Seo
-        title="Platform — operating layer between property data and deal execution"
-        description="FreshLien connects fragmented records, documents, property intelligence, CRM activity, and team workflows through one controlled operational system."
+        title="Platform: the layer between property data and deal execution"
+        description="FreshLien platform modules for data engineering, automation, and AI-assisted workflows. Connect records, documents, property intelligence, CRM activity, and team processes."
         path="/platform"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -116,7 +116,7 @@ export default function PlatformPage() {
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link to="/book-audit" className="fl-btn-primary px-6">
-                  Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+                  Request a workflow review <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link to={APP_HOME} className="fl-btn-ghost px-6">
                   Preview live foreclosure data
@@ -157,7 +157,7 @@ export default function PlatformPage() {
                 Explore solutions <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/pricing" className="fl-btn-ghost px-5">
-                Product and service pricing
+                See offers
               </Link>
             </div>
           </LandingContainer>

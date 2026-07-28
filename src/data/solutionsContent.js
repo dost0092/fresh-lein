@@ -1,5 +1,5 @@
 /**
- * Solutions catalog — homepage cards + detailed pages.
+ * Solutions catalog  -  homepage cards + detailed pages.
  */
 export const SOLUTIONS = [
   {
@@ -161,6 +161,7 @@ export const COMPARISON = {
   freshlien: {
     title: 'FreshLien',
     points: [
+      'Data engineering, automation, and AI for real estate',
       'Understands real estate public records and parcel data',
       'Normalizes property and ownership information',
       'Connects data to existing CRMs and workflows',
@@ -338,8 +339,16 @@ export const INTEGRATIONS = {
 
 export const SITE_FAQS = [
   {
+    q: 'What does FreshLien offer?',
+    a: 'FreshLien offers data engineering, automation, and AI services for real estate teams. That includes public-record collection, cleanup, property and owner matching, CRM updates, lead assignment, follow-up, offer generation, document processing, and reporting.',
+  },
+  {
     q: 'What does FreshLien automate?',
-    a: 'FreshLien automates recurring real estate data and operational workflows, including public-record collection, spreadsheet cleanup, property and owner matching, CRM updates, lead assignment, follow-up actions, offer generation, document processing, and reporting.',
+    a: 'Recurring real estate data and operational workflows: public-record collection, spreadsheet cleanup, property and owner matching, CRM updates, lead assignment, follow-up actions, offer generation, document processing, and reporting.',
+  },
+  {
+    q: 'Are you a generic software agency?',
+    a: 'No. FreshLien focuses on real estate data engineering, workflow automation, and AI-assisted processing. We work this data ourselves through a live foreclosure data product, then build the same class of systems for client teams.',
   },
   {
     q: 'Does FreshLien replace our CRM?',

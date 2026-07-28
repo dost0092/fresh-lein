@@ -13,12 +13,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 
 const INQUIRY_TYPES = [
-  'Workflow Audit',
+  'Data Engineering',
+  'Automation',
+  'AI Services',
+  'Workflow Review',
   'Lead Data Automation',
   'Acquisition Automation',
   'Disposition Workflow',
   'Property Research',
   'CRM Integration',
+  'Platform Access',
   'Partnership',
   'General Question',
 ];
@@ -140,14 +144,14 @@ export default function ContactPage() {
       seo={{
         title: 'Contact FreshLien',
         description:
-          'Contact FreshLien about workflow audits, lead data automation, acquisitions, dispositions, property research, CRM integrations, or partnerships.',
+          'Contact FreshLien about data engineering, automation, AI services, workflow reviews, lead pipelines, acquisitions, dispositions, property research, CRM integrations, or partnerships.',
         path: '/contact',
       }}
     >
       <MarketingPageHero
         eyebrow="Contact"
-        title="Tell us about your workflow"
-        description={`Reach us at ${COMPANY.contactEmail} or use the form. For automation scoping, the workflow audit intake is usually fastest.`}
+        title="Talk to us about data engineering, automation, or AI"
+        description={`Reach us at ${COMPANY.contactEmail} or use the form. For scoping, the workflow review intake is usually fastest.`}
       />
 
       <section className="py-11 lg:py-14">

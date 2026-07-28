@@ -173,7 +173,7 @@ export default function SettingsPage() {
 
             {isSuperAdmin && (
               <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-sm text-emerald-900">
-                Super admin account — full access without payment.{' '}
+                Super admin account. Full access without payment.{' '}
                 <Link to={APP_HOME} className="font-medium underline">
                   Go to dashboard
                 </Link>
@@ -191,7 +191,7 @@ export default function SettingsPage() {
 
             {getStripePaymentLink('starter') && (
               <p className="mb-3 text-xs text-emerald-700">
-                Payment Link configured — checkout will open Stripe directly (no Edge Function required).
+                Payment Link configured. Checkout will open Stripe directly (no Edge Function required).
               </p>
             )}
 

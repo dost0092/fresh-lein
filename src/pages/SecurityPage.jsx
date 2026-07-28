@@ -19,7 +19,7 @@ const practices = [
   {
     icon: Server,
     title: 'Infrastructure',
-    text: 'We host on Vercel and Supabase — providers with SOC 2 compliance programs, automated backups, and monitored uptime.',
+    text: 'We host on Vercel and Supabase: providers with SOC 2 compliance programs, automated backups, and monitored uptime.',
   },
   {
     icon: ShieldCheck,
@@ -70,7 +70,7 @@ export default function SecurityPage() {
           <div className="mx-auto max-w-3xl space-y-6 text-sm leading-relaxed text-muted-foreground">
             <h2 className="font-display text-lg font-semibold text-foreground">Payments</h2>
             <p>
-              Billing is handled by Stripe. Card details are entered on Stripe&apos;s secure checkout — we never
+              Billing is handled by Stripe. Card details are entered on Stripe&apos;s secure checkout. We never
               see or store your full payment card number.
             </p>
 

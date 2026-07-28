@@ -1,33 +1,33 @@
 /**
- * Service packages and starting prices — single source of truth.
- * REVIEW: confirm final prices before production marketing claims.
+ * Service offers: details only, no public prices.
+ * Commercial terms are discussed after contact / workflow review.
  */
 export const SERVICE_PACKAGES = [
   {
     id: 'workflow-audit',
-    name: 'Workflow Audit',
-    priceLabel: 'From $750',
-    priceNote: 'One-time',
+    name: 'Workflow review',
+    offerLabel: 'Custom offer',
+    offerNote: 'Scoped after a short intake call',
     href: '/book-audit',
-    cta: 'Book an Audit',
+    cta: 'Request a review',
     description:
-      'We map your current process, calculate time loss, identify automation opportunities, and create a prioritized implementation roadmap.',
+      'We map how you work today, find where time is lost, and give you a clear order of what to automate first.',
     deliverables: [
       'Workflow map',
       'Tool and data inventory',
       'Bottleneck analysis',
-      'Estimated time and cost loss',
+      'Estimated time loss',
       '30/60/90-day roadmap',
     ],
-    bestFor: 'Companies deciding what to automate first',
+    bestFor: 'Teams deciding what to automate first',
   },
   {
     id: 'lead-pipeline-sprint',
-    name: 'Lead Pipeline Sprint',
-    priceLabel: 'From $4,000',
-    priceNote: 'Implementation · optional monitoring from $750/mo',
+    name: 'Lead pipeline sprint',
+    offerLabel: 'Custom offer',
+    offerNote: 'One source-to-CRM workflow',
     href: '/contact?topic=Lead%20Pipeline%20Sprint',
-    cta: 'Discuss a Lead Pipeline',
+    cta: 'Discuss this offer',
     description:
       'Automate one high-value lead source from collection through cleaning, qualification, and CRM delivery.',
     deliverables: [
@@ -41,11 +41,11 @@ export const SERVICE_PACKAGES = [
   },
   {
     id: 'acquisition-automation',
-    name: 'Acquisition Automation System',
-    priceLabel: 'From $8,000',
-    priceNote: 'Implementation · ongoing plans available',
+    name: 'Acquisition automation',
+    offerLabel: 'Custom offer',
+    offerNote: 'Built around your acquisition process',
     href: '/contact?topic=Acquisition%20Automation',
-    cta: 'Automate Acquisitions',
+    cta: 'Discuss this offer',
     description:
       'Connect lead assignment, research, follow-up, offer generation, approvals, and reporting.',
     deliverables: [
@@ -60,13 +60,13 @@ export const SERVICE_PACKAGES = [
   },
   {
     id: 'custom-os',
-    name: 'Custom Real Estate Operating System',
-    priceLabel: 'Custom scope',
-    priceNote: 'Implementation and ongoing platform fee',
+    name: 'Custom operating system',
+    offerLabel: 'Custom offer',
+    offerNote: 'Multi-market or multi-team ops',
     href: '/contact?topic=Custom%20Operating%20System',
-    cta: 'Discuss Your Operation',
+    cta: 'Discuss this offer',
     description:
-      'Build a connected system spanning public records, property data, CRM operations, acquisitions, dispositions, documents, and analytics.',
+      'A connected system across public records, property data, CRM, acquisitions, dispositions, documents, and analytics.',
     deliverables: [
       'Multi-workflow architecture',
       'Integrations across your stack',
@@ -77,28 +77,31 @@ export const SERVICE_PACKAGES = [
   },
 ];
 
-export const PRICING_DISCLAIMER =
-  'Final pricing depends on data sources, record volume, integrations, workflow complexity, hosting, support requirements, and required customization.';
+export const OFFER_DISCLAIMER =
+  'FreshLien offers data engineering, automation, and AI services for real estate. Every engagement is scoped to your data sources, volume, integrations, and workflow. Contact us to discuss fit and terms. There is no self-serve checkout for services.';
+
+/** @deprecated use OFFER_DISCLAIMER */
+export const PRICING_DISCLAIMER = OFFER_DISCLAIMER;
 
 export const GOOD_FIT = {
   yes: [
-    'The company processes recurring property or lead data.',
-    'Employees repeat the same steps weekly.',
-    'Several systems contain overlapping information.',
-    'The company already spends money on data, VAs, marketing, or CRM tools.',
-    'A measurable operational result can be defined.',
+    'You process recurring property or lead data.',
+    'Your team repeats the same steps every week.',
+    'Several systems hold overlapping information.',
+    'You already spend on data, VAs, marketing, or CRM tools.',
+    'You can define a measurable operational result.',
   ],
   no: [
-    'The company has no repeatable workflow.',
-    'The request is only for an inexpensive generic website.',
-    'There is no internal owner for the project.',
-    'The customer expects guaranteed leads or deals.',
+    'There is no repeatable workflow.',
+    'You only need an inexpensive generic website.',
+    'Nobody inside will own the project.',
+    'You expect guaranteed leads or deals.',
     'Required data cannot legally or technically be accessed.',
   ],
 };
 
 export const ENGAGEMENT_MODEL = [
-  'Paid workflow audit',
+  'Discovery / workflow review',
   'Defined implementation proposal',
   'Pilot workflow',
   'Validation period',

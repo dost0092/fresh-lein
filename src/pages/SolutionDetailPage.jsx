@@ -195,7 +195,7 @@ export default function SolutionDetailPage() {
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Link to="/book-audit" className="fl-btn-primary px-5">
-              Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+              Request a workflow review <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/solutions" className="fl-btn-ghost px-5">
               All solutions

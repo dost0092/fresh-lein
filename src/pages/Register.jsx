@@ -91,7 +91,7 @@ function RegisterForm() {
             <ul className="mt-2 list-disc space-y-1 pl-4">
               <li>Check spam, promotions, and junk folders</li>
               <li>Supabase sends ~2 emails/hour on the free plan until you add custom SMTP</li>
-              <li>If you used Google before, sign in with Google instead — same email works</li>
+              <li>If you used Google before, sign in with Google instead. Same email works.</li>
             </ul>
             <p className="mt-2">
               Setup guide: <code className="text-[11px]">supabase/EMAIL_AUTH_SETUP.md</code>

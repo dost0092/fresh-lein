@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 /**
- * FreshLien services menu — what we build and deliver for clients.
+ * FreshLien services menu  -  what we build and deliver for clients.
  * The platform is an optional product; services are the main offer.
  */
 export const SERVICES = [
@@ -182,7 +182,7 @@ export const SERVICE_PROCESS = [
   {
     step: '02',
     title: 'Scope and proposal',
-    description: 'Clear deliverables, timeline, and price. Fixed scope so you know what you are getting.',
+    description: 'Clear deliverables and timeline. We discuss commercial terms after intake. No public price list.',
   },
   {
     step: '03',

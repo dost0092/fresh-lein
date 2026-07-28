@@ -73,7 +73,7 @@ export default function ResourcesPage() {
           <div className="mt-12">
             <LandingSectionHeader
               title="Upcoming evergreen guides"
-              description="Titles below are planned educational content—not empty fake articles."
+              description="Titles below are planned educational content, not empty fake articles."
             />
             <div className="grid gap-4 sm:grid-cols-2">
               {GUIDES.map((g) => (
@@ -93,7 +93,7 @@ export default function ResourcesPage() {
               Visit the blog <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/book-audit" className="fl-btn-ghost px-5">
-              Book a Workflow Audit
+              Request a workflow review
             </Link>
           </div>
         </LandingContainer>

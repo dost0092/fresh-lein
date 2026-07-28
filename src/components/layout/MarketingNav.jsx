@@ -28,7 +28,7 @@ const MAIN_LINKS = [
   { label: 'Platform', href: '/platform' },
   { label: 'Services', href: '/services' },
   { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Offers', href: '/pricing' },
   { label: 'About', href: '/about' },
 ];
 
@@ -195,7 +195,7 @@ function MobileNav({ open, onOpenChange }) {
           ))}
           <Link to="/case-studies" onClick={close} className={linkClass('/case-studies')}>Case Studies</Link>
           <Link to="/resources" onClick={close} className={linkClass('/resources')}>Resources</Link>
-          <Link to="/book-audit" onClick={close} className={linkClass('/book-audit')}>Book an Audit</Link>
+          <Link to="/book-audit" onClick={close} className={linkClass('/book-audit')}>Request a workflow review</Link>
           <Link to={APP_HOME} onClick={close} className={linkClass(APP_HOME)}>
             {isAuthenticated ? 'Open app' : 'Preview live data'}
           </Link>
@@ -215,7 +215,7 @@ function MobileNav({ open, onOpenChange }) {
                 <Link to="/login" onClick={close}>Log in</Link>
               </Button>
               <Button asChild className="fl-btn-primary h-11 w-full justify-center">
-                <Link to="/book-audit" onClick={close}>Book a Workflow Audit</Link>
+                <Link to="/book-audit" onClick={close}>Request a workflow review</Link>
               </Button>
             </div>
           )}
@@ -261,9 +261,7 @@ export default function MarketingNav() {
               <Link
                 to="/pricing"
                 className={cn(navLinkClass, location.pathname === '/pricing' && 'font-semibold text-primary')}
-              >
-                Pricing
-              </Link>
+              >Offers</Link>
               <Link
                 to="/about"
                 className={cn(navLinkClass, location.pathname === '/about' && 'font-semibold text-primary')}
@@ -279,7 +277,7 @@ export default function MarketingNav() {
                     Open app
                   </Link>
                   <Link to="/book-audit" className="fl-btn-primary h-10 px-5">
-                    Book a Workflow Audit
+                    Request a workflow review
                   </Link>
                   <UserMenu />
                 </>
@@ -292,7 +290,7 @@ export default function MarketingNav() {
                     Log in
                   </Link>
                   <Button asChild className="fl-btn-primary h-10 px-5 shadow-none">
-                    <Link to="/book-audit">Book a Workflow Audit</Link>
+                    <Link to="/book-audit">Request a workflow review</Link>
                   </Button>
                 </>
               )}

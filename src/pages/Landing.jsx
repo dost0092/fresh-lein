@@ -27,7 +27,9 @@ const serviceSchema = {
   description: POSITIONING.fiveSecond,
   areaServed: 'US',
   serviceType: [
-    'Real estate data automation',
+    'Data engineering for real estate',
+    'Workflow automation for real estate',
+    'AI services for real estate',
     'Public records workflow automation',
     'Acquisition automation',
     'Disposition workflows',
@@ -50,8 +52,8 @@ export default function Landing() {
   return (
     <div className="fl-app min-h-screen bg-white">
       <Seo
-        title="Turn fragmented property data into qualified seller opportunities"
-        description="FreshLien collects, cleans, enriches, and connects public records, property data, CRM workflows, follow-up, and offers—so real estate teams spend more time speaking with sellers and less time managing spreadsheets."
+        title="Data engineering, automation, and AI for real estate"
+        description="FreshLien offers data engineering, automation, and AI services. We pull public records into clean leads, then connect them to your CRM, follow-up, and offers."
         path="/"
         jsonLd={[orgSchema, serviceSchema, faqSchema]}
       />

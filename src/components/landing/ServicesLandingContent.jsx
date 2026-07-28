@@ -38,7 +38,7 @@ function ServicesSystemPreview() {
             <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
           </div>
           <div className="mx-auto flex h-7 min-w-0 max-w-[260px] flex-1 items-center justify-center rounded-md bg-white px-3 text-[11px] text-gray-400">
-            freshlien.com — client system
+            freshlien.com / client system
           </div>
         </div>
 
@@ -304,7 +304,7 @@ function ProductTeaser() {
               {[
                 'Search live county filings on a map',
                 'Alerts, exports, and a REST API',
-                'Product pricing is separate from custom builds',
+                'See offers is separate from custom builds',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -361,8 +361,8 @@ function WhyUsSection() {
     },
     {
       icon: Sparkles,
-      title: 'Fixed scope, your vendors',
-      text: 'Clear proposals and fixed prices. You keep Twilio, skip-trace, CRM, and DocuSign accounts under your name. We wire them and hand the system off.',
+      title: 'Scoped offers, your vendors',
+      text: 'Clear proposals after we talk. No public price list. You keep Twilio, skip-trace, CRM, and DocuSign accounts under your name. We wire them and hand the system off.',
     },
   ];
 

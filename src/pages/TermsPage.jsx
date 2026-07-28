@@ -29,9 +29,9 @@ export default function TermsPage() {
         <h2>Subscriptions &amp; billing</h2>
         <ul>
           <li>Paid plans renew automatically unless cancelled before the renewal date.</li>
-          <li>Prices are listed on our <Link to="/pricing">Pricing page</Link> and may change with notice.</li>
+          <li>Commercial terms for services and platform access are discussed after contact and may change with notice. See our <Link to="/pricing">Offers page</Link> for details (no public price list).</li>
           <li>Refunds are handled case-by-case unless required by applicable law.</li>
-          <li>Free trials convert to paid plans only if you subscribe — we do not charge without consent.</li>
+          <li>Free trials convert to paid plans only if you subscribe. We do not charge without consent.</li>
         </ul>
 
         <h2>Acceptable use</h2>

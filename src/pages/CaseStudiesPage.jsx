@@ -5,7 +5,7 @@ import MarketingPageHero from '@/components/landing/MarketingPageHero';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 
 /**
- * Illustrative / reference architectures only — not named customer results.
+ * Illustrative / reference architectures only  -  not named customer results.
  * Replace with real case studies when approved (see CONTENT_REVIEW.md).
  */
 const CASES = [
@@ -103,7 +103,7 @@ export default function CaseStudiesPage() {
               title="Want a workflow mapped for your operation?"
             />
             <Link to="/book-audit" className="fl-btn-primary mt-2 px-6">
-              Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+              Request a workflow review <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </LandingContainer>

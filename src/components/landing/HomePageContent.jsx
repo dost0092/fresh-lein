@@ -79,27 +79,24 @@ function HeroFlowVisual() {
 }
 
 function HeroSection() {
+  const { hero } = POSITIONING;
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_15%,rgba(19,81,51,0.07),transparent)]" />
       <LandingContainer className="relative py-14 sm:py-20 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <LandingEyebrow>Real estate data and workflow automation</LandingEyebrow>
+            <LandingEyebrow>{hero.eyebrow}</LandingEyebrow>
             <h1 className="font-display text-[2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[2.6rem] lg:text-[3rem]">
-              Turn fragmented property data into{' '}
+              {hero.titleBefore}{' '}
               <span
                 className="inline box-decoration-clone rounded-md px-1.5 py-0.5 text-primary"
                 style={highlightMarkStyle}
               >
-                qualified seller opportunities
+                {hero.titleHighlight}
               </span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              FreshLien collects, cleans, enriches, and connects public records, property data, CRM
-              workflows, follow-up, and offers—so your team spends more time speaking with sellers and
-              less time managing spreadsheets.
-            </p>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">{hero.subtitle}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link to={POSITIONING.primaryCta.href} className="fl-btn-primary h-11 px-6 text-[15px]">
                 {POSITIONING.primaryCta.label} <ArrowRight className="h-4 w-4" />
@@ -112,11 +109,32 @@ function HeroSection() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
-            <p className="mt-5 text-sm text-muted-foreground">
-              Built for real estate investors, wholesalers, acquisition teams, and property operators.
-            </p>
+            <p className="mt-5 text-sm text-muted-foreground">{hero.audienceLine}</p>
           </div>
           <HeroFlowVisual />
+        </div>
+      </LandingContainer>
+    </section>
+  );
+}
+
+function CapabilitiesSection() {
+  return (
+    <section className="border-b border-border/60 bg-fl-subtle py-10 lg:py-12">
+      <LandingContainer>
+        <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+          What FreshLien provides
+        </p>
+        <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-muted-foreground">
+          {POSITIONING.capabilitiesShort}
+        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {POSITIONING.capabilities.map((cap) => (
+            <div key={cap.id} className="rounded-xl border border-border/70 bg-white p-5">
+              <h3 className="text-sm font-semibold text-foreground">{cap.label}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cap.text}</p>
+            </div>
+          ))}
         </div>
       </LandingContainer>
     </section>
@@ -128,9 +146,9 @@ function PainSection() {
     <section className="fl-marketing-section">
       <LandingContainer>
         <LandingSectionHeader
-          title="Your team should not spend its week"
-          titleHighlight="fixing property data"
-          description="Real estate teams lose hours downloading county files, cleaning spreadsheets, removing duplicates, researching properties, updating CRMs, chasing documents, and repeating the same follow-up tasks. FreshLien turns those manual steps into dependable workflows."
+          title="Stop spending the week"
+          titleHighlight="cleaning property data"
+          description="County downloads, spreadsheet cleanup, duplicates, CRM updates, and the same follow-up loop eat most of the week. We turn those steps into workflows your team can actually run."
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PAIN_POINTS.map((p) => (
@@ -256,17 +274,20 @@ function ServicesSection() {
       <LandingContainer>
         <LandingSectionHeader
           eyebrow="Services"
-          title="Start with one bottleneck. Expand into a"
-          titleHighlight="complete operating system"
+          title="Data engineering, automation, and AI"
+          titleHighlight="scoped to your workflow"
+          description="Not an ordinary agency. We engineer the data, automate the busywork, and use AI where it helps. Start with one bottleneck. Expand when it works."
         />
         <div className="grid gap-5 sm:grid-cols-2">
           {SERVICE_PACKAGES.map((pkg) => (
             <div key={pkg.id} className="fl-card flex h-full flex-col p-6">
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
-                <p className="shrink-0 text-sm font-bold text-primary">{pkg.priceLabel}</p>
+                <p className="shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                  {pkg.offerLabel}
+                </p>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">{pkg.priceNote}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{pkg.offerNote}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pkg.description}</p>
               <ul className="mt-4 flex-1 space-y-1.5">
                 {pkg.deliverables.map((d) => (
@@ -374,7 +395,7 @@ function MetricsSection() {
         <LandingSectionHeader
           title="Measure the work your"
           titleHighlight="automation removes"
-          description="Every implementation should have a baseline, a target, and ongoing operational reporting. FreshLien focuses on measurable improvements—not vague automation claims."
+          description="We set a baseline, a target, and simple reporting. Real improvements you can track, not vague automation claims."
         />
         <div className="flex flex-wrap gap-2">
           {METRIC_CATEGORIES.map((m) => (
@@ -395,7 +416,7 @@ function UseCasesSection() {
   return (
     <section className="fl-marketing-section">
       <LandingContainer>
-        <LandingSectionHeader title="Built around real" titleHighlight="operational problems" />
+        <LandingSectionHeader title="Real problems" titleHighlight="we solve" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {USE_CASES.map((u) => (
             <div key={u.title} className="fl-card p-5">
@@ -425,8 +446,8 @@ function ProcessSection() {
     <section className="fl-marketing-section-muted">
       <LandingContainer>
         <LandingSectionHeader
-          title="A controlled path from manual work to"
-          titleHighlight="reliable automation"
+          title="From messy process to"
+          titleHighlight="something you can run"
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {PROCESS_PHASES.map((p, i) => (
@@ -439,7 +460,7 @@ function ProcessSection() {
         </div>
         <div className="mt-8">
           <Link to="/book-audit" className="fl-btn-primary px-5">
-            Book Your Workflow Audit <ArrowRight className="h-4 w-4" />
+            {POSITIONING.primaryCta.label} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </LandingContainer>
@@ -451,7 +472,7 @@ function TrustSection() {
   return (
     <section className="fl-marketing-section">
       <LandingContainer>
-        <LandingSectionHeader title="Built for" titleHighlight="operational reliability" />
+        <LandingSectionHeader title="How we work" titleHighlight="day to day" />
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {TRUST_FEATURES.map((t) => (
             <div key={t} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -493,18 +514,18 @@ function FinalCta() {
     <section className="border-b-0 bg-fl-subtle py-16 lg:py-20">
       <LandingContainer innerClassName="text-center">
         <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          Find the repetitive work hiding inside your real estate operation
+          Tell us where the busywork lives
         </h2>
         <p className="mx-auto mt-3 mb-8 max-w-lg text-base leading-relaxed text-muted-foreground">
-          FreshLien will map your workflow, identify the highest-value automation opportunity, and
-          show you what should be automated first.
+          We will map your workflow, point to the highest-value fix, and tell you what to automate
+          first.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link to="/book-audit" className="fl-btn-primary px-6 py-2.5">
-            Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+            {POSITIONING.primaryCta.label} <ArrowRight className="h-4 w-4" />
           </Link>
           <Link to="/contact" className="fl-btn-ghost px-6 py-2.5">
-            Tell Us About Your Workflow
+            Contact us
           </Link>
         </div>
       </LandingContainer>
@@ -518,6 +539,7 @@ export default function HomePageContent({ topSlot = null }) {
       {topSlot}
       <AnnouncementBar />
       <HeroSection />
+      <CapabilitiesSection />
       <PainSection />
       <WorkflowSection />
       <SolutionsSection />

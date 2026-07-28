@@ -55,9 +55,9 @@ export default function HowItWorksPage() {
     >
       <MarketingPageHero
         eyebrow="How it works"
-        title="A controlled path from manual work to"
-        titleHighlight="reliable automation"
-        description="FreshLien starts narrowly before expanding. A typical pilot is one county, one record type, and one CRM workflow—so quality and ownership stay clear."
+        title="Start small."
+        titleHighlight="Prove it. Then expand."
+        description="A typical pilot is one county, one record type, and one CRM workflow. That keeps quality and ownership clear."
       />
 
       <section className="py-14 lg:py-20">
@@ -102,7 +102,7 @@ export default function HowItWorksPage() {
 
           <div className="mt-10">
             <Link to="/book-audit" className="fl-btn-primary px-6">
-              Book Your Workflow Audit <ArrowRight className="h-4 w-4" />
+              Request a workflow review <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </LandingContainer>

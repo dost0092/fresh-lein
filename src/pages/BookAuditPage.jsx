@@ -33,17 +33,17 @@ export default function BookAuditPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'Book a Workflow Audit',
+        title: 'Request a workflow review',
         description:
-          'Find the highest-value automation opportunity in your real estate operation. FreshLien maps your workflow, estimates time loss, and builds a prioritized roadmap.',
+          'Request a FreshLien workflow review. We map where data engineering, automation, and AI can remove busywork in your real estate operation.',
         path: '/book-audit',
       }}
     >
       <MarketingPageHero
-        eyebrow="Workflow audit"
-        title="Find the highest-value automation opportunity in your"
-        titleHighlight="real estate operation"
-        description="FreshLien will map your workflow, identify the highest-value automation opportunity, and show you what should be automated first."
+        eyebrow="Workflow review"
+        title="Show us how your team works."
+        titleHighlight="We'll point to what to build first."
+        description="FreshLien offers data engineering, automation, and AI services. Tell us your markets, tools, and where time disappears. We map the workflow and send back a clear order of fixes."
       />
 
       <section className="py-14 lg:py-20">
@@ -60,8 +60,8 @@ export default function BookAuditPage() {
                 ))}
               </ul>
               <p className="mt-6 text-sm text-muted-foreground">
-                Starting at <strong className="text-foreground">$750</strong> (one-time). Final scope
-                confirmed after intake.
+                Commercial terms are discussed after intake. No public price list for reviews or
+                implementation work.
               </p>
               <p className="mt-4 text-xs text-muted-foreground">
                 Prefer email?{' '}
@@ -76,7 +76,7 @@ export default function BookAuditPage() {
                 <div className="fl-card p-8 text-center">
                   <h2 className="text-lg font-semibold text-foreground">Request received</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Thanks—we will review your workflow details and follow up shortly.
+                    Thanks. We will review your workflow details and follow up shortly.
                   </p>
                   <Link to="/" className="fl-btn-primary mt-6 inline-flex">
                     Back to home <ArrowRight className="h-4 w-4" />
@@ -89,7 +89,7 @@ export default function BookAuditPage() {
                   className="fl-card space-y-4 p-6"
                   onSubmit={() => setSubmitting(true)}
                 >
-                  <input type="hidden" name="_subject" value="FreshLien Workflow Audit" />
+                  <input type="hidden" name="_subject" value="FreshLien Workflow Review" />
                   <input type="hidden" name="_template" value="table" />
                   <input type="hidden" name="_captcha" value="false" />
                   {redirectUrl ? <input type="hidden" name="_next" value={redirectUrl} /> : null}

@@ -1,8 +1,8 @@
 export const COMPANY = {
   name: 'FreshLien',
-  tagline: 'Real estate data and workflow automation',
+  tagline: 'Data engineering, automation, and AI for real estate',
   description:
-    'FreshLien builds real estate data and automation systems that turn fragmented property records into qualified opportunities, automated workflows, and measurable business results.',
+    'FreshLien offers data engineering, automation, and AI services for real estate teams. Cleaner leads, CRM workflows, follow-up, and offers from county records and property files.',
   contactEmail: 'waqasdostdost0092@gmail.com',
   website: 'https://freshlien.com',
   apiBaseUrl: 'https://freshlien.com/api',

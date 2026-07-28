@@ -46,13 +46,13 @@ export default function PrivacyPage() {
         <p>We use trusted providers to operate our service, including:</p>
         <ul>
           <li>
-            <strong>Supabase</strong> — authentication and database hosting
+            <strong>Supabase</strong>: authentication and database hosting
           </li>
           <li>
-            <strong>Stripe</strong> — payment processing
+            <strong>Stripe</strong>: payment processing
           </li>
           <li>
-            <strong>Vercel</strong> — website hosting and analytics
+            <strong>Vercel</strong>: website hosting and analytics
           </li>
         </ul>
         <p>

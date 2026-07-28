@@ -13,7 +13,7 @@ const VALUES = [
   },
   {
     title: 'Measurable outcomes over buzzwords',
-    text: 'Baselines, targets, and operational reporting—not vague AI claims.',
+    text: 'Baselines, targets, and operational reporting. AI is used where it helps, with human review where judgment matters.',
   },
   {
     title: 'Source traceability',
@@ -39,19 +39,27 @@ export default function AboutPage() {
       seo={{
         title: 'About FreshLien',
         description:
-          'FreshLien was created around a simple observation: real estate companies lose enormous time between receiving property information and acting on it.',
+          'FreshLien offers data engineering, automation, and AI services for real estate teams. We close the gap between property information and action.',
         path: '/about',
       }}
     >
       <MarketingPageHero
         eyebrow="About FreshLien"
-        title="Built for the gap between property information and"
-        titleHighlight="action"
-        description="FreshLien was created around a simple observation: real estate companies lose enormous time between receiving property information and acting on it."
+        title="Data engineering, automation, and AI"
+        titleHighlight="for real estate"
+        description="We are not a generic software shop. FreshLien builds the data pipelines, automations, and AI-assisted workflows real estate teams need between receiving property information and acting on it."
       />
 
       <section className="py-14 lg:py-20">
         <LandingContainer>
+          <div className="mb-14 grid gap-4 sm:grid-cols-3">
+            {POSITIONING.capabilities.map((cap) => (
+              <div key={cap.id} className="fl-card p-5">
+                <h2 className="text-sm font-semibold text-foreground">{cap.label}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cap.text}</p>
+              </div>
+            ))}
+          </div>
           <div className="grid gap-10 lg:grid-cols-2">
             <div>
               <LandingSectionHeader
@@ -70,13 +78,13 @@ export default function AboutPage() {
             <div className="fl-card p-6 lg:p-8">
               <p className="text-sm font-semibold text-foreground">What we combine</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                FreshLien brings together experience across real estate data, public records,
-                geospatial systems, parcel matching, data engineering, CRM workflows, automation,
-                document processing, AI-assisted extraction, and operational analytics.
+                Data engineering on public records and property files. Automation into CRM, follow-up,
+                and offers. AI for document extraction and matching support, with human review where
+                judgment matters.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 Our own foreclosure data product indexes {MARKETING_COVERAGE.foreclosureFilingsLiveFull}{' '}
-                filings across {MARKETING_COVERAGE.counties} counties—proof that we work with messy
+                filings across {MARKETING_COVERAGE.counties} counties. Proof that we work with messy
                 county and court sources every day.
               </p>
             </div>
@@ -100,7 +108,7 @@ export default function AboutPage() {
 
           <div className="mt-8">
             <Link to="/book-audit" className="fl-btn-primary px-6">
-              Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+              Request a workflow review <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </LandingContainer>

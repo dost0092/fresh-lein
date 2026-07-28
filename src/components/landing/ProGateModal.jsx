@@ -39,7 +39,7 @@ export default function ProGateModal({ open, onClose }) {
         </ul>
         <div className="flex flex-col gap-2">
           <Button asChild className="w-full h-10">
-            <Link to="/register">Start Pro from $25/mo</Link>
+            <Link to="/contact?topic=Platform%20Access">Contact us for access</Link>
           </Button>
           <Button variant="outline" asChild className="w-full h-9 text-xs">
             <Link to="/login">Already have an account? Log in</Link>

@@ -275,13 +275,13 @@ export const DASHBOARD_IA = [
 
 export const ABOUT = {
   mission:
-    'FreshLien helps real estate teams automate distressed-deal workflows. We build lead delivery, skip trace, SMS, CRM sync, offer systems, and custom software. Our own county-direct platform (100K+ filings, 250+ counties) is how we prove we know this data.',
+    'FreshLien offers data engineering, automation, and AI services for real estate teams. We build lead delivery, skip trace, SMS, CRM sync, offer systems, and custom software. Our own county-direct platform (100K+ filings, 250+ counties) is how we prove we know this data.',
   story:
-    'We started with county foreclosure data because investors were wasting hours on county sites and stale lists. Teams then asked us to wire that data into skip trace, SMS, CRM, and offer workflows. Today FreshLien delivers those systems as services, with an optional self-serve platform for teams that only need the data.',
+    'We started with county foreclosure data because investors were wasting hours on county sites and stale lists. Teams then asked us to wire that data into skip trace, SMS, CRM, and offer workflows. Today FreshLien delivers data engineering, automation, and AI as services, with an optional self-serve platform for teams that only need the data.',
   values: [
     {
       title: 'Services first',
-      text: 'We scope what you need, then build and hand it off. Clear deliverables, fixed prices.',
+      text: 'Data engineering, automation, and AI scoped to your workflow. Clear deliverables. Terms discussed after we talk.',
     },
     {
       title: 'Build for your stack',
@@ -292,8 +292,8 @@ export const ABOUT = {
       text: 'We run a live county-direct foreclosure pipeline. Distressed real estate is not new to us.',
     },
     {
-      title: 'Fixed scope',
-      text: 'Clear proposals, fixed prices, and handoff with training. Optional retainers after launch.',
+      title: 'Scoped offers',
+      text: 'Clear proposals and handoff with training. Terms discussed after intake. No public price list.',
     },
   ],
 };

@@ -11,15 +11,15 @@ export default function SolutionsIndexPage() {
       seo={{
         title: 'Real Estate Automation Solutions',
         description:
-          'FreshLien solutions for lead data automation, acquisitions, dispositions, and property research—built for investors, wholesalers, and operators.',
+          'Data engineering, automation, and AI for lead pipelines, acquisitions, dispositions, and property research.',
         path: '/solutions',
       }}
     >
       <MarketingPageHero
         eyebrow="Solutions"
-        title="One operational system across the"
-        titleHighlight="deal lifecycle"
-        description="FreshLien helps real estate teams move from fragmented records to clean leads, CRM activity, follow-up, offers, and dispositions—without replacing every tool you already use."
+        title="From messy records to"
+        titleHighlight="working deal flow"
+        description="FreshLien offers data engineering, automation, and AI services across clean leads, CRM activity, follow-up, offers, and dispositions. Built to fit the tools you already use."
       />
       <section className="py-14 lg:py-20">
         <LandingContainer>

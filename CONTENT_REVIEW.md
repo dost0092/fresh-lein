@@ -2,15 +2,11 @@
 
 Items below need business or legal confirmation before treating website copy as final.
 
-## Pricing
+## Pricing / commercial terms
 
-- [ ] Workflow Audit starting price (`From $750`)
-- [ ] Lead Pipeline Sprint (`From $4,000` + optional monitoring from `$750/mo`)
-- [ ] Acquisition Automation (`From $8,000`)
-- [ ] Custom OS pricing language
-- [ ] SaaS product plan prices on `/pricing` (existing Stripe plans)
-
-Source file: `src/data/servicePackages.js`
+- [ ] No public dollar amounts on marketing /pricing (Offers page).
+- [ ] Stripe / in-app billing may still exist for existing accounts; marketing does not list plan prices.
+- [ ] Confirm how commercial terms are communicated after contact.
 
 ## Claims and proof
 

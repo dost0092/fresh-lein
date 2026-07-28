@@ -5,10 +5,11 @@ import MarketingPageHero from '@/components/landing/MarketingPageHero';
 import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
 import {
   SERVICE_PACKAGES,
-  PRICING_DISCLAIMER,
+  OFFER_DISCLAIMER,
   GOOD_FIT,
   ENGAGEMENT_MODEL,
 } from '@/data/servicePackages';
+import { POSITIONING } from '@/data/sitePositioning';
 import { SITE_FAQS } from '@/data/solutionsContent';
 import {
   Accordion,
@@ -21,18 +22,31 @@ export default function ServicesPage() {
   return (
     <MarketingPageShell
       seo={{
-        title: 'Real Estate Automation Services',
+        title: 'Data Engineering, Automation & AI Services',
         description:
-          'FreshLien combines software, implementation, integration, and workflow monitoring. Start with a workflow audit, then automate lead pipelines, acquisitions, or a full operating system.',
+          'FreshLien offers data engineering, automation, and AI services for real estate teams. Clean leads, CRM workflows, follow-up, and offers scoped after we talk.',
         path: '/services',
       }}
     >
       <MarketingPageHero
         eyebrow="Services"
-        title="Software, implementation, and"
-        titleHighlight="ongoing workflow monitoring"
-        description="FreshLien combines product modules with implementation services. Start with one bottleneck. Expand into a complete operating system when the pilot is proven."
+        title="Data engineering, automation,"
+        titleHighlight="and AI services"
+        description="Not a generic agency and not just a data dump. We engineer your property data, automate the busywork, and apply AI where it actually helps. Start with one bottleneck. Expand when the pilot works."
       />
+
+      <section className="border-b border-border/60 bg-fl-subtle py-10 lg:py-12">
+        <LandingContainer>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {POSITIONING.capabilities.map((cap) => (
+              <div key={cap.id} className="rounded-xl border border-border/70 bg-white p-5">
+                <h2 className="text-sm font-semibold text-foreground">{cap.label}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cap.text}</p>
+              </div>
+            ))}
+          </div>
+        </LandingContainer>
+      </section>
 
       <section className="py-14 lg:py-20">
         <LandingContainer>
@@ -41,9 +55,11 @@ export default function ServicesPage() {
               <div key={pkg.id} className="fl-card flex h-full flex-col p-6">
                 <div className="flex items-start justify-between gap-3">
                   <h2 className="text-lg font-semibold text-foreground">{pkg.name}</h2>
-                  <p className="shrink-0 text-sm font-bold text-primary">{pkg.priceLabel}</p>
+                  <p className="shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                    {pkg.offerLabel}
+                  </p>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{pkg.priceNote}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{pkg.offerNote}</p>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pkg.description}</p>
                 <ul className="mt-4 flex-1 space-y-1.5">
                   {pkg.deliverables.map((d) => (
@@ -60,7 +76,7 @@ export default function ServicesPage() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">{PRICING_DISCLAIMER}</p>
+          <p className="mt-6 text-sm text-muted-foreground">{OFFER_DISCLAIMER}</p>
         </LandingContainer>
       </section>
 
@@ -68,7 +84,7 @@ export default function ServicesPage() {
         <LandingContainer>
           <LandingSectionHeader
             title="Engagement model"
-            description="A controlled path from audit to production—not an open-ended build."
+            description="A controlled path from audit to production, not an open-ended build."
           />
           <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {ENGAGEMENT_MODEL.map((step, i) => (
@@ -123,7 +139,7 @@ export default function ServicesPage() {
           </Accordion>
           <div className="mt-10 text-center">
             <Link to="/book-audit" className="fl-btn-primary px-6">
-              Book a Workflow Audit <ArrowRight className="h-4 w-4" />
+              Request a workflow review <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </LandingContainer>

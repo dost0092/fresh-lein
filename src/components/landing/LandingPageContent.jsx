@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HeroSection from '@/components/landing/HeroSection';
 import CrmShowcaseSection from '@/components/landing/CrmShowcaseSection';
@@ -10,8 +9,6 @@ import WhyDifferentSection from '@/components/landing/WhyDifferentSection';
 import UseCasesSection from '@/components/landing/UseCasesSection';
 import TrustTransparencySection from '@/components/landing/TrustTransparencySection';
 import BlogPreviewSection from '@/components/landing/BlogPreviewSection';
-import PricingSection from '@/components/landing/PricingSection';
-import PricingCompareTable from '@/components/landing/PricingCompareTable';
 import { LandingContainer } from '@/components/landing/LandingLayout';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
@@ -19,7 +16,6 @@ import MarketingFooter from '@/components/landing/MarketingFooter';
 
 export default function LandingPageContent({ topSlot = null }) {
   const { isAuthenticated } = useAuth();
-  const [pricingType, setPricingType] = useState('platform');
 
   return (
     <div className="fl-app">
@@ -36,16 +32,13 @@ export default function LandingPageContent({ topSlot = null }) {
       <TrustTransparencySection />
       <BlogPreviewSection />
 
-      <PricingSection pricingType={pricingType} onPricingTypeChange={setPricingType} />
-      <PricingCompareTable pricingType={pricingType} />
-
       <section className="fl-marketing-section border-t">
         <LandingContainer innerClassName="text-center">
           <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-            Find distressed deals before the crowd
+            Tell us what you need built
           </h2>
           <p className="mx-auto mt-3 mb-8 max-w-lg text-base leading-relaxed text-muted-foreground">
-            Start free, search live county filings, and upgrade when you need more coverage.
+            Automation offers and platform access are scoped after we talk. No public price list.
           </p>
           {isAuthenticated ? (
             <Link to="/dashboard/foreclosures" className="fl-btn-primary px-6 py-2.5">
@@ -53,11 +46,11 @@ export default function LandingPageContent({ topSlot = null }) {
             </Link>
           ) : (
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link to="/register" className="fl-btn-primary px-6 py-2.5">
-                Get started free <ArrowRight className="h-4 w-4" />
+              <Link to="/contact" className="fl-btn-primary px-6 py-2.5">
+                Contact us to discuss <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/dashboard/foreclosures" className="fl-btn-ghost px-6 py-2.5">
-                Preview live data
+              <Link to="/book-audit" className="fl-btn-ghost px-6 py-2.5">
+                Request a workflow review
               </Link>
             </div>
           )}

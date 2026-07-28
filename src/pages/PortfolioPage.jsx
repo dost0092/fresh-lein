@@ -24,7 +24,7 @@ export default function PortfolioPage() {
             <h2 className="font-heading text-xl font-bold text-foreground mb-2">Portfolio Monitor</h2>
             <p className="text-muted-foreground text-sm max-w-md mx-auto mb-8">
               Add any property addresses to your portfolio. Get instant alerts when any monitored 
-              property receives a new distress filing — NOD, Lis Pendens, tax lien, or probate.
+              property receives a new distress filing (NOD, Lis Pendens, tax lien, or probate).
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto mb-8">
               {([

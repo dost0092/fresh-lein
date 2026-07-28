@@ -24,7 +24,7 @@ const productLinks = [
   { label: 'Live foreclosure data', to: APP_HOME },
   { label: 'Outreach CRM', to: '/crm' },
   { label: 'REST API', to: '/api' },
-  { label: 'Pricing', to: '/pricing' },
+  { label: 'Offers', to: '/pricing' },
 ];
 
 const legalLinks = [
@@ -42,6 +42,9 @@ export default function MarketingFooter() {
             <FreshLienLogo to="/" variant="footer" onDark />
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
               {POSITIONING.footerDescription}
+            </p>
+            <p className="mt-2 text-xs font-medium tracking-wide text-white/45">
+              {POSITIONING.capabilitiesLine}
             </p>
             <a
               href={CONTACT_MAILTO}
@@ -101,7 +104,7 @@ export default function MarketingFooter() {
               ))}
               <li>
                 <Link to="/book-audit" className="inline-flex items-center gap-1 text-sm font-medium text-white/80 hover:text-white">
-                  Book an Audit <ArrowRight className="h-3 w-3" />
+                  Request a workflow review <ArrowRight className="h-3 w-3" />
                 </Link>
               </li>
             </ul>
@@ -142,7 +145,7 @@ export default function MarketingFooter() {
           <p>
             © {COMPANY.year} {COMPANY.name}. All rights reserved.
           </p>
-          <p>Real estate data and workflow automation for serious operators.</p>
+          <p>Data engineering · Automation · AI services for real estate.</p>
         </div>
       </LandingContainer>
     </footer>
