@@ -18,10 +18,9 @@ export default function SolutionsIndexPage() {
     >
       <PageHero
         eyebrow="Solutions"
-        title="Built for the way"
-        accent="your side of real estate"
-        after="works."
-        description="Every part of the industry runs on different data, different tools, and different deals. Find yours and see what we typically build."
+        title="Find your setup."
+        accent="Built for how you work."
+        description="Pick your side of real estate and see what we build for it."
       >
         <div className="mt-10">
           <ButtonLink to="/book-audit" arrow>
@@ -40,7 +39,7 @@ export default function SolutionsIndexPage() {
                   className="site-card site-card-hover group flex h-full flex-col p-8 sm:p-10"
                 >
                   <div className="flex items-start justify-between">
-                    <IconTile icon={s.icon} className="transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink" />
+                    <IconTile icon={s.icon} interactive />
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-white">
                       <ArrowUpRight className="h-5 w-5" />
                     </span>

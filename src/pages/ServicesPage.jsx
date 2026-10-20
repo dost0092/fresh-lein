@@ -4,7 +4,7 @@ import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import CtaBand from '@/components/site/CtaBand';
 import { EngagementCards } from '@/components/site/blocks';
 import { IntegrationsSection } from '@/components/site/Integrations';
-import { ButtonLink, Container, IconTile, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
+import { ButtonLink, CheckList, Container, IconTile, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
 import { SERVICES } from '@/data/siteContent';
 
 function ServiceRow({ service, index }) {
@@ -17,7 +17,7 @@ function ServiceRow({ service, index }) {
         <div className="flex items-start gap-5 lg:col-span-5">
           <span className="pt-1 font-mono text-sm text-ink-mute">{String(index + 1).padStart(2, '0')}</span>
           <div>
-            <IconTile icon={service.icon} className="transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink" />
+            <IconTile icon={service.icon} interactive />
             <h2 className="mt-5 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-[1.75rem]">
               {service.name}
             </h2>
@@ -26,22 +26,11 @@ function ServiceRow({ service, index }) {
         </div>
         <div className="lg:col-span-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">What you get</p>
-          <ul className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2">
-            {service.deliverables.slice(0, 4).map((d) => (
-              <li key={d} className="flex gap-2.5 text-[14.5px] leading-snug text-ink-soft">
-                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink/25" />
-                {d}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {service.stack.slice(0, 5).map((t) => (
-              <span key={t} className="site-chip">
-                {t}
-              </span>
-            ))}
-            <span className="site-chip !bg-paper">Typical: {service.timeline}</span>
-          </div>
+          <CheckList items={service.deliverables.slice(0, 3)} className="mt-4 !gap-2.5" />
+          <p className="mt-6 inline-flex items-center gap-2 text-[13px] text-ink-mute">
+            <span className="h-1 w-1 rounded-full bg-ink-faint" aria-hidden />
+            Typical timeline: <span className="font-medium text-ink">{service.timeline}</span>
+          </p>
         </div>
         <div className="flex items-start justify-end lg:col-span-1">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-white">
@@ -66,9 +55,9 @@ export default function ServicesPage() {
     >
       <PageHero
         eyebrow="Services"
-        title="Everything your real estate operation needs,"
-        accent="built by one team."
-        description="Data, AI, automation, outreach, and software. Pick a single service or combine them into one connected system. You own everything we build."
+        title="Everything you need."
+        accent="One team."
+        description="Pick one service or combine them. You own everything we build."
       >
         <div className="mt-10 flex flex-wrap gap-3">
           <ButtonLink to="/book-audit" arrow>
@@ -98,7 +87,6 @@ export default function ServicesPage() {
             eyebrow="Engagements"
             title="Start small or"
             accent="go all in."
-            description="Every service can be delivered as a fixed-scope project or as part of an ongoing embedded team."
           />
           <div className="mt-14">
             <EngagementCards />
@@ -106,7 +94,7 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      <CtaBand title="Not sure which service you need?" accent="That is what the first call is for." />
+      <CtaBand title="Not sure what you need?" accent="That is what the call is for." />
     </MarketingPageShell>
   );
 }

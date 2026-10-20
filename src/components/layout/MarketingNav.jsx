@@ -5,6 +5,7 @@ import { ArrowRight, ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MARKETING_NAV_HEIGHT_CLASS } from '@/components/landing/LandingLayout';
 import SiteLogo from '@/components/site/SiteLogo';
+import { IconTile } from '@/components/site/ui';
 import { useAuth } from '@/lib/AuthContext';
 import { APP_HOME } from '@/lib/routes';
 import { SERVICES, SOLUTIONS } from '@/data/siteContent';
@@ -61,12 +62,10 @@ function MegaPanel({ menuKey, onNavigate }) {
                   key={item.to}
                   to={item.to}
                   onClick={onNavigate}
-                  className="group flex items-start gap-3.5 rounded-2xl p-3.5 transition-colors hover:bg-paper"
+                  className="group flex items-start gap-3.5 rounded-2xl p-3 transition-colors hover:bg-paper"
                 >
                   {Icon && (
-                    <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink">
-                      <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-                    </span>
+                    <IconTile icon={Icon} size="sm" interactive className="mt-0.5" />
                   )}
                   <span className="min-w-0">
                     <span className="block text-[15px] font-semibold text-ink">{item.label}</span>
@@ -94,15 +93,20 @@ function MegaPanel({ menuKey, onNavigate }) {
             className="group relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl border border-line bg-paper p-6 transition-colors hover:border-ink/20"
           >
             <div className="relative">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute">Not sure where to start?</p>
-              <p className="mt-3 font-tight text-xl font-semibold leading-snug text-ink">
+              <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-mute">Not sure where to start?</p>
+              <p className="mt-3 font-tight text-xl font-semibold leading-snug tracking-[-0.02em] text-ink">
                 Book a 30-minute call. We will tell you what to build first.
               </p>
             </div>
-            <span className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
-              Book a call
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </span>
+            <div className="relative mt-6 flex items-center justify-between">
+              <span className="inline-flex items-center gap-2 text-[12.5px] text-ink-mute">
+                <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-leaf-500" aria-hidden />
+                Free · reply in 1 business day
+              </span>
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white transition-transform group-hover:translate-x-0.5">
+                <ArrowUpRight className="h-4 w-4" />
+              </span>
+            </div>
           </Link>
         </div>
       </div>

@@ -5,11 +5,11 @@ import { Accordion, ButtonLink, CheckList, Container, PageHero, Reveal, Section,
 import { PRINCIPLES, PROCESS, SITE_FAQS } from '@/data/siteContent';
 
 const STEP_OUTPUTS = {
-  '01': ['An honest read on fit', 'Rough timeline and budget range', 'Next step agreed on the call'],
-  '02': ['Workflow and data map', 'Prioritized build plan', 'Fixed quote and milestones'],
-  '03': ['Weekly live demos', 'Written progress notes', 'Access to a staging environment'],
-  '04': ['Production launch', 'Team training', 'Code, data, and docs handed over'],
-  '05': ['Pipeline monitoring', 'New markets and features', 'Monthly planning session'],
+  '01': ['An honest read on fit', 'A rough timeline and budget'],
+  '02': ['A prioritized build plan', 'A fixed quote and milestones'],
+  '03': ['Weekly live demos', 'A staging environment to try'],
+  '04': ['Team training', 'Code, data, and docs handed over'],
+  '05': ['Pipeline monitoring', 'New markets and features'],
 };
 
 export default function HowItWorksPage() {
@@ -27,7 +27,7 @@ export default function HowItWorksPage() {
         eyebrow="How we work"
         title="A clear plan, a fixed quote,"
         accent="and working software every week."
-        description="No mystery retainers, no six-month roadmaps before anything ships. Here is exactly what happens from the first call to launch."
+        description="No mystery retainers. No six-month roadmaps. Here is every step."
       >
         <div className="mt-10">
           <ButtonLink to="/book-audit" arrow>
@@ -91,7 +91,7 @@ export default function HowItWorksPage() {
       <Section tone="paper">
         <Container size="narrow">
           <SectionHeading align="center" eyebrow="FAQ" title="Common" accent="questions." />
-          <Accordion items={SITE_FAQS} className="mt-12" />
+          <Accordion items={SITE_FAQS.slice(3, 7)} className="mt-12" />
         </Container>
       </Section>
 

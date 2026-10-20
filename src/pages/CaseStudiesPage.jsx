@@ -20,7 +20,7 @@ export default function CaseStudiesPage() {
         eyebrow="Example work"
         title="Real workflow problems."
         accent="Systems that fix them."
-        description="A look at the kinds of engagements we run across data, AI, CRM, and campaigns. Each one starts with a specific bottleneck and ends with a system the team owns."
+        description="Each one starts with a real bottleneck and ends with a system the team owns."
       >
         <div className="mt-10">
           <ButtonLink to="/book-audit" arrow>
@@ -34,8 +34,7 @@ export default function CaseStudiesPage() {
           <div className="mb-10 flex items-start gap-3 rounded-2xl border border-line bg-paper p-5 text-sm leading-relaxed text-ink-soft">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-ink-mute" />
             <p>
-              These are representative engagements that describe the scope and shape of our work. Client names and
-              figures are kept private. Ask us on a call and we will walk you through work relevant to your team.
+              Representative examples. Client names stay private; ask on a call to see work like yours.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">

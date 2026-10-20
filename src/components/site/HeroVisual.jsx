@@ -99,10 +99,10 @@ function CardLabel({ icon: Icon, children, tone = 'leaf' }) {
 }
 
 const LOT_FILL = {
-  base: '#F1F2EF',
-  match: '#DCE8E0',
-  permit: '#E9EBE6',
-  hot: '#7FA390',
+  base: '#F3F5F4',
+  match: '#C9ECD9',
+  permit: '#E4E8E6',
+  hot: '#0E8A56',
 };
 
 export default function HeroVisual() {
@@ -119,14 +119,15 @@ export default function HeroVisual() {
             <span className="h-2.5 w-2.5 rounded-full bg-line" />
           </div>
           <p className="font-mono text-[10.5px] text-ink-mute">your-workspace / acquisitions / map</p>
-          <span className="rounded-full bg-white px-2 py-0.5 font-mono text-[9.5px] font-medium uppercase tracking-wider text-ink-mute ring-1 ring-line">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-0.5 font-mono text-[9.5px] font-medium uppercase tracking-wider text-leaf-600 ring-1 ring-leaf-100">
+            <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-leaf-500" />
             Live
           </span>
         </div>
 
         <div className="relative aspect-[640/420] bg-paper">
           <svg viewBox="0 0 640 420" className="absolute inset-0 h-full w-full" aria-hidden>
-            <rect width="640" height="420" fill="#E4E6E2" />
+            <rect width="640" height="420" fill="#DDE2DF" />
             {lots.map((l, i) => (
               <rect
                 key={i}
@@ -136,17 +137,18 @@ export default function HeroVisual() {
                 height={l.h}
                 rx="2"
                 fill={LOT_FILL[l.kind]}
-                stroke={l.kind === 'hot' ? '#6D917E' : '#FFFFFF'}
+                stroke={l.kind === 'hot' ? '#0B6E46' : '#FFFFFF'}
                 strokeWidth={l.kind === 'hot' ? 1.5 : 1}
               />
             ))}
-            <path d="M0 300 C 160 260, 300 340, 640 250" stroke="#D6DCE2" strokeWidth="16" fill="none" opacity="0.8" />
+            <path d="M0 300 C 160 260, 300 340, 640 250" stroke="#F7F8F7" strokeWidth="14" fill="none" />
+            <path d="M0 300 C 160 260, 300 340, 640 250" stroke="#D0D5D2" strokeWidth="1" strokeDasharray="6 8" fill="none" />
           </svg>
 
           {/* Pin */}
           <div className="absolute left-[46%] top-[38%]">
-            <span className="absolute -left-3 -top-3 h-6 w-6 animate-pulse-ring rounded-full bg-ink/20" />
-            <span className="relative block h-3.5 w-3.5 rounded-full border-2 border-white bg-ink shadow" />
+            <span className="absolute -left-3 -top-3 h-6 w-6 animate-pulse-ring rounded-full bg-leaf-500/30" />
+            <span className="relative block h-3.5 w-3.5 rounded-full border-2 border-white bg-leaf-500 shadow-[0_2px_6px_rgba(14,138,86,0.5)]" />
           </div>
 
           <span className="absolute bottom-3 right-3 hidden rounded-full bg-white/80 px-2 py-1 font-mono text-[9px] sm:block uppercase tracking-[0.14em] text-ink-mute">
@@ -156,9 +158,9 @@ export default function HeroVisual() {
           {/* Legend */}
           <div className="absolute bottom-3 left-3 hidden flex-wrap gap-1.5 sm:flex">
             {[
-              ['#7FA390', 'High score'],
-              ['#DCE8E0', 'Buy box match'],
-              ['#D9DCD6', 'Recent permit'],
+              ['#0E8A56', 'High score'],
+              ['#C9ECD9', 'Buy box match'],
+              ['#E4E8E6', 'Recent permit'],
             ].map(([c, l]) => (
               <span key={l} className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2 py-1 text-[10px] font-medium text-ink-soft shadow-sm">
                 <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: c }} />
@@ -176,7 +178,7 @@ export default function HeroVisual() {
           <p className="mt-2 text-[13px] font-semibold text-ink">Lis pendens recorded</p>
           <p className="text-[11.5px] text-ink-mute">1418 Alder St · Owner: estate</p>
           <div className="mt-2.5 flex items-center gap-1.5 rounded-lg bg-paper px-2 py-1.5 text-[11px] font-medium text-ink-soft">
-            <Check className="h-3 w-3" strokeWidth={3} /> Enriched &amp; pushed to CRM
+            <Check className="h-3 w-3 text-leaf-500" strokeWidth={3} /> Enriched &amp; pushed to CRM
           </div>
         </Card>
       </Float>
@@ -205,7 +207,7 @@ export default function HeroVisual() {
             <p className="pb-1 text-[11px] text-ink-mute">top 3% in ZIP</p>
           </div>
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-paper">
-            <div className="h-full w-[87%] rounded-full bg-ink/80" />
+            <div className="h-full w-[87%] rounded-full bg-gradient-to-r from-leaf-400 to-leaf-600" />
           </div>
         </Card>
       </Float>
@@ -215,12 +217,16 @@ export default function HeroVisual() {
           <CardLabel icon={Megaphone}>Buyer campaign</CardLabel>
           <div className="mt-2 flex items-end gap-1">
             {[18, 26, 22, 34, 30, 44, 40, 52, 48, 60].map((h, i) => (
-              <span key={i} className="w-full rounded-sm bg-ink/15" style={{ height: `${h * 0.6}px` }} />
+              <span
+                key={i}
+                className={cn('w-full rounded-sm', i >= 7 ? 'bg-leaf-500' : 'bg-leaf-100')}
+                style={{ height: `${h * 0.6}px` }}
+              />
             ))}
           </div>
           <div className="mt-2 flex justify-between text-[11px]">
             <span className="text-ink-mute">Replies this week</span>
-            <span className="font-semibold text-ink">+38</span>
+            <span className="font-semibold text-leaf-600">+38</span>
           </div>
         </Card>
       </Float>

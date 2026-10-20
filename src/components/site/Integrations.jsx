@@ -299,7 +299,7 @@ export function IntegrationsSection({ tone = 'white' }) {
                 eyebrow="Integrations"
                 title="Works with the tools"
                 accent="you already use."
-                description="We plug into your CRM, data, AI, and marketing tools, so your team keeps working the way it does today. If a tool has no integration, we build one."
+                description="We plug into your stack. If a tool has no integration, we build one."
               />
               <div className="mt-8 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-line bg-white p-4">

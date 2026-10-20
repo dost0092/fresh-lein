@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Mail } from 'lucide-react';
 import FeedbackDialog from '@/components/FeedbackDialog';
 import SocialLinks from '@/components/brand/SocialLinks';
 import SiteLogo from '@/components/site/SiteLogo';
@@ -26,11 +26,11 @@ const LEGAL_LINKS = [
 function Column({ title, links }) {
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">{title}</p>
-      <ul className="mt-5 space-y-3">
+      <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/35">{title}</p>
+      <ul className="mt-5 space-y-2.5">
         {links.map(({ label, to }) => (
           <li key={to}>
-            <Link to={to} className="text-[14.5px] text-white/65 transition-colors hover:text-white">
+            <Link to={to} className="text-[14px] text-white/60 transition-colors duration-200 hover:text-white">
               {label}
             </Link>
           </li>
@@ -42,7 +42,7 @@ function Column({ title, links }) {
 
 export default function MarketingFooter() {
   return (
-    <footer className="relative overflow-hidden bg-ink text-white">
+    <footer className="relative overflow-hidden bg-night text-white">
       <div className="site-grid-bg-dark pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <Container className="relative pb-10 pt-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
@@ -56,7 +56,18 @@ export default function MarketingFooter() {
               <Mail className="h-4 w-4 text-white/60" />
               {COMPANY.contactEmail}
             </a>
-            <SocialLinks className="mt-6" onDark />
+            <p className="mt-3 flex items-center gap-2 text-[13px] text-white/40">
+              <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-leaf-300" aria-hidden />
+              Replies within one business day
+            </p>
+            <Link
+              to="/book-audit"
+              className="group mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[14.5px] font-semibold text-ink transition-colors hover:bg-white/90"
+            >
+              Book a free call
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <SocialLinks className="mt-8" onDark />
           </div>
 
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-8">
@@ -74,7 +85,7 @@ export default function MarketingFooter() {
                 <li>
                   <FeedbackDialog
                     trigger={
-                      <button type="button" className="text-[14.5px] text-white/65 transition-colors hover:text-white">
+                      <button type="button" className="text-[14px] text-white/60 transition-colors duration-200 hover:text-white">
                         Feedback
                       </button>
                     }
@@ -87,12 +98,12 @@ export default function MarketingFooter() {
         </div>
 
         <div className="mt-20 select-none overflow-hidden" aria-hidden>
-          <p className="whitespace-nowrap font-tight text-[18vw] font-bold leading-[0.8] tracking-[-0.06em] text-white/[0.04] lg:text-[15rem]">
+          <p className="whitespace-nowrap bg-gradient-to-b from-white/[0.07] to-transparent bg-clip-text font-tight text-[18vw] font-bold leading-[0.85] tracking-[-0.06em] text-transparent lg:text-[15rem]">
             FreshLien
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-t border-white/10 pt-8 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {COMPANY.year} {COMPANY.name}. Data, AI, and growth services for real estate.
           </p>

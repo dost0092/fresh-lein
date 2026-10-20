@@ -90,26 +90,38 @@ module.exports = {
   				light: '#EDF5F0',
   			},
   			ink: {
-  				DEFAULT: '#151817',
-  				2: '#1D211F',
-  				3: '#2A2F2C',
-  				soft: '#4A514D',
-  				mute: '#737A76'
+  				DEFAULT: '#0A0D0C',
+  				2: '#141816',
+  				3: '#222724',
+  				soft: '#3E4441',
+  				mute: '#5E6561',
+  				faint: '#99A09C'
+  			},
+  			night: {
+  				DEFAULT: '#06120D',
+  				2: '#0B1D15',
+  				3: '#12291F'
   			},
   			leaf: {
-  				DEFAULT: '#135133',
-  				600: '#176240',
-  				500: '#1F8A55',
-  				300: '#7CC79E',
-  				100: '#E2F1E7',
-  				50: '#F1F7F3'
+  				DEFAULT: '#0B5A3A',
+  				700: '#0B5A3A',
+  				600: '#0B6E46',
+  				500: '#0E8A56',
+  				400: '#22B574',
+  				300: '#6CD6A3',
+  				100: '#D5F2E3',
+  				50: '#EDF9F3'
   			},
   			zest: {
   				DEFAULT: '#D4F36C',
   				soft: '#EEFBC4'
   			},
-  			paper: '#F8F8F6',
-  			line: '#E7E8E4'
+  			paper: '#F7F8F7',
+  			mist: '#F0F2F1',
+  			line: {
+  				DEFAULT: '#E4E7E5',
+  				strong: '#D0D5D2'
+  			}
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],
@@ -143,6 +155,10 @@ module.exports = {
   			'pulse-ring': {
   				'0%': { transform: 'scale(0.8)', opacity: '0.7' },
   				'100%': { transform: 'scale(2.4)', opacity: '0' }
+  			},
+  			'soft-pulse': {
+  				'0%, 100%': { opacity: '1' },
+  				'50%': { opacity: '0.45' }
   			}
   		},
   		animation: {
@@ -151,11 +167,18 @@ module.exports = {
   			'slide-in-right': 'slide-in-right 0.3s ease-out',
   			'fade-up': 'fade-up 0.4s ease-out',
   			marquee: 'marquee 40s linear infinite',
-  			'pulse-ring': 'pulse-ring 2s cubic-bezier(0.2,0.6,0.4,1) infinite'
+  			'pulse-ring': 'pulse-ring 2s cubic-bezier(0.2,0.6,0.4,1) infinite',
+  			'soft-pulse': 'soft-pulse 2.4s ease-in-out infinite'
+  		},
+  		transitionTimingFunction: {
+  			'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)'
   		},
   		boxShadow: {
   			'card': '0 1px 2px 0 rgba(0,0,0,0.04)',
   			'card-hover': '0 4px 16px -4px rgba(0,0,0,0.08)',
+  			'hairline': '0 1px 2px rgba(15,20,18,0.04)',
+  			'lift': '0 1px 2px rgba(15,20,18,0.04), 0 12px 32px -16px rgba(15,20,18,0.16)',
+  			'float': '0 1px 2px rgba(15,20,18,0.05), 0 24px 56px -28px rgba(15,20,18,0.28)',
   			'drawer': '-4px 0 24px rgba(0,0,0,0.06)',
   			'nav': '0 1px 0 0 hsl(var(--border))'
   		}
