@@ -1,76 +1,52 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
+import MarketingPageShell from '@/components/landing/MarketingPageShell';
+import { ButtonLink, Container, Eyebrow } from '@/components/site/ui';
+import { GlyphCompass, GlyphDashboard, GlyphSign } from '@/components/site/Glyphs';
 
-import { useLocation } from 'react-router-dom';
+const SUGGESTIONS = [
+  { to: '/services', icon: GlyphDashboard, title: 'Services', body: 'What we build for real estate teams' },
+  { to: '/solutions', icon: GlyphSign, title: 'Solutions', body: 'Find the setup for your side of the market' },
+  { to: '/book-audit', icon: GlyphCompass, title: 'Book a call', body: 'Free 30-minute strategy call' },
+];
 
-import { useQuery } from '@tanstack/react-query';
-
-export default function PageNotFound({}) {
-    const location = useLocation();
-    const pageName = location.pathname.substring(1);
-
-    const { data: authData, isFetched } = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => {
-            try {
-                const user = await db.auth.me();
-                return { user, isAuthenticated: true };
-            } catch (error) {
-                return { user: null, isAuthenticated: false };
-            }
-        }
-    });
-    
-    return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-            <div className="max-w-md w-full">
-                <div className="text-center space-y-6">
-                    {/* 404 Error Code */}
-                    <div className="space-y-2">
-                        <h1 className="text-7xl font-light text-slate-300">404</h1>
-                        <div className="h-0.5 w-16 bg-slate-200 mx-auto"></div>
-                    </div>
-                    
-                    {/* Main Message */}
-                    <div className="space-y-3">
-                        <h2 className="text-2xl font-medium text-slate-800">
-                            Page Not Found
-                        </h2>
-                        <p className="text-slate-600 leading-relaxed">
-                            The page <span className="font-medium text-slate-700">"{pageName}"</span> could not be found in this application.
-                        </p>
-                    </div>
-                    
-                    {/* Admin Note */}
-                    {isFetched && authData.isAuthenticated && authData.user?.role === 'admin' && (
-                        <div className="mt-8 p-4 bg-slate-100 rounded-lg border border-slate-200">
-                            <div className="flex items-start space-x-3">
-                                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center mt-0.5">
-                                    <div className="w-2 h-2 rounded-full bg-orange-400"></div>
-                                </div>
-                                <div className="text-left space-y-1">
-                                    <p className="text-sm font-medium text-slate-700">Admin Note</p>
-                                    <p className="text-sm text-slate-600 leading-relaxed">
-                                        This could mean that the AI hasn't implemented this page yet. Ask it to implement it in the chat.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {/* Action Button */}
-                    <div className="pt-6">
-                        <button 
-                            onClick={() => window.location.href = '/'} 
-                            className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-                        >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            Go Home
-                        </button>
-                    </div>
+export default function PageNotFound() {
+  return (
+    <MarketingPageShell overlapNav seo={{ title: 'Page not found', description: 'This page could not be found.', path: '/404' }}>
+      <section className="relative overflow-hidden bg-paper">
+        <div className="site-grid-bg site-fade-b pointer-events-none absolute inset-0" aria-hidden />
+        <Container size="narrow" className="relative pb-28 pt-36 text-center sm:pt-44">
+          <Eyebrow className="justify-center">Error 404</Eyebrow>
+          <h1 className="site-display mt-6 !text-[2.6rem] sm:!text-[3.5rem]">
+            This lot is <span className="site-accent">still vacant.</span>
+          </h1>
+          <p className="site-lead mx-auto mt-5 max-w-lg">
+            The page you are looking for has moved or never existed. Here are a few good places to go instead.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <ButtonLink to="/" arrow>
+              Back to home
+            </ButtonLink>
+            <ButtonLink to="/contact" variant="secondary">
+              Contact us
+            </ButtonLink>
+          </div>
+          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
+            {SUGGESTIONS.map(({ to, icon: Icon, title, body }) => (
+              <Link key={to} to={to} className="site-card site-card-hover group p-5">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-b from-white to-mist text-ink ring-1 ring-inset ring-line">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 text-ink-faint transition-colors group-hover:text-ink" />
                 </div>
-            </div>
-        </div>
-    )
+                <p className="mt-5 text-[15px] font-semibold text-ink">{title}</p>
+                <p className="mt-0.5 text-[13.5px] leading-snug text-ink-mute">{body}</p>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </section>
+    </MarketingPageShell>
+  );
 }

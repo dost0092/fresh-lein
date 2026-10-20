@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import CtaBand from '@/components/site/CtaBand';
 import { ExampleCard, ProcessSteps, ServiceCard } from '@/components/site/blocks';
-import { ButtonLink, CheckList, Container, Reveal, Section, SectionHeading } from '@/components/site/ui';
+import { ButtonLink, CheckList, Container, IconTile, Reveal, Section, SectionHeading } from '@/components/site/ui';
 import { EXAMPLE_ENGAGEMENTS, SOLUTIONS, getService, getSolution } from '@/data/siteContent';
 
 /** Slugs from the previous site structure, kept so old links still land somewhere sensible. */
@@ -44,8 +44,8 @@ export default function SolutionDetailPage() {
           <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
             <Reveal delay={0.05} className="lg:col-span-7">
               <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink shadow-sm">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-white">
-                  <Icon className="h-3.5 w-3.5" />
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-night text-white [--glyph-accent:#6CD6A3]">
+                  <Icon className="h-4 w-4" strokeWidth={1.6} />
                 </span>
                 For {sol.name}
               </span>
@@ -61,7 +61,7 @@ export default function SolutionDetailPage() {
               </div>
             </Reveal>
             <Reveal delay={0.12} className="lg:col-span-5">
-              <div className="rounded-[2rem] border border-line bg-white p-6 shadow-[0_40px_80px_-48px_rgba(11,26,19,0.4)]">
+              <div className="rounded-[1.75rem] border border-line bg-white p-6 shadow-float">
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">Your stack, built by FreshLien</p>
                 <ul className="mt-5 space-y-2">
                   {sol.services.map((slug, i) => {
@@ -74,15 +74,7 @@ export default function SolutionDetailPage() {
                           to={`/services/${slug}`}
                           className="group flex items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-paper"
                         >
-                          <span
-                            className={
-                              i === 0
-                                ? 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-paper text-ink ring-1 ring-line'
-                                : 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line'
-                            }
-                          >
-                            <SvcIcon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-                          </span>
+                          <IconTile icon={SvcIcon} size="sm" interactive active={i === 0} />
                           <span className="text-[15px] font-semibold text-ink">{svc.name}</span>
                           <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-mute">{svc.timeline}</span>
                         </Link>

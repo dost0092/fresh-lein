@@ -56,9 +56,7 @@ export default function ServiceDetailPage() {
           <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
               <Reveal delay={0.05}>
-                <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-ink ring-1 ring-line">
-                  <Icon className="h-7 w-7" strokeWidth={1.6} />
-                </span>
+                <IconTile icon={Icon} size="lg" active />
                 <h1 className="site-display mt-8">{service.headline}</h1>
                 <p className="site-lead mt-6 max-w-2xl">{service.description}</p>
                 <div className="mt-10 flex flex-wrap gap-3">
@@ -126,7 +124,7 @@ export default function ServiceDetailPage() {
                     to={`/solutions/${a.slug}`}
                     className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-4 transition-all hover:border-ink/20 hover:shadow-lg"
                   >
-                    <IconTile icon={a.icon} size="sm" />
+                    <IconTile icon={a.icon} size="sm" interactive />
                     <div className="min-w-0">
                       <p className="font-semibold text-ink">{a.name}</p>
                       <p className="truncate text-sm text-ink-mute">{a.short}</p>

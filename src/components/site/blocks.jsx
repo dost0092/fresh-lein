@@ -19,8 +19,10 @@ export function ServiceCard({ service, index = 0, className }) {
         className="site-card site-card-hover group flex h-full flex-col p-7"
       >
         <div className="flex items-start justify-between">
-          <IconTile icon={service.icon} />
-          <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-mute">{service.category}</span>
+          <IconTile icon={service.icon} interactive />
+          <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-mute ring-1 ring-inset ring-line">
+            {service.category}
+          </span>
         </div>
         <h3 className="site-h3 mt-8">{service.name}</h3>
         <p className="mt-3 flex-1 text-[15px] leading-relaxed text-ink-soft">{service.short}</p>
@@ -53,10 +55,10 @@ export function AudienceExplorer() {
                 onClick={() => setActive(i)}
                 className={cn(
                   'flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all lg:w-full',
-                  isActive ? 'bg-paper text-ink ring-1 ring-line' : 'text-ink-soft hover:bg-paper/70 hover:text-ink'
+                  isActive ? 'bg-white text-ink shadow-lift ring-1 ring-line' : 'text-ink-soft hover:bg-paper hover:text-ink'
                 )}
               >
-                <Icon className={cn('h-[18px] w-[18px]', isActive ? 'text-ink' : 'text-ink-mute')} strokeWidth={1.75} />
+                <Icon className={cn('h-5 w-5 transition-colors', isActive ? 'text-ink' : 'text-ink-mute')} strokeWidth={1.5} />
                 <span className="whitespace-nowrap text-[15px] font-semibold">{s.name}</span>
                 <ArrowRight className={cn('ml-auto hidden h-4 w-4 lg:block', isActive ? 'opacity-100' : 'opacity-0')} />
               </button>
@@ -82,7 +84,7 @@ export function AudienceExplorer() {
 
             <div className="relative mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div>
-                <p className="text-sm font-semibold text-ink-mute">What gets in the way</p>
+                <p className="text-sm font-semibold text-ink-mute">The problem</p>
                 <ul className="mt-4 space-y-3">
                   {sol.pains.map((p) => (
                     <li key={p} className="flex items-start gap-3 text-[15px] leading-relaxed text-ink-soft">
@@ -135,7 +137,7 @@ export function ProcessSteps({ compact = false }) {
           <div className="site-card h-full p-6">
             <div className="flex items-center justify-between">
               <span className="font-mono text-sm font-medium text-ink-mute">{p.step}</span>
-              <span className="rounded-full bg-paper px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ink-mute">
+              <span className="rounded-full bg-paper px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ink-mute ring-1 ring-inset ring-line">
                 {p.duration}
               </span>
             </div>
@@ -161,7 +163,7 @@ export function EngagementCards() {
           <div
             className={cn(
               'relative flex h-full flex-col overflow-hidden rounded-[2rem] p-8',
-              e.featured ? 'bg-ink text-white' : 'border border-line bg-white'
+              e.featured ? 'bg-night text-white ring-1 ring-inset ring-white/10' : 'border border-line bg-white'
             )}
           >
             <div className="relative flex items-center justify-between">
@@ -203,7 +205,7 @@ export function ExampleCard({ example, index = 0, expanded = false }) {
     <Reveal delay={(index % 3) * 0.08} className="h-full">
       <article className="site-card flex h-full flex-col overflow-hidden">
         <div className="relative h-40 overflow-hidden border-b border-line bg-paper">
-          <div className="site-grid-bg absolute inset-0 opacity-80" aria-hidden />
+          <div className="site-dots-bg absolute inset-0 opacity-70" aria-hidden />
           <div className="absolute inset-0 flex items-center justify-center gap-3">
             {example.services.map((slug, i) => {
               const s = getService(slug);
@@ -213,17 +215,17 @@ export function ExampleCard({ example, index = 0, expanded = false }) {
                 <span
                   key={slug}
                   className={cn(
-                    'inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm ring-1',
-                    i === 0 ? 'bg-white text-ink ring-line' : 'bg-white text-ink-mute ring-line'
+                    'inline-flex h-14 w-14 items-center justify-center rounded-[16px] bg-gradient-to-b from-white to-mist text-ink ring-1 ring-inset ring-line shadow-[0_1px_2px_rgba(15,20,18,0.06),0_8px_20px_-12px_rgba(15,20,18,0.2)]',
+                    i === 1 && '-translate-y-1.5',
                   )}
                   title={s.name}
                 >
-                  <Icon className="h-6 w-6" strokeWidth={1.6} />
+                  <Icon className="h-7 w-7" strokeWidth={1.5} />
                 </span>
               );
             })}
           </div>
-          <span className="absolute left-4 top-4 rounded-full bg-white px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-mute shadow-sm">
+          <span className="absolute left-4 top-4 rounded-full bg-white px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-mute ring-1 ring-inset ring-line">
             {example.audience}
           </span>
         </div>
@@ -237,7 +239,10 @@ export function ExampleCard({ example, index = 0, expanded = false }) {
             </>
           )}
           <div className="mt-auto pt-6">
-            <p className="rounded-2xl border border-line bg-paper p-4 text-[14.5px] leading-relaxed text-ink-soft">{example.outcome}</p>
+            <p className="flex gap-3 rounded-2xl border border-line bg-paper p-4 text-[14px] leading-relaxed text-ink-soft">
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rotate-45 rounded-[1px] bg-leaf-500" aria-hidden />
+              {example.outcome}
+            </p>
           </div>
         </div>
       </article>

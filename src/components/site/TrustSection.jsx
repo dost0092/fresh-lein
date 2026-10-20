@@ -1,36 +1,36 @@
-import { FileSignature, KeyRound, LifeBuoy, MonitorPlay, PackageCheck, ShieldCheck } from 'lucide-react';
-import { Container, Reveal, SectionHeading } from '@/components/site/ui';
+import { Container, IconTile, Reveal, SectionHeading } from '@/components/site/ui';
+import { GlyphContract, GlyphDemo, GlyphHandoff, GlyphKey, GlyphShield, GlyphSupport } from '@/components/site/Glyphs';
 
 const ITEMS = [
   {
-    icon: FileSignature,
+    icon: GlyphContract,
     title: 'Fixed quote in writing',
-    body: 'Scope, milestones, and price are agreed before any work starts. No surprise invoices.',
+    body: 'Agreed before work starts. No surprise invoices.',
   },
   {
-    icon: ShieldCheck,
+    icon: GlyphShield,
     title: 'Confidential by default',
-    body: 'Happy to sign your NDA before you share files, lists, or workflows with us.',
+    body: 'We sign your NDA before you share anything.',
   },
   {
-    icon: KeyRound,
+    icon: GlyphKey,
     title: 'Your accounts, your keys',
-    body: 'We build inside your CRM, cloud, and data accounts with access you can revoke anytime.',
+    body: 'We work in your accounts. Revoke access anytime.',
   },
   {
-    icon: MonitorPlay,
+    icon: GlyphDemo,
     title: 'A live demo every week',
-    body: 'You see real progress on real data every week, not a big reveal at the end.',
+    body: 'Real progress on real data, every week.',
   },
   {
-    icon: PackageCheck,
+    icon: GlyphHandoff,
     title: 'Full handoff, no lock-in',
-    body: 'Code, data, documentation, and credentials are yours at launch. No license fees.',
+    body: 'Code, data, and docs are yours. No license fees.',
   },
   {
-    icon: LifeBuoy,
+    icon: GlyphSupport,
     title: 'Support after launch',
-    body: '30 days of support on every project, with optional ongoing help after that.',
+    body: '30 days included, ongoing help if you want it.',
   },
 ];
 
@@ -43,15 +43,13 @@ export default function TrustSection() {
           eyebrow="Why teams trust us"
           title="Clear terms. Your data."
           accent="No lock-in."
-          description="Working with an outside team should feel safe. Here is what you can expect from day one."
+          description="What you can count on from day one."
         />
         <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ITEMS.map(({ icon: Icon, title, body }, i) => (
             <Reveal key={title} delay={(i % 3) * 0.05} className="h-full">
-              <div className="flex h-full gap-4 rounded-2xl border border-line bg-white p-6">
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-paper text-ink">
-                  <Icon className="h-5 w-5" strokeWidth={1.6} />
-                </span>
+              <div className="site-card site-card-hover group flex h-full gap-4 p-6">
+                <IconTile icon={Icon} interactive />
                 <div>
                   <h3 className="font-tight text-[17px] font-semibold tracking-[-0.01em] text-ink">{title}</h3>
                   <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-soft">{body}</p>

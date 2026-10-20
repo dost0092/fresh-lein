@@ -47,25 +47,16 @@ export default function AboutPage() {
               <Eyebrow>Our story</Eyebrow>
               <p className="mt-6 font-tight text-[1.75rem] font-semibold leading-[1.2] tracking-[-0.025em] text-ink sm:text-[2.1rem]">
                 FreshLien started by turning messy county records into clean leads.{' '}
-                <span className="site-accent text-ink-mute">Clients kept asking us to build the rest.</span>
+                <span className="site-accent">Clients kept asking us to build the rest.</span>
               </p>
             </Reveal>
             <Reveal delay={0.08} className="space-y-5 text-[16px] leading-relaxed text-ink-soft lg:col-span-7">
+              <p>We started by turning county records into clean leads for investors.</p>
               <p>
-                We began in public records: scraping recorder and court portals, matching owners to parcels, and getting
-                distressed-property data to investors before it went stale. The data was useful, but the bigger problem
-                was everything around it.
+                Then we saw the real problem: six tools that never talked to each other, and good leads going cold in
+                spreadsheets.
               </p>
-              <p>
-                Teams were paying for a parcel tool, a zoning tool, a permit feed, a list provider, a CRM, and a campaign
-                agency, and none of them talked to each other. Analysts spent their days copying data between tabs. Good
-                leads went cold in spreadsheets.
-              </p>
-              <p>
-                So we became the team that builds the whole system. Today FreshLien designs and runs data pipelines, AI
-                models, CRMs, campaigns, and custom software for investors, brokerages, CRE firms, developers, lenders,
-                and PropTech companies. Same engineering depth, applied to the entire deal lifecycle.
-              </p>
+              <p className="font-medium text-ink">So now we build the whole system, and hand you the keys.</p>
               <div className="pt-4">
                 <ButtonLink to="/book-audit" arrow>
                   Work with us
@@ -96,7 +87,7 @@ export default function AboutPage() {
               eyebrow="Domain depth"
               title="We speak"
               accent="real estate."
-              description="You will not spend the first month teaching us the business. These are the systems and workflows we work in every day."
+              description="No ramp-up. This is what we work in every day."
             />
             <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {DOMAIN.map((d, i) => (

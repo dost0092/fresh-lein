@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -64,6 +64,8 @@ function MessageBubble({ role, content }) {
 }
 
 export default function AssistantWidget() {
+  const { pathname } = useLocation();
+  const liftForBooking = pathname === '/book-audit';
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([GREETING]);
   const [input, setInput] = useState('');
@@ -214,6 +216,8 @@ export default function AssistantWidget() {
         onClick={() => setOpen((v) => !v)}
         className={cn(
           'fixed bottom-5 right-5 z-[1200] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl',
+          // Sit above the booking wizard's sticky action bar on phones.
+          liftForBooking && 'bottom-28 lg:bottom-5',
           open && 'hidden sm:flex'
         )}
         aria-label={open ? 'Close assistant' : 'Open FreshLien assistant'}

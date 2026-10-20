@@ -1,28 +1,29 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowUpRight, CalendarCheck, Mail, MessageSquare } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { GlyphCalendar, GlyphChat, GlyphMail } from '@/components/site/Glyphs';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import SocialLinks from '@/components/brand/SocialLinks';
 import LeadForm, { SentState } from '@/components/site/LeadForm';
-import { Container, Eyebrow, Reveal } from '@/components/site/ui';
+import { Container, Eyebrow, IconTile, Reveal } from '@/components/site/ui';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
 
 const OPTIONS = [
   {
-    icon: CalendarCheck,
+    icon: GlyphCalendar,
     title: 'Start a project',
     body: 'Share your workflow and goals. We reply with times for a strategy call.',
     to: '/book-audit',
     cta: 'Book a call',
   },
   {
-    icon: Mail,
+    icon: GlyphMail,
     title: 'Email the team',
     body: COMPANY.contactEmail,
     href: CONTACT_MAILTO,
     cta: 'Send an email',
   },
   {
-    icon: MessageSquare,
+    icon: GlyphChat,
     title: 'Common questions',
     body: 'Pricing, timelines, ownership, and how we work.',
     to: '/faq',
@@ -37,6 +38,7 @@ export default function ContactPage() {
   return (
     <MarketingPageShell
       overlapNav
+      hideBookBar
       seo={{
         title: 'Contact',
         description: 'Contact FreshLien about real estate data engineering, AI, CRM automation, campaigns, or custom software.',
@@ -50,20 +52,17 @@ export default function ContactPage() {
             <Reveal className="lg:col-span-5">
               <Eyebrow>Contact</Eyebrow>
               <h1 className="site-display mt-5 !text-[2.6rem] sm:!text-[3.4rem]">
-                Talk to a <span className="site-accent text-ink-mute">real person.</span>
+                Talk to a <span className="site-accent">real person.</span>
               </h1>
               <p className="site-lead mt-6">
-                Questions, partnerships, or a project in mind. Send a note and someone from the team will get back to you
-                within one business day.
+                Send a note. A real person replies within one business day.
               </p>
               <div className="mt-10 space-y-3">
                 {OPTIONS.map((o) => {
                   const Icon = o.icon;
                   const inner = (
                     <>
-                      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line">
-                        <Icon className="h-5 w-5" strokeWidth={1.75} />
-                      </span>
+                      <IconTile icon={Icon} interactive />
                       <div className="min-w-0">
                         <p className="font-semibold text-ink">{o.title}</p>
                         <p className="truncate text-sm text-ink-mute">{o.body}</p>
@@ -88,7 +87,7 @@ export default function ContactPage() {
             </Reveal>
 
             <Reveal delay={0.08} className="lg:col-span-7">
-              <div className="rounded-[2rem] border border-line bg-white p-6 shadow-[0_40px_80px_-48px_rgba(11,26,19,0.35)] sm:p-10">
+              <div className="rounded-[1.75rem] border border-line bg-white p-6 shadow-float sm:p-10">
                 {sent ? (
                   <SentState title="Message sent." />
                 ) : (

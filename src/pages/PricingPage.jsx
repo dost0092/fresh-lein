@@ -37,7 +37,7 @@ export default function PricingPage() {
         eyebrow="Engagements"
         title="Clear scope. Fixed quotes."
         accent="No surprises."
-        description="Every engagement starts with a short discovery and ends in a written quote. You know exactly what you are getting and what it costs before we build anything."
+        description="You see the full scope and price before we build anything."
       />
 
       <Section>
@@ -52,8 +52,7 @@ export default function PricingPage() {
             <Reveal>
               <SectionHeading eyebrow="What affects cost" title="Every quote is" accent="built from scope." />
               <p className="site-lead mt-6">
-                We do not publish a rate card because two projects rarely look the same. Here is what moves the number,
-                so you can think about it before the call.
+                No two projects are the same, so there is no rate card. These are what move the price.
               </p>
               <CheckList items={COST_DRIVERS} className="mt-8" />
             </Reveal>
