@@ -1,15 +1,39 @@
 # FreshLien
 
-> Same-day distressed property data for real estate investors and B2B teams.
+> The data, AI, and growth team behind real estate operators.
 
-FreshLien pulls county and court public records into one searchable platform. Search 100K+ foreclosure filings across 250+ counties in 40+ states with same-day updates on priority markets.
+FreshLien is a services company for real estate. We build property data pipelines, zoning and permit intelligence, AI models, CRM automation, outreach campaigns, and custom software for investors, brokerages, commercial real estate firms, developers, lenders, property managers, and PropTech companies. Every engagement is quoted up front and clients own everything we build.
 
-## Product
+## Services
 
-- Web app (map search, filters, property detail): https://freshlien.com/dashboard/foreclosures
-- Pricing: https://freshlien.com/pricing
-- REST API docs: https://freshlien.com/api
-- Free signup: https://freshlien.com/register
+- All services: https://freshlien.com/services
+- https://freshlien.com/services/property-data-engineering
+- https://freshlien.com/services/zoning-land-use
+- https://freshlien.com/services/permit-construction-intelligence
+- https://freshlien.com/services/deal-sourcing-market-intelligence
+- https://freshlien.com/services/ai-predictive-analytics
+- https://freshlien.com/services/crm-workflow-automation
+- https://freshlien.com/services/campaigns-outreach
+- https://freshlien.com/services/custom-software-dashboards
+
+## Solutions
+
+- All solutions: https://freshlien.com/solutions
+- https://freshlien.com/solutions/investors-wholesalers
+- https://freshlien.com/solutions/brokerages-agents
+- https://freshlien.com/solutions/commercial-real-estate
+- https://freshlien.com/solutions/developers-land
+- https://freshlien.com/solutions/lenders-servicers
+- https://freshlien.com/solutions/proptech-data-companies
+- https://freshlien.com/solutions/property-managers-operators
+- https://freshlien.com/solutions/builders-home-services
+
+## Working with us
+
+- How we work: https://freshlien.com/how-it-works
+- Engagements: https://freshlien.com/pricing
+- Example work: https://freshlien.com/case-studies
+- Book a strategy call: https://freshlien.com/book-audit
 
 ## Blog (foreclosure & distressed property guides)
 

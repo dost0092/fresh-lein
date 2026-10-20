@@ -1,306 +1,335 @@
-import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown, LogOut, Menu, Settings, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import {
-  LANDING_MAX,
-  LANDING_PAD,
-  MARKETING_NAV_HEIGHT_CLASS,
-} from '@/components/landing/LandingLayout';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
+import { MARKETING_NAV_HEIGHT_CLASS } from '@/components/landing/LandingLayout';
+import SiteLogo from '@/components/site/SiteLogo';
 import { useAuth } from '@/lib/AuthContext';
-import FreshLienLogo, { HOME_PATH } from '@/components/brand/FreshLienLogo';
 import { APP_HOME } from '@/lib/routes';
-import { SOLUTIONS } from '@/data/solutionsContent';
+import { SERVICES, SOLUTIONS } from '@/data/siteContent';
 
-const navLinkClass =
-  'inline-flex items-center rounded-md px-3 py-2 text-[15px] font-medium text-primary/90 transition-colors hover:text-primary';
-
-const MAIN_LINKS = [
-  { label: 'Platform', href: '/platform' },
-  { label: 'Services', href: '/services' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Offers', href: '/pricing' },
-  { label: 'About', href: '/about' },
+const COMPANY_LINKS = [
+  { label: 'About', to: '/about', desc: 'Who we are and how we work' },
+  { label: 'Example work', to: '/case-studies', desc: 'The kinds of systems we build' },
+  { label: 'FAQ', to: '/faq', desc: 'Pricing, timelines, ownership' },
+  { label: 'Blog', to: '/blog', desc: 'Notes on real estate data and AI' },
+  { label: 'Contact', to: '/contact', desc: 'Talk to the team' },
 ];
 
-function UserMenu() {
-  const { profile, signOut } = useAuth();
-  const navigate = useNavigate();
+const MENUS = {
+  services: {
+    label: 'Services',
+    all: { label: 'All services', to: '/services' },
+    items: SERVICES.map((s) => ({ label: s.name, to: `/services/${s.slug}`, desc: s.short, icon: s.icon })),
+  },
+  solutions: {
+    label: 'Solutions',
+    all: { label: 'All solutions', to: '/solutions' },
+    items: SOLUTIONS.map((s) => ({ label: s.name, to: `/solutions/${s.slug}`, desc: s.short, icon: s.icon })),
+  },
+  company: {
+    label: 'Company',
+    items: COMPANY_LINKS,
+  },
+};
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/login', { replace: true });
-  };
+const PLAIN_LINKS = [
+  { label: 'How we work', to: '/how-it-works' },
+  { label: 'Engagements', to: '/pricing' },
+];
 
-  const initial = (profile?.full_name || profile?.email || 'U').charAt(0).toUpperCase();
+function MegaPanel({ menuKey, onNavigate }) {
+  const menu = MENUS[menuKey];
+  const isCompany = menuKey === 'company';
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-border/80 px-1.5 py-1 text-sm outline-none transition-colors hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-primary/20">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
-          {initial}
-        </span>
-        <ChevronDown className="hidden h-4 w-4 text-muted-foreground sm:block" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
-        {profile?.email && (
-          <p className="truncate px-2 py-1.5 text-xs text-muted-foreground">{profile.email}</p>
-        )}
-        <DropdownMenuItem asChild>
-          <Link to={APP_HOME} className="cursor-pointer">
-            <User className="mr-2 h-4 w-4" /> Open app
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to={HOME_PATH} className="cursor-pointer">Homepage</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/settings" className="cursor-pointer">
-            <Settings className="mr-2 h-4 w-4" /> Settings
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
-          <LogOut className="mr-2 h-4 w-4" /> Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function SolutionsMenu({ triggerClassName }) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          'inline-flex items-center gap-1 rounded-md px-3 py-2 text-[15px] font-medium text-primary/90 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/20 data-[state=open]:text-primary',
-          triggerClassName
-        )}
-      >
-        Solutions
-        <ChevronDown className="h-4 w-4 opacity-70" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" sideOffset={10} className="w-80 rounded-xl p-2">
-        <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-neutral-50">
-          <Link to="/solutions" className="block px-3 py-2.5">
-            <span className="block text-sm font-semibold text-foreground">All solutions</span>
-            <span className="block text-xs text-muted-foreground">Deal lifecycle overview</span>
-          </Link>
-        </DropdownMenuItem>
-        {SOLUTIONS.map((s) => (
-          <DropdownMenuItem key={s.id} asChild className="cursor-pointer rounded-lg p-0 focus:bg-neutral-50">
-            <Link to={s.href} className="block px-3 py-2.5">
-              <span className="block text-sm font-semibold text-foreground">{s.name}</span>
-              <span className="block text-xs leading-snug text-muted-foreground line-clamp-2">
-                {s.description}
-              </span>
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.18, ease: 'easeOut' }}
+      className="absolute inset-x-0 top-full border-b border-line bg-white shadow-[0_32px_64px_-32px_rgba(11,26,19,0.25)]"
+    >
+      <div className="mx-auto grid max-w-7xl gap-8 px-8 py-8 lg:grid-cols-12">
+        <div className={cn(isCompany ? 'lg:col-span-7' : 'lg:col-span-9')}>
+          <div className={cn('grid gap-1', isCompany ? 'grid-cols-2' : 'grid-cols-2')}>
+            {menu.items.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onNavigate}
+                  className="group flex items-start gap-3.5 rounded-2xl p-3.5 transition-colors hover:bg-paper"
+                >
+                  {Icon && (
+                    <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100 transition-colors group-hover:bg-ink group-hover:text-zest group-hover:ring-ink">
+                      <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                    </span>
+                  )}
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-semibold text-ink">{item.label}</span>
+                    <span className="mt-0.5 block text-[13px] leading-snug text-ink-mute">{item.desc}</span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+          {menu.all && (
+            <Link
+              to={menu.all.to}
+              onClick={onNavigate}
+              className="group mt-3 inline-flex items-center gap-1.5 px-3.5 text-sm font-semibold text-leaf hover:text-ink"
+            >
+              {menu.all.label}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          )}
+        </div>
+        <div className={cn(isCompany ? 'lg:col-span-5' : 'lg:col-span-3')}>
+          <Link
+            to="/book-audit"
+            onClick={onNavigate}
+            className="group relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl bg-ink p-6 text-white"
+          >
+            <div className="site-grid-bg-dark pointer-events-none absolute inset-0 opacity-60" aria-hidden />
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
+            <div className="relative">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-zest">Not sure where to start?</p>
+              <p className="mt-3 font-tight text-xl font-semibold leading-snug text-white">
+                Book a 30-minute call. We will tell you what to build first.
+              </p>
+            </div>
+            <span className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-zest">
+              Book a call
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
-function ResourcesMenu({ triggerClassName }) {
-  const links = [
-    { label: 'Case Studies', href: '/case-studies', desc: 'Illustrative workflows and architectures' },
-    { label: 'Resources', href: '/resources', desc: 'Guides and upcoming articles' },
-    { label: 'FAQ', href: '/faq', desc: 'Common questions' },
-    { label: 'Blog', href: '/blog', desc: 'Product and market notes' },
-    { label: 'API docs', href: '/api', desc: 'REST endpoints for filings' },
-    { label: 'Contact', href: '/contact', desc: 'General inquiries' },
-  ];
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          'inline-flex items-center gap-1 rounded-md px-3 py-2 text-[15px] font-medium text-primary/90 outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/20 data-[state=open]:text-primary',
-          triggerClassName
-        )}
-      >
-        Resources
-        <ChevronDown className="h-4 w-4 opacity-70" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" sideOffset={10} className="w-72 rounded-xl p-2">
-        {links.map((l) => (
-          <DropdownMenuItem key={l.href} asChild className="cursor-pointer rounded-lg p-0 focus:bg-neutral-50">
-            <Link to={l.href} className="block px-3 py-2.5">
-              <span className="block text-sm font-semibold text-foreground">{l.label}</span>
-              <span className="block text-xs text-muted-foreground">{l.desc}</span>
-            </Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function MobileNav({ open, onOpenChange }) {
-  const close = () => onOpenChange(false);
-  const { isAuthenticated, signOut } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSignOut = async () => {
-    close();
-    await signOut();
-    navigate('/login', { replace: true });
-  };
-
-  const linkClass = (path) =>
-    cn(
-      'rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-neutral-50',
-      location.pathname === path || location.pathname.startsWith(`${path}/`)
-        ? 'text-primary'
-        : 'text-foreground'
-    );
+function MobileMenu({ open, onClose, isAuthenticated }) {
+  const [expanded, setExpanded] = useState(null);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetTrigger asChild>
-        <button
-          type="button"
-          className="rounded-md p-2 text-primary hover:bg-neutral-50 lg:hidden"
-          aria-label="Open menu"
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-x-0 bottom-0 top-[4.25rem] z-40 overflow-y-auto bg-white sm:top-[4.5rem] lg:hidden"
         >
-          <Menu className="h-6 w-6" />
-        </button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[min(100vw,320px)]">
-        <SheetHeader className="border-b border-border pb-4">
-          <FreshLienLogo to={HOME_PATH} variant="nav" onClick={close} />
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-        </SheetHeader>
-        <nav className="mt-6 flex flex-col gap-0.5 border-b border-border pb-5">
-          {MAIN_LINKS.map((l) => (
-            <Link key={l.href} to={l.href} onClick={close} className={linkClass(l.href)}>
+          <nav className="px-4 pb-10 pt-4 sm:px-6">
+            {Object.entries(MENUS).map(([key, menu]) => (
+              <div key={key} className="border-b border-line">
+                <button
+                  type="button"
+                  onClick={() => setExpanded(expanded === key ? null : key)}
+                  className="flex w-full items-center justify-between py-4 text-left text-lg font-semibold text-ink"
+                  aria-expanded={expanded === key}
+                >
+                  {menu.label}
+                  <ChevronDown className={cn('h-5 w-5 transition-transform', expanded === key && 'rotate-180')} />
+                </button>
+                {expanded === key && (
+                  <div className="grid gap-1 pb-4">
+                    {menu.all && (
+                      <Link to={menu.all.to} onClick={onClose} className="rounded-xl px-3 py-2.5 text-[15px] font-semibold text-leaf">
+                        {menu.all.label}
+                      </Link>
+                    )}
+                    {menu.items.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={onClose}
+                        className="rounded-xl px-3 py-2.5 text-[15px] text-ink-soft hover:bg-paper"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {PLAIN_LINKS.map((l) => (
+              <Link key={l.to} to={l.to} onClick={onClose} className="block border-b border-line py-4 text-lg font-semibold text-ink">
+                {l.label}
+              </Link>
+            ))}
+            <div className="mt-8 grid gap-3">
+              <Link to="/book-audit" onClick={onClose} className="site-btn-primary w-full">
+                Book a call <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link to={isAuthenticated ? APP_HOME : '/login'} onClick={onClose} className="site-btn-secondary w-full">
+                {isAuthenticated ? 'Open app' : 'Client log in'}
+              </Link>
+            </div>
+          </nav>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export default function MarketingNav({ tone = 'light' }) {
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const closeTimer = useRef(null);
+
+  useEffect(() => {
+    setOpenMenu(null);
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && setOpenMenu(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  const open = (key) => {
+    clearTimeout(closeTimer.current);
+    setOpenMenu(key);
+  };
+  const scheduleClose = () => {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
+  };
+
+  const isActive = (prefix) => location.pathname === prefix || location.pathname.startsWith(`${prefix}/`);
+  const triggerActive = {
+    services: isActive('/services'),
+    solutions: isActive('/solutions'),
+    company: ['/about', '/case-studies', '/faq', '/blog', '/contact'].some(isActive),
+  };
+
+  const solid = scrolled || openMenu || mobileOpen;
+  const dark = tone === 'dark' && !solid;
+
+  const linkBase =
+    'inline-flex h-10 items-center gap-1 rounded-full px-3.5 text-[14.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf-500';
+
+  return (
+    <>
+    <header
+      className={cn(
+        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
+        solid ? 'border-b border-line bg-white/95 backdrop-blur-xl' : 'border-b border-transparent bg-transparent'
+      )}
+      onMouseLeave={scheduleClose}
+    >
+      <div className={cn('mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8', MARKETING_NAV_HEIGHT_CLASS)}>
+        <SiteLogo onDark={dark} />
+
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main">
+          {Object.entries(MENUS).map(([key, menu]) => (
+            <button
+              key={key}
+              type="button"
+              onMouseEnter={() => open(key)}
+              onClick={() => setOpenMenu(openMenu === key ? null : key)}
+              aria-expanded={openMenu === key}
+              className={cn(
+                linkBase,
+                dark
+                  ? triggerActive[key]
+                    ? 'bg-white/10 text-white'
+                    : 'text-white/70 hover:text-white'
+                  : openMenu === key || triggerActive[key]
+                    ? 'bg-paper text-ink'
+                    : 'text-ink-soft hover:text-ink'
+              )}
+            >
+              {menu.label}
+              <ChevronDown className={cn('h-3.5 w-3.5 opacity-60 transition-transform', openMenu === key && 'rotate-180')} />
+            </button>
+          ))}
+          {PLAIN_LINKS.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              onMouseEnter={scheduleClose}
+              className={cn(
+                linkBase,
+                dark
+                  ? isActive(l.to)
+                    ? 'bg-white/10 text-white'
+                    : 'text-white/70 hover:text-white'
+                  : isActive(l.to)
+                    ? 'bg-paper text-ink'
+                    : 'text-ink-soft hover:text-ink'
+              )}
+            >
               {l.label}
             </Link>
           ))}
-          <Link to="/solutions" onClick={close} className={linkClass('/solutions')}>Solutions</Link>
-          {SOLUTIONS.map((s) => (
-            <Link key={s.id} to={s.href} onClick={close} className="rounded-md px-3 py-2 pl-6 text-sm text-muted-foreground hover:bg-neutral-50">
-              {s.name}
-            </Link>
-          ))}
-          <Link to="/case-studies" onClick={close} className={linkClass('/case-studies')}>Case Studies</Link>
-          <Link to="/resources" onClick={close} className={linkClass('/resources')}>Resources</Link>
-          <Link to="/book-audit" onClick={close} className={linkClass('/book-audit')}>Request a workflow review</Link>
-          <Link to={APP_HOME} onClick={close} className={linkClass(APP_HOME)}>
-            {isAuthenticated ? 'Open app' : 'Preview live data'}
-          </Link>
         </nav>
-        <div className="mt-6 border-t border-border pt-5">
-          {isAuthenticated ? (
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="w-full rounded-md px-3 py-2.5 text-left text-[15px] font-medium text-destructive hover:bg-destructive/5"
-            >
-              Sign out
-            </button>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <Button variant="outline" asChild className="h-11 w-full justify-center text-[15px] font-semibold">
-                <Link to="/login" onClick={close}>Log in</Link>
-              </Button>
-              <Button asChild className="fl-btn-primary h-11 w-full justify-center">
-                <Link to="/book-audit" onClick={close}>Request a workflow review</Link>
-              </Button>
-            </div>
+
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            to={isAuthenticated ? APP_HOME : '/login'}
+            className={cn(
+              'inline-flex h-10 items-center rounded-full px-4 text-[14.5px] font-medium transition-colors',
+              dark ? 'text-white/70 hover:text-white' : 'text-ink-soft hover:text-ink'
+            )}
+          >
+            {isAuthenticated ? 'Open app' : 'Log in'}
+          </Link>
+          <Link
+            to="/book-audit"
+            className={cn(dark ? 'site-btn-zest' : 'site-btn-primary', 'group !h-11 !px-5 !text-[14.5px]')}
+          >
+            Book a call
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          className={cn(
+            'inline-flex h-11 w-11 items-center justify-center rounded-full border lg:hidden',
+            dark ? 'border-white/20 bg-white/5 text-white' : 'border-line bg-white text-ink'
           )}
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-export default function MarketingNav() {
-  const location = useLocation();
-  const { isAuthenticated } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/70 bg-white/95 backdrop-blur-sm">
-      <div className={cn('w-full', LANDING_PAD)}>
-        <div className={cn('mx-auto flex items-center justify-between gap-4', MARKETING_NAV_HEIGHT_CLASS, LANDING_MAX)}>
-          <FreshLienLogo to={HOME_PATH} variant="nav" />
-
-          <div className="flex min-w-0 flex-1 items-center justify-end gap-0">
-            <nav className="hidden items-center gap-0.5 lg:flex lg:pr-5 lg:mr-5 lg:border-r lg:border-border/70">
-              <Link
-                to="/platform"
-                className={cn(navLinkClass, location.pathname === '/platform' && 'font-semibold text-primary')}
-              >
-                Platform
-              </Link>
-              <SolutionsMenu />
-              <Link
-                to="/services"
-                className={cn(navLinkClass, location.pathname === '/services' && 'font-semibold text-primary')}
-              >
-                Services
-              </Link>
-              <Link
-                to="/how-it-works"
-                className={cn(navLinkClass, location.pathname === '/how-it-works' && 'font-semibold text-primary')}
-              >
-                How It Works
-              </Link>
-              <ResourcesMenu />
-              <Link
-                to="/pricing"
-                className={cn(navLinkClass, location.pathname === '/pricing' && 'font-semibold text-primary')}
-              >Offers</Link>
-              <Link
-                to="/about"
-                className={cn(navLinkClass, location.pathname === '/about' && 'font-semibold text-primary')}
-              >
-                About
-              </Link>
-            </nav>
-
-            <div className="hidden items-center gap-4 lg:flex">
-              {isAuthenticated ? (
-                <>
-                  <Link to={APP_HOME} className="text-[15px] font-medium text-primary/90 hover:text-primary">
-                    Open app
-                  </Link>
-                  <Link to="/book-audit" className="fl-btn-primary h-10 px-5">
-                    Request a workflow review
-                  </Link>
-                  <UserMenu />
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-[15px] font-medium text-primary/90 transition-colors hover:text-primary"
-                  >
-                    Log in
-                  </Link>
-                  <Button asChild className="fl-btn-primary h-10 px-5 shadow-none">
-                    <Link to="/book-audit">Request a workflow review</Link>
-                  </Button>
-                </>
-              )}
-            </div>
-
-            <MobileNav open={mobileOpen} onOpenChange={setMobileOpen} />
-          </div>
-        </div>
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
+
+      <div className="hidden lg:block" onMouseEnter={() => clearTimeout(closeTimer.current)}>
+        <AnimatePresence>
+          {openMenu && <MegaPanel key={openMenu} menuKey={openMenu} onNavigate={() => setOpenMenu(null)} />}
+        </AnimatePresence>
+      </div>
+
     </header>
+    <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} isAuthenticated={isAuthenticated} />
+    </>
   );
 }
 

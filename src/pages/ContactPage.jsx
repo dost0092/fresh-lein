@@ -1,179 +1,108 @@
-import { useMemo } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { Mail, MessageSquare, Clock, Share2, ArrowRight } from 'lucide-react';
-import SocialLinks from '@/components/brand/SocialLinks';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ArrowUpRight, CalendarCheck, Mail, MessageSquare } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
-import MarketingPageHero from '@/components/landing/MarketingPageHero';
-import { LandingContainer } from '@/components/landing/LandingLayout';
-import FeedbackDialog from '@/components/FeedbackDialog';
+import SocialLinks from '@/components/brand/SocialLinks';
+import LeadForm, { SentState } from '@/components/site/LeadForm';
+import { Container, Eyebrow, Reveal } from '@/components/site/ui';
 import { COMPANY, CONTACT_MAILTO } from '@/data/company';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 
-const INQUIRY_TYPES = [
-  'Data Engineering',
-  'Automation',
-  'AI Services',
-  'Workflow Review',
-  'Lead Data Automation',
-  'Acquisition Automation',
-  'Disposition Workflow',
-  'Property Research',
-  'CRM Integration',
-  'Platform Access',
-  'Partnership',
-  'General Question',
-];
-
-const contactOptions = [
+const OPTIONS = [
+  {
+    icon: CalendarCheck,
+    title: 'Start a project',
+    body: 'Share your workflow and goals. We reply with times for a strategy call.',
+    to: '/book-audit',
+    cta: 'Book a call',
+  },
   {
     icon: Mail,
-    title: 'Email',
-    text: 'Best for service and partnership inquiries.',
-    action: (
-      <a href={CONTACT_MAILTO} className="text-sm font-medium text-primary hover:underline">
-        {COMPANY.contactEmail}
-      </a>
-    ),
+    title: 'Email the team',
+    body: COMPANY.contactEmail,
+    href: CONTACT_MAILTO,
+    cta: 'Send an email',
   },
   {
     icon: MessageSquare,
-    title: 'Product feedback',
-    text: 'Bugs or ideas for the live data product.',
-    action: (
-      <FeedbackDialog
-        trigger={
-          <button type="button" className="text-sm font-medium text-primary hover:underline">
-            Open feedback form
-          </button>
-        }
-        showIcon={false}
-      />
-    ),
-  },
-  {
-    icon: Clock,
-    title: 'Workflow audit',
-    text: 'Prefer a structured intake for automation scoping.',
-    action: (
-      <Link to="/book-audit" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-        Book an audit <ArrowRight className="h-3.5 w-3.5" />
-      </Link>
-    ),
-  },
-  {
-    icon: Share2,
-    title: 'Follow us',
-    text: 'Product and operations updates.',
-    action: <SocialLinks />,
+    title: 'Common questions',
+    body: 'Pricing, timelines, ownership, and how we work.',
+    to: '/faq',
+    cta: 'Read the FAQ',
   },
 ];
 
-function ContactInquiryForm({ defaultTopic = '' }) {
-  const redirectUrl = useMemo(() => {
-    if (typeof window === 'undefined') return '';
-    const url = new URL(window.location.href);
-    url.searchParams.set('feedback', 'sent');
-    return url.toString();
-  }, []);
-
-  return (
-    <form
-      action={`https://formsubmit.co/${COMPANY.contactEmail}`}
-      method="POST"
-      className="space-y-4"
-    >
-      <input type="hidden" name="_subject" value="FreshLien contact" />
-      <input type="hidden" name="_template" value="table" />
-      <input type="hidden" name="_captcha" value="false" />
-      {redirectUrl ? <input type="hidden" name="_next" value={redirectUrl} /> : null}
-      <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="contact-name">Name</Label>
-          <Input id="contact-name" name="name" required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="contact-email">Email</Label>
-          <Input id="contact-email" name="email" type="email" required />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="inquiry_type">Inquiry type</Label>
-        <select
-          id="inquiry_type"
-          name="inquiry_type"
-          defaultValue={defaultTopic || INQUIRY_TYPES[0]}
-          className="fl-input"
-        >
-          {INQUIRY_TYPES.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="contact-message">Message</Label>
-        <Textarea id="contact-message" name="message" required rows={5} />
-      </div>
-
-      <label className="flex items-start gap-2 text-xs text-muted-foreground">
-        <input type="checkbox" name="consent" required className="mt-0.5" />
-        <span>I agree to be contacted about this inquiry.</span>
-      </label>
-
-      <Button type="submit" className="w-full sm:w-auto">
-        Send message
-      </Button>
-    </form>
-  );
-}
-
 export default function ContactPage() {
   const [params] = useSearchParams();
-  const topic = params.get('topic') || '';
+  const sent = params.get('sent') === '1';
 
   return (
     <MarketingPageShell
+      overlapNav
       seo={{
-        title: 'Contact FreshLien',
-        description:
-          'Contact FreshLien about data engineering, automation, AI services, workflow reviews, lead pipelines, acquisitions, dispositions, property research, CRM integrations, or partnerships.',
+        title: 'Contact',
+        description: 'Contact FreshLien about real estate data engineering, AI, CRM automation, campaigns, or custom software.',
         path: '/contact',
       }}
     >
-      <MarketingPageHero
-        eyebrow="Contact"
-        title="Talk to us about data engineering, automation, or AI"
-        description={`Reach us at ${COMPANY.contactEmail} or use the form. For scoping, the workflow review intake is usually fastest.`}
-      />
+      <section className="relative overflow-hidden bg-paper">
+        <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
+        <Container className="relative pb-24 pt-32 sm:pt-36 lg:pt-44">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+            <Reveal className="lg:col-span-5">
+              <Eyebrow>Contact</Eyebrow>
+              <h1 className="site-display mt-5 !text-[2.6rem] sm:!text-[3.4rem]">
+                Talk to a <span className="site-accent text-leaf">real person.</span>
+              </h1>
+              <p className="site-lead mt-6">
+                Questions, partnerships, or a project in mind. Send a note and someone from the team will get back to you
+                within one business day.
+              </p>
+              <div className="mt-10 space-y-3">
+                {OPTIONS.map((o) => {
+                  const Icon = o.icon;
+                  const inner = (
+                    <>
+                      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100">
+                        <Icon className="h-5 w-5" strokeWidth={1.75} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-ink">{o.title}</p>
+                        <p className="truncate text-sm text-ink-mute">{o.body}</p>
+                      </div>
+                      <ArrowUpRight className="ml-auto h-4 w-4 shrink-0 text-ink-mute transition-colors group-hover:text-ink" />
+                    </>
+                  );
+                  const cls =
+                    'group flex items-center gap-4 rounded-2xl border border-line bg-white p-4 transition-all hover:border-ink/20 hover:shadow-lg';
+                  return o.href ? (
+                    <a key={o.title} href={o.href} className={cls}>
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link key={o.title} to={o.to} className={cls}>
+                      {inner}
+                    </Link>
+                  );
+                })}
+              </div>
+              <SocialLinks className="mt-8" />
+            </Reveal>
 
-      <section className="py-11 lg:py-14">
-        <LandingContainer>
-          <div className="grid gap-10 lg:grid-cols-5">
-            <div className="space-y-4 lg:col-span-2">
-              {contactOptions.map(({ icon: Icon, title, text, action }) => (
-                <div key={title} className="fl-card p-5">
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-4 w-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{text}</p>
-                  <div className="mt-3">{action}</div>
-                </div>
-              ))}
-            </div>
-            <div className="fl-card p-6 lg:col-span-3">
-              <ContactInquiryForm defaultTopic={topic} />
-            </div>
+            <Reveal delay={0.08} className="lg:col-span-7">
+              <div className="rounded-[2rem] border border-line bg-white p-6 shadow-[0_40px_80px_-48px_rgba(11,26,19,0.35)] sm:p-10">
+                {sent ? (
+                  <SentState title="Message sent." />
+                ) : (
+                  <>
+                    <h2 className="font-tight text-2xl font-semibold tracking-[-0.02em] text-ink">Send us a message</h2>
+                    <div className="mt-8">
+                      <LeadForm variant="short" subject="FreshLien website contact" defaults={{ topic: params.get('topic') || '' }} />
+                    </div>
+                  </>
+                )}
+              </div>
+            </Reveal>
           </div>
-        </LandingContainer>
+        </Container>
       </section>
     </MarketingPageShell>
   );

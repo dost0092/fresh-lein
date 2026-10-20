@@ -1,112 +1,102 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
-import MarketingPageHero from '@/components/landing/MarketingPageHero';
-import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
-import { PROCESS_PHASES } from '@/data/solutionsContent';
+import CtaBand from '@/components/site/CtaBand';
+import { EngagementCards } from '@/components/site/blocks';
+import { Accordion, ButtonLink, CheckList, Container, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
+import { PRINCIPLES, PROCESS, SITE_FAQS } from '@/data/siteContent';
 
-const PHASE_DETAIL = [
-  {
-    customer: 'Share current tools, sample files, and who owns each step.',
-    freshlien: 'Interview stakeholders and inventory systems and data.',
-    deliverables: 'Discovery notes and initial opportunity list.',
-    acceptance: 'Both sides agree on the primary bottleneck to map.',
-    risks: 'Missing stakeholders or incomplete sample data.',
-  },
-  {
-    customer: 'Walk through the live process with real exceptions.',
-    freshlien: 'Document inputs, outputs, delays, and failure modes.',
-    deliverables: 'Workflow map and time-loss estimate.',
-    acceptance: 'Map reflects the actual process, not the ideal one.',
-    risks: 'Undocumented tribal knowledge.',
-  },
-  {
-    customer: 'Provide access for one source, one market, one CRM path.',
-    freshlien: 'Build a narrow automation with monitoring.',
-    deliverables: 'Working pilot and documentation.',
-    acceptance: 'Pilot processes agreed sample volume with reviewable exceptions.',
-    risks: 'Scope creep into multi-market builds too early.',
-  },
-  {
-    customer: 'Compare automated output with the existing process.',
-    freshlien: 'Quality checks, exception review, and tuning.',
-    deliverables: 'Validation report and go/no-go recommendation.',
-    acceptance: 'Quality and timing meet agreed thresholds.',
-    risks: 'Skipping human review on uncertain matches.',
-  },
-  {
-    customer: 'Prioritize next sources and teams.',
-    freshlien: 'Expand workflows, reporting, and support model.',
-    deliverables: 'Scale plan and production monitoring.',
-    acceptance: 'Additional workflows have owners and metrics.',
-    risks: 'Adding markets before the pilot is stable.',
-  },
-];
+const STEP_OUTPUTS = {
+  '01': ['An honest read on fit', 'Rough timeline and budget range', 'Next step agreed on the call'],
+  '02': ['Workflow and data map', 'Prioritized build plan', 'Fixed quote and milestones'],
+  '03': ['Weekly live demos', 'Written progress notes', 'Access to a staging environment'],
+  '04': ['Production launch', 'Team training', 'Code, data, and docs handed over'],
+  '05': ['Pipeline monitoring', 'New markets and features', 'Monthly planning session'],
+};
 
 export default function HowItWorksPage() {
   return (
     <MarketingPageShell
+      overlapNav
       seo={{
-        title: 'How FreshLien Implementation Works',
+        title: 'How we work',
         description:
-          'FreshLien starts with one measurable bottleneck: discover, map, pilot, validate, then scale. Sample pilot: one county, one record type, one CRM workflow.',
+          'How FreshLien delivers real estate data, AI, CRM, and campaign projects: discovery call, blueprint with a fixed quote, weekly build sprints, launch and handoff, and optional ongoing support.',
         path: '/how-it-works',
       }}
     >
-      <MarketingPageHero
-        eyebrow="How it works"
-        title="Start small."
-        titleHighlight="Prove it. Then expand."
-        description="A typical pilot is one county, one record type, and one CRM workflow. That keeps quality and ownership clear."
-      />
+      <PageHero
+        eyebrow="How we work"
+        title="A clear plan, a fixed quote,"
+        accent="and working software every week."
+        description="No mystery retainers, no six-month roadmaps before anything ships. Here is exactly what happens from the first call to launch."
+      >
+        <div className="mt-10">
+          <ButtonLink to="/book-audit" arrow>
+            Start with a call
+          </ButtonLink>
+        </div>
+      </PageHero>
 
-      <section className="py-14 lg:py-20">
-        <LandingContainer>
-          <div className="space-y-8">
-            {PROCESS_PHASES.map((phase, i) => {
-              const d = PHASE_DETAIL[i];
-              return (
-                <div key={phase.title} className="fl-card p-6 lg:p-8">
-                  <p className="text-xs font-bold uppercase tracking-wider text-primary">
-                    Phase {i + 1}: {phase.title}
-                  </p>
-                  <p className="mt-2 text-sm text-muted-foreground">{phase.text}</p>
-                  <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                    {[
-                      ['Customer', d.customer],
-                      ['FreshLien', d.freshlien],
-                      ['Deliverables', d.deliverables],
-                      ['Acceptance', d.acceptance],
-                      ['Common risks', d.risks],
-                    ].map(([label, text]) => (
-                      <div key={label}>
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                          {label}
-                        </p>
-                        <p className="mt-1 text-xs leading-relaxed text-foreground/80">{text}</p>
-                      </div>
-                    ))}
-                  </div>
+      <Section>
+        <Container size="narrow">
+          <ol className="relative">
+            <span className="absolute bottom-6 left-[27px] top-6 w-px bg-line sm:left-[31px]" aria-hidden />
+            {PROCESS.map((p, i) => (
+              <Reveal key={p.step} as="li" delay={i * 0.04} className="relative pb-14 pl-20 last:pb-0 sm:pl-24">
+                <span className="absolute left-0 top-0 inline-flex h-14 w-14 items-center justify-center rounded-full border border-line bg-white font-mono text-sm font-medium text-leaf shadow-sm sm:h-16 sm:w-16">
+                  {p.step}
+                </span>
+                <div className="flex flex-wrap items-center gap-3 pt-3">
+                  <h2 className="font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">{p.title}</h2>
+                  <span className="rounded-full bg-paper px-3 py-1 font-mono text-[10.5px] uppercase tracking-wider text-ink-mute">
+                    {p.duration}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+                <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-ink-soft">{p.body}</p>
+                <div className="mt-6 rounded-2xl border border-line bg-paper/60 p-5">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">You get</p>
+                  <CheckList items={STEP_OUTPUTS[p.step]} cols={2} className="mt-4" />
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </Container>
+      </Section>
 
-          <div className="mt-12 rounded-xl border border-primary/20 bg-fl-subtle p-6">
-            <LandingSectionHeader
-              className="mb-0"
-              title="Sample pilot"
-              description="One county, one record type, one CRM workflow. Validate quality and timing before adding markets or sources."
-            />
+      <Section tone="ink" className="overflow-hidden">
+        <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
+        <Container className="relative">
+          <SectionHeading onDark eyebrow="Our principles" title="The rules we" accent="work by." />
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {PRINCIPLES.map((p, i) => (
+              <Reveal key={p.title} delay={i * 0.06} className="h-full">
+                <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-7">
+                  <span className="font-mono text-sm text-zest">0{i + 1}</span>
+                  <h3 className="mt-6 font-tight text-xl font-semibold !text-white">{p.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-white/60">{p.body}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
+        </Container>
+      </Section>
 
-          <div className="mt-10">
-            <Link to="/book-audit" className="fl-btn-primary px-6">
-              Request a workflow review <ArrowRight className="h-4 w-4" />
-            </Link>
+      <Section tone="paper">
+        <Container>
+          <SectionHeading align="center" eyebrow="Engagements" title="Pick the shape" accent="that fits." />
+          <div className="mt-14">
+            <EngagementCards />
           </div>
-        </LandingContainer>
-      </section>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container size="narrow">
+          <SectionHeading align="center" eyebrow="FAQ" title="Common" accent="questions." />
+          <Accordion items={SITE_FAQS} className="mt-12" />
+        </Container>
+      </Section>
+
+      <CtaBand />
     </MarketingPageShell>
   );
 }

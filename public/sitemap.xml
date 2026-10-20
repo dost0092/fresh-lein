@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://freshlien.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://freshlien.com/pricing</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://freshlien.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://freshlien.com/blog</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://freshlien.com/faq</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://freshlien.com/api</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://freshlien.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://freshlien.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://freshlien.com/services/property-data-engineering</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/zoning-land-use</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/permit-construction-intelligence</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/deal-sourcing-market-intelligence</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/ai-predictive-analytics</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/crm-workflow-automation</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/campaigns-outreach</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/services/custom-software-dashboards</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://freshlien.com/solutions/investors-wholesalers</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/brokerages-agents</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/commercial-real-estate</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/developers-land</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/lenders-servicers</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/proptech-data-companies</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/property-managers-operators</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/solutions/builders-home-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/how-it-works</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://freshlien.com/pricing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/case-studies</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://freshlien.com/book-audit</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://freshlien.com/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://freshlien.com/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://freshlien.com/security</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://freshlien.com/faq</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://freshlien.com/blog</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://freshlien.com/security</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://freshlien.com/blog/introducing-freshlien-same-day-distressed-property-data</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://freshlien.com/blog/how-to-find-foreclosure-deals-before-auction</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://freshlien.com/blog/what-is-foreclosure-complete-guide</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>

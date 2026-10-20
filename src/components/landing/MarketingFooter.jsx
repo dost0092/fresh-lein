@@ -1,153 +1,113 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Mail } from 'lucide-react';
-import { LandingContainer } from '@/components/landing/LandingLayout';
+import { ArrowUpRight, Mail } from 'lucide-react';
 import FeedbackDialog from '@/components/FeedbackDialog';
-import { COMPANY, CONTACT_MAILTO } from '@/data/company';
-import { POSITIONING } from '@/data/sitePositioning';
-import { SOLUTIONS } from '@/data/solutionsContent';
-import { SERVICE_PACKAGES } from '@/data/servicePackages';
-import { APP_HOME } from '@/lib/routes';
-import FreshLienLogo from '@/components/brand/FreshLienLogo';
 import SocialLinks from '@/components/brand/SocialLinks';
+import SiteLogo from '@/components/site/SiteLogo';
+import { Container } from '@/components/site/ui';
+import { COMPANY, CONTACT_MAILTO } from '@/data/company';
+import { BRAND, SERVICES, SOLUTIONS } from '@/data/siteContent';
 
-const companyLinks = [
+const COMPANY_LINKS = [
   { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/contact' },
-  { label: 'Case Studies', to: '/case-studies' },
-  { label: 'Resources', to: '/resources' },
-  { label: 'Blog', to: '/blog' },
+  { label: 'How we work', to: '/how-it-works' },
+  { label: 'Engagements', to: '/pricing' },
+  { label: 'Example work', to: '/case-studies' },
   { label: 'FAQ', to: '/faq' },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Contact', to: '/contact' },
 ];
 
-const productLinks = [
-  { label: 'Platform overview', to: '/platform' },
-  { label: 'Live foreclosure data', to: APP_HOME },
-  { label: 'Outreach CRM', to: '/crm' },
-  { label: 'REST API', to: '/api' },
-  { label: 'Offers', to: '/pricing' },
-];
-
-const legalLinks = [
+const LEGAL_LINKS = [
   { label: 'Privacy', to: '/privacy' },
   { label: 'Terms', to: '/terms' },
   { label: 'Security', to: '/security' },
 ];
 
+function Column({ title, links }) {
+  return (
+    <div>
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">{title}</p>
+      <ul className="mt-5 space-y-3">
+        {links.map(({ label, to }) => (
+          <li key={to}>
+            <Link to={to} className="text-[14.5px] text-white/65 transition-colors hover:text-white">
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function MarketingFooter() {
   return (
-    <footer className="border-t border-white/10 bg-navy-dark">
-      <LandingContainer className="py-12 lg:py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
-          <div className="sm:col-span-2 lg:col-span-4">
-            <FreshLienLogo to="/" variant="footer" onDark />
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/55">
-              {POSITIONING.footerDescription}
-            </p>
-            <p className="mt-2 text-xs font-medium tracking-wide text-white/45">
-              {POSITIONING.capabilitiesLine}
-            </p>
+    <footer className="relative overflow-hidden bg-ink text-white">
+      <div className="site-grid-bg-dark pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+      <Container className="relative pb-10 pt-20">
+        <div className="grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <SiteLogo onDark />
+            <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/60">{BRAND.promise}</p>
             <a
               href={CONTACT_MAILTO}
-              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-white/85 transition-colors hover:text-zest"
             >
-              <Mail className="h-4 w-4 text-primary" />
+              <Mail className="h-4 w-4 text-zest" />
               {COMPANY.contactEmail}
             </a>
-            <SocialLinks className="mt-4" onDark />
+            <SocialLinks className="mt-6" onDark />
           </div>
 
-          <div className="lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Platform</p>
-            <ul className="mt-4 space-y-2.5">
-              {productLinks.map(({ label, to }) => (
-                <li key={`${label}-${to}`}>
-                  <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
-                    {label}
-                  </Link>
+          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-8">
+            <Column
+              title="Services"
+              links={SERVICES.map((s) => ({ label: s.name, to: `/services/${s.slug}` }))}
+            />
+            <Column
+              title="Solutions"
+              links={SOLUTIONS.map((s) => ({ label: s.name, to: `/solutions/${s.slug}` }))}
+            />
+            <div>
+              <Column title="Company" links={COMPANY_LINKS} />
+              <ul className="mt-3">
+                <li>
+                  <FeedbackDialog
+                    trigger={
+                      <button type="button" className="text-[14.5px] text-white/65 transition-colors hover:text-white">
+                        Feedback
+                      </button>
+                    }
+                    showIcon={false}
+                  />
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Solutions</p>
-            <ul className="mt-4 space-y-2.5">
-              <li>
-                <Link to="/solutions" className="text-sm text-white/60 hover:text-white">
-                  All solutions
-                </Link>
-              </li>
-              {SOLUTIONS.map((s) => (
-                <li key={s.id}>
-                  <Link to={s.href} className="text-sm text-white/60 hover:text-white">
-                    {s.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Services</p>
-            <ul className="mt-4 space-y-2.5">
-              <li>
-                <Link to="/services" className="text-sm text-white/60 hover:text-white">
-                  All services
-                </Link>
-              </li>
-              {SERVICE_PACKAGES.map((p) => (
-                <li key={p.id}>
-                  <Link to={p.href} className="text-sm text-white/60 hover:text-white">
-                    {p.name}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link to="/book-audit" className="inline-flex items-center gap-1 text-sm font-medium text-white/80 hover:text-white">
-                  Request a workflow review <ArrowRight className="h-3 w-3" />
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Company</p>
-            <ul className="mt-4 space-y-2.5">
-              {companyLinks.map(({ label, to }) => (
-                <li key={`${label}-${to}`}>
-                  <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-              {legalLinks.map(({ label, to }) => (
-                <li key={`${label}-${to}`}>
-                  <Link to={to} className="text-sm text-white/60 transition-colors hover:text-white">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <FeedbackDialog
-                  trigger={
-                    <button type="button" className="text-sm text-white/60 transition-colors hover:text-white">
-                      Feedback
-                    </button>
-                  }
-                  showIcon={false}
-                />
-              </li>
-            </ul>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row">
-          <p>
-            © {COMPANY.year} {COMPANY.name}. All rights reserved.
+        <div className="mt-20 select-none overflow-hidden" aria-hidden>
+          <p className="whitespace-nowrap font-tight text-[18vw] font-bold leading-[0.8] tracking-[-0.06em] text-white/[0.04] lg:text-[15rem]">
+            FreshLien
           </p>
-          <p>Data engineering · Automation · AI services for real estate.</p>
         </div>
-      </LandingContainer>
+
+        <div className="flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {COMPANY.year} {COMPANY.name}. Data, AI, and growth services for real estate.
+          </p>
+          <div className="flex flex-wrap items-center gap-6">
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.to} to={l.to} className="transition-colors hover:text-white">
+                {l.label}
+              </Link>
+            ))}
+            <Link to="/login" className="inline-flex items-center gap-1 transition-colors hover:text-white">
+              Client log in <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+      </Container>
     </footer>
   );
 }

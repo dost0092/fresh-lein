@@ -1,208 +1,191 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
-import MarketingPageHero from '@/components/landing/MarketingPageHero';
-import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
-import { SOLUTIONS } from '@/data/solutionsContent';
+import CtaBand from '@/components/site/CtaBand';
+import { ExampleCard, ProcessSteps, ServiceCard } from '@/components/site/blocks';
+import { ButtonLink, CheckList, Container, Reveal, Section, SectionHeading } from '@/components/site/ui';
+import { EXAMPLE_ENGAGEMENTS, SOLUTIONS, getService, getSolution } from '@/data/siteContent';
 
-const DETAIL = {
-  'lead-data-automation': {
-    steps: [
-      'Connect sources',
-      'Preserve raw records',
-      'Standardize fields',
-      'Match properties and owners',
-      'Detect duplicates',
-      'Validate uncertain records',
-      'Add permitted enrichment',
-      'Apply tags and scores',
-      'Sync to CRM',
-      'Monitor ongoing delivery',
-    ],
-    sources: [
-      'Foreclosure',
-      'Pre-foreclosure',
-      'Tax delinquency',
-      'Liens',
-      'Probate',
-      'Code violations',
-      'Permits',
-      'Vacant properties',
-      'Absentee owners',
-      'Vendor files',
-      'Internal spreadsheets',
-    ],
-    outcomes: [
-      'Faster source-to-CRM delivery',
-      'Fewer duplicate records',
-      'Less spreadsheet work',
-      'Better source traceability',
-      'More consistent campaign segmentation',
-      'Easier expansion into new markets',
-    ],
-    note: 'Source availability, licensing, frequency, and permitted use vary by jurisdiction and provider.',
-  },
-  acquisitions: {
-    steps: [
-      'Lead arrives',
-      'Property reviewed',
-      'Seller contacted',
-      'Follow-up scheduled',
-      'Offer calculated',
-      'Approval received',
-      'Offer sent',
-      'Outcome recorded',
-    ],
-    modules: [
-      'Automatic lead assignment',
-      'Property context in one workspace',
-      'Follow-up sequences',
-      'Call and communication summaries',
-      'Comparable sales and assumptions',
-      'Offer calculations',
-      'Manager approvals',
-      'Offer document generation',
-      'Stale-lead alerts',
-      'Acquisition scorecards',
-    ],
-  },
-  dispositions: {
-    modules: [
-      'Deal package generation',
-      'Buyer database organization',
-      'Buyer criteria',
-      'Market and property-type segmentation',
-      'Buyer matching',
-      'Proof-of-funds collection',
-      'Access scheduling',
-      'Offer collection',
-      'Buyer ranking',
-      'Assignment and closing tracking',
-    ],
-    note: 'Buyer matching does not guarantee a sale. FreshLien organizes disposition work; outcomes depend on market conditions, pricing, and your team.',
-  },
-  'property-research': {
-    modules: [
-      'Parcel and ownership research',
-      'Deeds and liens',
-      'Cases and public records',
-      'Zoning summaries',
-      'Permit history',
-      'Code violations',
-      'Document extraction',
-      'Property timelines',
-      'Source-linked reporting',
-      'Human verification',
-    ],
-    note: 'Jurisdictional availability varies. FreshLien evaluates each source before confirming what can be automated.',
-  },
+/** Slugs from the previous site structure, kept so old links still land somewhere sensible. */
+const LEGACY_SLUGS = {
+  'lead-data-automation': 'investors-wholesalers',
+  acquisitions: 'investors-wholesalers',
+  dispositions: 'commercial-real-estate',
+  'property-research': 'developers-land',
 };
 
 export default function SolutionDetailPage() {
   const { slug } = useParams();
-  const solution = SOLUTIONS.find((s) => s.slug === slug);
-  if (!solution) return <Navigate to="/solutions" replace />;
-  const extra = DETAIL[slug] || {};
+  if (LEGACY_SLUGS[slug]) return <Navigate to={`/solutions/${LEGACY_SLUGS[slug]}`} replace />;
+  const sol = getSolution(slug);
+  if (!sol) return <Navigate to="/solutions" replace />;
+
+  const Icon = sol.icon;
+  const examples = EXAMPLE_ENGAGEMENTS.filter((e) => e.services.some((s) => sol.services.includes(s))).slice(0, 3);
+  const others = SOLUTIONS.filter((s) => s.slug !== sol.slug);
 
   return (
     <MarketingPageShell
+      overlapNav
       seo={{
-        title: `${solution.name} | FreshLien`,
-        description: solution.description,
-        path: solution.href,
+        title: `For ${sol.name}`,
+        description: `${sol.headline} ${sol.short}`,
+        path: `/solutions/${sol.slug}`,
       }}
     >
-      <MarketingPageHero
-        eyebrow="Solutions"
-        title={solution.hero}
-        description={solution.description}
-      />
-
-      <section className="py-14 lg:py-20">
-        <LandingContainer>
-          <LandingSectionHeader title="What is included" />
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {solution.features.map((f) => (
-              <li key={f} className="fl-card flex items-start gap-2 p-4 text-sm text-muted-foreground">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                {f}
-              </li>
-            ))}
-          </ul>
-
-          {extra.modules && (
-            <div className="mt-12">
-              <LandingSectionHeader title="Capabilities" />
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {extra.modules.map((m) => (
-                  <li key={m} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    {m}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {extra.steps && (
-            <div className="mt-12">
-              <LandingSectionHeader title="Workflow" />
-              <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                {extra.steps.map((s, i) => (
-                  <li key={s} className="fl-card p-4 text-sm">
-                    <span className="text-xs font-bold text-primary/40">{i + 1}</span>
-                    <p className="mt-1 font-medium text-foreground">{s}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
-
-          {extra.sources && (
-            <div className="mt-12">
-              <LandingSectionHeader title="Supported source categories" />
-              <div className="flex flex-wrap gap-2">
-                {extra.sources.map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-md border border-border/80 bg-fl-subtle px-3 py-1.5 text-xs font-medium"
-                  >
-                    {s}
-                  </span>
-                ))}
+      <section className="relative overflow-hidden bg-paper">
+        <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
+        <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-zest/30 blur-3xl" aria-hidden />
+        <Container className="relative pb-20 pt-32 sm:pt-36 lg:pb-28 lg:pt-44">
+          <Reveal>
+            <Link to="/solutions" className="inline-flex items-center gap-1.5 text-sm text-ink-mute hover:text-ink">
+              Solutions <span className="text-ink/25">/</span> <span className="text-ink">{sol.name}</span>
+            </Link>
+          </Reveal>
+          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-center">
+            <Reveal delay={0.05} className="lg:col-span-7">
+              <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink shadow-sm">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-zest">
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+                For {sol.name}
+              </span>
+              <h1 className="site-display mt-8">{sol.headline}</h1>
+              <p className="site-lead mt-6 max-w-2xl">{sol.short}</p>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <ButtonLink to={`/book-audit?team=${encodeURIComponent(sol.name)}`} arrow>
+                  Book a strategy call
+                </ButtonLink>
+                <ButtonLink to="/case-studies" variant="secondary">
+                  See example work
+                </ButtonLink>
               </div>
-            </div>
-          )}
-
-          {extra.outcomes && (
-            <div className="mt-12">
-              <LandingSectionHeader title="Operational outcomes" />
-              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {extra.outcomes.map((o) => (
-                  <li key={o} className="fl-card p-4 text-sm text-muted-foreground">
-                    {o}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {extra.note && (
-            <p className="mt-8 rounded-lg border border-border/70 bg-fl-subtle p-4 text-xs leading-relaxed text-muted-foreground">
-              {extra.note}
-            </p>
-          )}
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link to="/book-audit" className="fl-btn-primary px-5">
-              Request a workflow review <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/solutions" className="fl-btn-ghost px-5">
-              All solutions
-            </Link>
+            </Reveal>
+            <Reveal delay={0.12} className="lg:col-span-5">
+              <div className="rounded-[2rem] border border-line bg-white p-6 shadow-[0_40px_80px_-48px_rgba(11,26,19,0.4)]">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">Your stack, built by FreshLien</p>
+                <ul className="mt-5 space-y-2">
+                  {sol.services.map((slug, i) => {
+                    const svc = getService(slug);
+                    if (!svc) return null;
+                    const SvcIcon = svc.icon;
+                    return (
+                      <li key={slug}>
+                        <Link
+                          to={`/services/${slug}`}
+                          className="group flex items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-paper"
+                        >
+                          <span
+                            className={
+                              i === 0
+                                ? 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-zest'
+                                : 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100'
+                            }
+                          >
+                            <SvcIcon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                          </span>
+                          <span className="text-[15px] font-semibold text-ink">{svc.name}</span>
+                          <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-mute">{svc.timeline}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </Reveal>
           </div>
-        </LandingContainer>
+        </Container>
       </section>
+
+      <Section>
+        <Container>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <Reveal className="h-full">
+              <div className="h-full rounded-[2rem] border border-line bg-white p-8 sm:p-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">The problem</p>
+                <h2 className="mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">
+                  What slows teams like yours down
+                </h2>
+                <ul className="mt-8 space-y-4">
+                  {sol.pains.map((p) => (
+                    <li key={p} className="flex items-start gap-3 text-[15px] leading-relaxed text-ink-soft">
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper text-ink-mute ring-1 ring-line">
+                        <X className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+            <Reveal delay={0.08} className="h-full">
+              <div className="relative h-full overflow-hidden rounded-[2rem] bg-ink p-8 text-white sm:p-10">
+                <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
+                <p className="relative font-mono text-[11px] uppercase tracking-[0.16em] text-zest">What we build</p>
+                <h2 className="relative mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] !text-white sm:text-3xl">
+                  A system built around your deals
+                </h2>
+                <CheckList items={sol.builds} onDark className="relative mt-8 !gap-4" />
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </Section>
+
+      <Section tone="paper">
+        <Container>
+          <SectionHeading eyebrow="Services involved" title="The services behind" accent="this solution." />
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {sol.services
+              .map(getService)
+              .filter(Boolean)
+              .map((service, i) => (
+                <ServiceCard key={service.slug} service={service} index={i} />
+              ))}
+          </div>
+        </Container>
+      </Section>
+
+      {examples.length > 0 && (
+        <Section>
+          <Container>
+            <SectionHeading eyebrow="Example work" title="Systems we build for" accent="teams like yours." />
+            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {examples.map((e, i) => (
+                <ExampleCard key={e.slug} example={e} index={i} />
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      <Section tone="paper">
+        <Container>
+          <SectionHeading eyebrow="How we work" title="Plan, build, launch," accent="improve." />
+          <div className="mt-14">
+            <ProcessSteps />
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="!py-16">
+        <Container>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">Other solutions</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {others.map((o) => (
+              <Link
+                key={o.slug}
+                to={`/solutions/${o.slug}`}
+                className="rounded-full border border-line px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:border-ink hover:text-ink"
+              >
+                {o.name}
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <CtaBand />
     </MarketingPageShell>
   );
 }

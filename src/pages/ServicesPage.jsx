@@ -1,149 +1,111 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
-import MarketingPageHero from '@/components/landing/MarketingPageHero';
-import { LandingContainer, LandingSectionHeader } from '@/components/landing/LandingLayout';
-import {
-  SERVICE_PACKAGES,
-  OFFER_DISCLAIMER,
-  GOOD_FIT,
-  ENGAGEMENT_MODEL,
-} from '@/data/servicePackages';
-import { POSITIONING } from '@/data/sitePositioning';
-import { SITE_FAQS } from '@/data/solutionsContent';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import CtaBand from '@/components/site/CtaBand';
+import { EngagementCards, StackMarquee } from '@/components/site/blocks';
+import { ButtonLink, Container, IconTile, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
+import { SERVICES } from '@/data/siteContent';
+
+function ServiceRow({ service, index }) {
+  return (
+    <Reveal>
+      <Link
+        to={`/services/${service.slug}`}
+        className="group grid gap-6 border-t border-line py-10 transition-colors lg:grid-cols-12 lg:gap-10"
+      >
+        <div className="flex items-start gap-5 lg:col-span-5">
+          <span className="pt-1 font-mono text-sm text-ink-mute">{String(index + 1).padStart(2, '0')}</span>
+          <div>
+            <IconTile icon={service.icon} className="transition-colors group-hover:bg-ink group-hover:text-zest group-hover:ring-ink" />
+            <h2 className="mt-5 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-[1.75rem]">
+              {service.name}
+            </h2>
+            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">{service.short}</p>
+          </div>
+        </div>
+        <div className="lg:col-span-6">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">What you get</p>
+          <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            {service.deliverables.slice(0, 4).map((d) => (
+              <li key={d} className="flex gap-2.5 text-[14.5px] leading-snug text-ink-soft">
+                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500" />
+                {d}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {service.stack.slice(0, 5).map((t) => (
+              <span key={t} className="site-chip">
+                {t}
+              </span>
+            ))}
+            <span className="site-chip !border-transparent !bg-leaf-50 !text-leaf">Typical: {service.timeline}</span>
+          </div>
+        </div>
+        <div className="flex items-start justify-end lg:col-span-1">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-zest">
+            <ArrowUpRight className="h-5 w-5" />
+          </span>
+        </div>
+      </Link>
+    </Reveal>
+  );
+}
 
 export default function ServicesPage() {
   return (
     <MarketingPageShell
+      overlapNav
       seo={{
-        title: 'Data Engineering, Automation & AI Services',
+        title: 'Services',
         description:
-          'FreshLien offers data engineering, automation, and AI services for real estate teams. Clean leads, CRM workflows, follow-up, and offers scoped after we talk.',
+          'Real estate data engineering, zoning and land-use intelligence, permit data, deal sourcing, AI and predictive analytics, CRM automation, campaigns, and custom software. Scoped to your markets.',
         path: '/services',
       }}
     >
-      <MarketingPageHero
+      <PageHero
         eyebrow="Services"
-        title="Data engineering, automation,"
-        titleHighlight="and AI services"
-        description="Not a generic agency and not just a data dump. We engineer your property data, automate the busywork, and apply AI where it actually helps. Start with one bottleneck. Expand when the pilot works."
-      />
+        title="Everything your real estate operation needs,"
+        accent="built by one team."
+        description="Data, AI, automation, outreach, and software. Pick a single service or combine them into one connected system. You own everything we build."
+      >
+        <div className="mt-10 flex flex-wrap gap-3">
+          <ButtonLink to="/book-audit" arrow>
+            Book a strategy call
+          </ButtonLink>
+          <ButtonLink to="/solutions" variant="secondary">
+            Find your solution
+          </ButtonLink>
+        </div>
+      </PageHero>
 
-      <section className="border-b border-border/60 bg-fl-subtle py-10 lg:py-12">
-        <LandingContainer>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {POSITIONING.capabilities.map((cap) => (
-              <div key={cap.id} className="rounded-xl border border-border/70 bg-white p-5">
-                <h2 className="text-sm font-semibold text-foreground">{cap.label}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cap.text}</p>
-              </div>
-            ))}
-          </div>
-        </LandingContainer>
-      </section>
+      <Section className="!pt-16">
+        <Container>
+          {SERVICES.map((s, i) => (
+            <ServiceRow key={s.slug} service={s} index={i} />
+          ))}
+          <div className="border-t border-line" />
+        </Container>
+      </Section>
 
-      <section className="py-14 lg:py-20">
-        <LandingContainer>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {SERVICE_PACKAGES.map((pkg) => (
-              <div key={pkg.id} className="fl-card flex h-full flex-col p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-lg font-semibold text-foreground">{pkg.name}</h2>
-                  <p className="shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                    {pkg.offerLabel}
-                  </p>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">{pkg.offerNote}</p>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{pkg.description}</p>
-                <ul className="mt-4 flex-1 space-y-1.5">
-                  {pkg.deliverables.map((d) => (
-                    <li key={d} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                      {d}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-xs text-muted-foreground">Best for: {pkg.bestFor}</p>
-                <Link to={pkg.href} className="fl-btn-primary mt-5">
-                  {pkg.cta} <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">{OFFER_DISCLAIMER}</p>
-        </LandingContainer>
-      </section>
+      <StackMarquee />
 
-      <section className="border-t border-border/60 bg-fl-subtle py-14 lg:py-20">
-        <LandingContainer>
-          <LandingSectionHeader
-            title="Engagement model"
-            description="A controlled path from audit to production, not an open-ended build."
+      <Section tone="paper">
+        <Container>
+          <SectionHeading
+            align="center"
+            eyebrow="Engagements"
+            title="Start small or"
+            accent="go all in."
+            description="Every service can be delivered as a fixed-scope project or as part of an ongoing embedded team."
           />
-          <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {ENGAGEMENT_MODEL.map((step, i) => (
-              <li key={step} className="fl-card p-5 text-sm">
-                <span className="font-bold text-primary/40">0{i + 1}</span>
-                <p className="mt-1 font-semibold text-foreground">{step}</p>
-              </li>
-            ))}
-          </ol>
-        </LandingContainer>
-      </section>
-
-      <section className="py-14 lg:py-20">
-        <LandingContainer>
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div>
-              <h2 className="text-xl font-semibold text-foreground">Good fit</h2>
-              <ul className="mt-4 space-y-2">
-                {GOOD_FIT.yes.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-foreground">May not be a fit</h2>
-              <ul className="mt-4 space-y-2">
-                {GOOD_FIT.no.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="mt-14">
+            <EngagementCards />
           </div>
-        </LandingContainer>
-      </section>
+        </Container>
+      </Section>
 
-      <section className="border-t border-border/60 bg-fl-subtle py-14">
-        <LandingContainer>
-          <LandingSectionHeader title="FAQ" />
-          <Accordion type="single" collapsible className="mx-auto max-w-3xl">
-            {SITE_FAQS.map((item, i) => (
-              <AccordionItem key={item.q} value={`s-faq-${i}`}>
-                <AccordionTrigger className="text-left text-sm font-semibold">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-          <div className="mt-10 text-center">
-            <Link to="/book-audit" className="fl-btn-primary px-6">
-              Request a workflow review <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </LandingContainer>
-      </section>
+      <CtaBand title="Not sure which service you need?" accent="That is what the first call is for." />
     </MarketingPageShell>
   );
 }

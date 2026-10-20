@@ -8,8 +8,8 @@ import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from '@/components/ScrollToTop';
 
 import Landing from './pages/Landing';
-import PlatformPage from './pages/PlatformPage';
 import ServicesPage from './pages/ServicesPage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
 import SolutionsIndexPage from './pages/SolutionsIndexPage';
 import SolutionDetailPage from './pages/SolutionDetailPage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -58,10 +58,11 @@ function AppRoutes() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/platform" element={<PlatformPage />} />
+        <Route path="/platform" element={<Navigate to="/services" replace />} />
         <Route path="/solutions" element={<SolutionsIndexPage />} />
         <Route path="/solutions/:slug" element={<SolutionDetailPage />} />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/case-studies" element={<CaseStudiesPage />} />
         <Route path="/resources" element={<ResourcesPage />} />

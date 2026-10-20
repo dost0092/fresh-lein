@@ -1,74 +1,64 @@
-import { Link } from 'react-router-dom';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
-import MarketingPageHero from '@/components/landing/MarketingPageHero';
-import { LandingContainer } from '@/components/landing/LandingLayout';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import { FAQ_ITEMS } from '@/data/faq';
-import { COMPANY, CONTACT_MAILTO } from '@/data/company';
+import CtaBand from '@/components/site/CtaBand';
+import { Accordion, Container, PageHero, Section } from '@/components/site/ui';
+import { SITE_FAQS } from '@/data/siteContent';
+
+const MORE_FAQS = [
+  {
+    q: 'Do you sell data or software subscriptions?',
+    a: 'Our focus is services: we build data, AI, CRM, and campaign systems for you. Where it helps, we can also connect the data products you already subscribe to so everything flows into one place.',
+  },
+  {
+    q: 'Who will we work with day to day?',
+    a: 'A lead engineer and a project manager who stay with your project from blueprint to launch, plus specialists in data, AI, or campaigns as the scope needs. You get a shared channel and a weekly demo.',
+  },
+  {
+    q: 'How do you handle data security and privacy?',
+    a: 'We work in your accounts wherever possible, use least-privilege access, and keep credentials in managed secret stores. We follow the terms of each data source and the consent rules that apply to outreach.',
+  },
+  {
+    q: 'Can you work with our in-house developers?',
+    a: 'Yes. We often pair with internal teams, follow your code standards and review process, and leave documentation so your team can own the system after launch.',
+  },
+  {
+    q: 'Do you work outside the United States?',
+    a: 'Most of our public-records work is US-focused. AI, CRM, campaign, and software projects can serve teams anywhere. Ask us about your market.',
+  },
+];
+
+const ALL = [...SITE_FAQS, ...MORE_FAQS];
 
 export default function FaqPage() {
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: FAQ_ITEMS.map((item) => ({
-      '@type': 'Question',
-      name: item.q,
-      acceptedAnswer: { '@type': 'Answer', text: item.a },
-    })),
-  };
-
   return (
     <MarketingPageShell
+      overlapNav
       seo={{
-        title: 'FAQ: Foreclosure Data, Coverage & Pricing',
-        description:
-          'Answers about FreshLien foreclosure data, county coverage, data freshness, pricing plans, CSV export, API access, and county alerts.',
+        title: 'FAQ',
+        description: 'Answers about FreshLien services, pricing, timelines, ownership, security, and how we work with real estate teams.',
         path: '/faq',
-        jsonLd: faqSchema,
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: ALL.map(({ q, a }) => ({
+            '@type': 'Question',
+            name: q,
+            acceptedAnswer: { '@type': 'Answer', text: a },
+          })),
+        },
       }}
     >
-      <MarketingPageHero
+      <PageHero
         eyebrow="FAQ"
-        title="Frequently asked questions"
-        description="Everything you need to know about FreshLien, our data, and plans."
+        title="Questions,"
+        accent="answered."
+        description="Everything teams usually ask before working with us. If yours is not here, just ask."
       />
-
-      <section className="pb-14 lg:pb-16">
-        <LandingContainer>
-          <div className="mx-auto max-w-3xl">
-            <Accordion type="single" collapsible className="w-full">
-              {FAQ_ITEMS.map((item, i) => (
-                <AccordionItem key={item.q} value={`item-${i}`}>
-                  <AccordionTrigger className="text-left text-sm font-semibold text-foreground hover:text-primary">
-                    {item.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                    {item.a}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-
-            <div className="mt-10 rounded-lg border border-border bg-[#FAFAFA] p-8 text-center">
-              <p className="text-sm text-muted-foreground">Still have questions?</p>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                <Button asChild>
-                  <Link to="/contact">Contact us</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <a href={CONTACT_MAILTO}>{COMPANY.contactEmail}</a>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </LandingContainer>
-      </section>
+      <Section>
+        <Container size="narrow">
+          <Accordion items={ALL} />
+        </Container>
+      </Section>
+      <CtaBand title="Still have a question?" accent="Ask us on a call." />
     </MarketingPageShell>
   );
 }
