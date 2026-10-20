@@ -228,7 +228,7 @@ export default function MarketingNav({ tone = 'light' }) {
   const dark = tone === 'dark' && !solid;
 
   const linkBase =
-    'inline-flex h-10 items-center gap-1 rounded-full px-3.5 text-[14.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf-500';
+    'inline-flex h-10 items-center gap-1 whitespace-nowrap rounded-full px-3 text-[14.5px] font-medium transition-colors xl:px-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf-500';
 
   return (
     <>
@@ -290,7 +290,7 @@ export default function MarketingNav({ tone = 'light' }) {
           <Link
             to={isAuthenticated ? APP_HOME : '/login'}
             className={cn(
-              'inline-flex h-10 items-center rounded-full px-4 text-[14.5px] font-medium transition-colors',
+              'inline-flex h-10 items-center whitespace-nowrap rounded-full px-3 text-[14.5px] font-medium transition-colors',
               dark ? 'text-white/70 hover:text-white' : 'text-ink-soft hover:text-ink'
             )}
           >
