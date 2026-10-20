@@ -1,6 +1,6 @@
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import CtaBand from '@/components/site/CtaBand';
-import { StackMarquee } from '@/components/site/blocks';
+import { IntegrationsSection } from '@/components/site/Integrations';
 import { ButtonLink, Container, Eyebrow, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
 import { BRAND, PRINCIPLES, SERVICES, SOLUTIONS } from '@/data/siteContent';
 
@@ -126,7 +126,7 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <StackMarquee />
+      <IntegrationsSection />
       <CtaBand />
     </MarketingPageShell>
   );

@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import CtaBand from '@/components/site/CtaBand';
-import { EngagementCards, StackMarquee } from '@/components/site/blocks';
+import { EngagementCards } from '@/components/site/blocks';
+import { IntegrationsSection } from '@/components/site/Integrations';
 import { ButtonLink, Container, IconTile, PageHero, Reveal, Section, SectionHeading } from '@/components/site/ui';
 import { SERVICES } from '@/data/siteContent';
 
@@ -88,7 +89,7 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      <StackMarquee />
+      <IntegrationsSection />
 
       <Section tone="paper">
         <Container>

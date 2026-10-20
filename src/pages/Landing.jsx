@@ -4,12 +4,13 @@ import MarketingPageShell from '@/components/landing/MarketingPageShell';
 import { BASE_URL } from '@/components/seo/Seo';
 import HeroVisual from '@/components/site/HeroVisual';
 import CtaBand from '@/components/site/CtaBand';
+import TrustSection from '@/components/site/TrustSection';
+import { IntegrationsSection, ToolStrip } from '@/components/site/Integrations';
 import { LogoMark } from '@/components/site/SiteLogo';
 import {
   Accordion,
   ButtonLink,
   Container,
-  Eyebrow,
   Reveal,
   Section,
   SectionHeading,
@@ -21,14 +22,12 @@ import {
   ExampleCard,
   ProcessSteps,
   ServiceCard,
-  StackMarquee,
 } from '@/components/site/blocks';
 import { COMPANY } from '@/data/company';
 import {
   BRAND,
   CATEGORIES_WE_COVER,
   EXAMPLE_ENGAGEMENTS,
-  PRINCIPLES,
   SERVICES,
   SITE_FAQS,
 } from '@/data/siteContent';
@@ -216,7 +215,7 @@ function Services() {
 
 function Audiences() {
   return (
-    <Section tone="paper">
+    <Section>
       <Container>
         <SectionHeading
           eyebrow="Solutions"
@@ -234,7 +233,7 @@ function Audiences() {
 
 function HowWeWork() {
   return (
-    <Section>
+    <Section tone="paper">
       <Container>
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <SectionHeading
@@ -274,36 +273,6 @@ function ExampleWork() {
           {EXAMPLE_ENGAGEMENTS.slice(0, 3).map((e, i) => (
             <ExampleCard key={e.slug} example={e} index={i} />
           ))}
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
-function Principles() {
-  return (
-    <Section>
-      <Container>
-        <div className="grid gap-14 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <Reveal>
-              <Eyebrow>Why FreshLien</Eyebrow>
-              <p className="mt-6 font-tight text-[2rem] font-semibold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
-                “Most real estate teams don’t need another subscription.{' '}
-                <span className="site-accent text-ink-mute">They need someone to build the system.</span>”
-              </p>
-              <p className="mt-6 text-[15px] text-ink-mute">The idea FreshLien was founded on.</p>
-            </Reveal>
-          </div>
-          <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-7">
-            {PRINCIPLES.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.06}>
-                <span className="font-mono text-sm text-ink-mute">0{i + 1}</span>
-                <h3 className="site-h3 mt-3">{p.title}</h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{p.body}</p>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </Container>
     </Section>
@@ -372,13 +341,14 @@ export default function Landing() {
       }}
     >
       <Hero />
-      <StackMarquee />
+      <ToolStrip />
       <OneTeam />
       <Services />
       <Audiences />
       <HowWeWork />
+      <IntegrationsSection />
       <ExampleWork />
-      <Principles />
+      <TrustSection />
       <Engagements />
       <Faq />
       <CtaBand />

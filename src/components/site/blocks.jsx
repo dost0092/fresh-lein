@@ -8,8 +8,6 @@ import {
   ENGAGEMENTS,
   PROCESS,
   SOLUTIONS,
-  STACK,
-  TRUSTED_BY,
   getService,
 } from '@/data/siteContent';
 
@@ -35,32 +33,6 @@ export function ServiceCard({ service, index = 0, className }) {
   );
 }
 
-export function StackMarquee({ label = 'We build on and integrate with the tools you already use' }) {
-  const hasClients = TRUSTED_BY.length > 0;
-  const items = hasClients ? TRUSTED_BY : STACK;
-  const row = [...items, ...items];
-  return (
-    <div className="border-y border-line bg-white py-10">
-      <p className="mb-7 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute">
-        {hasClients ? 'Trusted by real estate teams at' : label}
-      </p>
-      <div className="site-marquee-mask overflow-hidden">
-        <div className="flex w-max animate-marquee items-center gap-14 pr-14 hover:[animation-play-state:paused]">
-          {row.map((name, i) => (
-            <span
-              key={`${name}-${i}`}
-              className="whitespace-nowrap font-tight text-xl font-semibold tracking-[-0.02em] text-ink/35 transition-colors hover:text-ink"
-              aria-hidden={i >= items.length}
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function AudienceExplorer() {
   const [active, setActive] = useState(0);
   const sol = SOLUTIONS[active];
@@ -81,7 +53,7 @@ export function AudienceExplorer() {
                 onClick={() => setActive(i)}
                 className={cn(
                   'flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all lg:w-full',
-                  isActive ? 'bg-white text-ink shadow-sm ring-1 ring-line' : 'text-ink-soft hover:bg-white/70 hover:text-ink'
+                  isActive ? 'bg-paper text-ink ring-1 ring-line' : 'text-ink-soft hover:bg-paper/70 hover:text-ink'
                 )}
               >
                 <Icon className={cn('h-[18px] w-[18px]', isActive ? 'text-ink' : 'text-ink-mute')} strokeWidth={1.75} />
