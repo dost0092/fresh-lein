@@ -55,7 +55,7 @@ export default function LeadForm({ variant = 'full', subject, defaults = {}, sen
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
       {isFull && <input type="hidden" name="services" value={services.join(', ') || 'Not specified'} />}
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field label="Full name" htmlFor="lf-name">
           <input id="lf-name" name="name" required autoComplete="name" className="site-input" placeholder="Jane Doe" />
         </Field>
@@ -120,7 +120,7 @@ export default function LeadForm({ variant = 'full', subject, defaults = {}, sen
             </div>
           </fieldset>
 
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <Field label="Engagement" htmlFor="lf-engagement">
               <select id="lf-engagement" name="engagement" defaultValue={defaults.engagement || 'Not sure yet'} className="site-input">
                 <option>Not sure yet</option>

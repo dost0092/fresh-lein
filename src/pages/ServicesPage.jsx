@@ -12,7 +12,7 @@ function ServiceRow({ service, index }) {
     <Reveal>
       <Link
         to={`/services/${service.slug}`}
-        className="group grid gap-6 border-t border-line py-10 transition-colors lg:grid-cols-12 lg:gap-10"
+        className="group grid grid-cols-1 gap-6 border-t border-line py-10 transition-colors lg:grid-cols-12 lg:gap-10"
       >
         <div className="flex items-start gap-5 lg:col-span-5">
           <span className="pt-1 font-mono text-sm text-ink-mute">{String(index + 1).padStart(2, '0')}</span>
@@ -26,7 +26,7 @@ function ServiceRow({ service, index }) {
         </div>
         <div className="lg:col-span-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">What you get</p>
-          <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+          <ul className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2">
             {service.deliverables.slice(0, 4).map((d) => (
               <li key={d} className="flex gap-2.5 text-[14.5px] leading-snug text-ink-soft">
                 <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink/25" />

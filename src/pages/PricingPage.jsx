@@ -48,7 +48,7 @@ export default function PricingPage() {
 
       <Section tone="paper">
         <Container>
-          <div className="grid gap-14 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
             <Reveal>
               <SectionHeading eyebrow="What affects cost" title="Every quote is" accent="built from scope." />
               <p className="site-lead mt-6">

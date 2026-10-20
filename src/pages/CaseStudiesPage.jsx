@@ -38,7 +38,7 @@ export default function CaseStudiesPage() {
               figures are kept private. Ask us on a call and we will walk you through work relevant to your team.
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {EXAMPLE_ENGAGEMENTS.map((e, i) => (
               <ExampleCard key={e.slug} example={e} index={i} expanded />
             ))}

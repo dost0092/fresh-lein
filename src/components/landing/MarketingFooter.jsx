@@ -45,7 +45,7 @@ export default function MarketingFooter() {
     <footer className="relative overflow-hidden bg-ink text-white">
       <div className="site-grid-bg-dark pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <Container className="relative pb-10 pt-20">
-        <div className="grid gap-12 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SiteLogo onDark />
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/60">{BRAND.promise}</p>
@@ -59,7 +59,7 @@ export default function MarketingFooter() {
             <SocialLinks className="mt-6" onDark />
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-8">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-8">
             <Column
               title="Services"
               links={SERVICES.map((s) => ({ label: s.name, to: `/services/${s.slug}` }))}

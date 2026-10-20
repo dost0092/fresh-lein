@@ -65,7 +65,7 @@ export default function BlogPage() {
               to={`/blog/${featured.slug}`}
               className="group mb-10 block overflow-hidden rounded-2xl border border-border bg-white shadow-card transition-shadow hover:shadow-card-hover lg:mb-14"
             >
-              <div className="grid gap-0 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-0 lg:grid-cols-2">
                 <div className="flex items-center justify-center bg-primary/5 p-8 lg:p-12">
                   <div className="text-center">
                     <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -93,7 +93,7 @@ export default function BlogPage() {
             </Link>
           )}
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((post) => (
               <Link
                 key={post.slug}

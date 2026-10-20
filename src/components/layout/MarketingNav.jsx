@@ -51,7 +51,7 @@ function MegaPanel({ menuKey, onNavigate }) {
       transition={{ duration: 0.18, ease: 'easeOut' }}
       className="absolute inset-x-0 top-full border-b border-line bg-white shadow-[0_32px_64px_-32px_rgba(11,26,19,0.25)]"
     >
-      <div className="mx-auto grid max-w-7xl gap-8 px-8 py-8 lg:grid-cols-12">
+      <div className="mx-auto grid grid-cols-1 max-w-7xl gap-8 px-8 py-8 lg:grid-cols-12">
         <div className={cn(isCompany ? 'lg:col-span-7' : 'lg:col-span-9')}>
           <div className={cn('grid gap-1', isCompany ? 'grid-cols-2' : 'grid-cols-2')}>
             {menu.items.map((item) => {

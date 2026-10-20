@@ -35,7 +35,7 @@ export default function BookAuditPage() {
       <section className="relative overflow-hidden bg-paper">
         <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
         <Container className="relative pb-24 pt-32 sm:pt-36 lg:pt-44">
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
               <Eyebrow>Book a strategy call</Eyebrow>
               <h1 className="site-display mt-5 !text-[2.6rem] sm:!text-[3.4rem]">

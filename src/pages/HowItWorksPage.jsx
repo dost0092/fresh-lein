@@ -65,7 +65,7 @@ export default function HowItWorksPage() {
       <Section tone="paper">
         <Container>
           <SectionHeading eyebrow="Our principles" title="The rules we" accent="work by." />
-          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.06} className="h-full">
                 <div className="h-full rounded-3xl border border-line bg-white p-7">

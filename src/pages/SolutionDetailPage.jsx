@@ -41,7 +41,7 @@ export default function SolutionDetailPage() {
               Solutions <span className="text-ink/25">/</span> <span className="text-ink">{sol.name}</span>
             </Link>
           </Reveal>
-          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-center">
+          <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
             <Reveal delay={0.05} className="lg:col-span-7">
               <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink shadow-sm">
                 <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-white">
@@ -98,7 +98,7 @@ export default function SolutionDetailPage() {
 
       <Section>
         <Container>
-          <div className="grid gap-5 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <Reveal className="h-full">
               <div className="h-full rounded-[2rem] border border-line bg-white p-8 sm:p-10">
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">The problem</p>
@@ -133,7 +133,7 @@ export default function SolutionDetailPage() {
       <Section tone="paper">
         <Container>
           <SectionHeading eyebrow="Services involved" title="The services behind" accent="this solution." />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {sol.services
               .map(getService)
               .filter(Boolean)
@@ -148,7 +148,7 @@ export default function SolutionDetailPage() {
         <Section>
           <Container>
             <SectionHeading eyebrow="Example work" title="Systems we build for" accent="teams like yours." />
-            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {examples.map((e, i) => (
                 <ExampleCard key={e.slug} example={e} index={i} />
               ))}

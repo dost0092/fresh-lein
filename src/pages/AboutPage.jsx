@@ -42,7 +42,7 @@ export default function AboutPage() {
 
       <Section>
         <Container>
-          <div className="grid gap-14 lg:grid-cols-12">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-12">
             <Reveal className="lg:col-span-5">
               <Eyebrow>Our story</Eyebrow>
               <p className="mt-6 font-tight text-[1.75rem] font-semibold leading-[1.2] tracking-[-0.025em] text-ink sm:text-[2.1rem]">
@@ -91,14 +91,14 @@ export default function AboutPage() {
 
       <Section>
         <Container>
-          <div className="grid gap-14 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
             <SectionHeading
               eyebrow="Domain depth"
               title="We speak"
               accent="real estate."
               description="You will not spend the first month teaching us the business. These are the systems and workflows we work in every day."
             />
-            <ul className="grid gap-3 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {DOMAIN.map((d, i) => (
                 <Reveal key={d} delay={(i % 2) * 0.05} as="li">
                   <div className="h-full rounded-2xl border border-line p-5 text-[15px] font-medium text-ink">{d}</div>
@@ -112,7 +112,7 @@ export default function AboutPage() {
       <Section tone="paper">
         <Container>
           <SectionHeading eyebrow="What we believe" title="How we" accent="show up." />
-          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.06} className="h-full">
                 <div className="h-full rounded-3xl border border-line bg-white p-7">

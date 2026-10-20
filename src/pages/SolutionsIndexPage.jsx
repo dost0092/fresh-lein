@@ -32,7 +32,7 @@ export default function SolutionsIndexPage() {
 
       <Section>
         <Container>
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {SOLUTIONS.map((s, i) => (
               <Reveal key={s.slug} delay={(i % 2) * 0.06} className="h-full">
                 <Link

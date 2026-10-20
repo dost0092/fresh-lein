@@ -71,7 +71,7 @@ function Hero() {
       <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
 
       <Container className="relative pb-24 pt-32 sm:pt-36 lg:pb-32 lg:pt-44">
-        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-10">
+        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
             <Reveal>
               <Link
@@ -131,7 +131,7 @@ function OneTeam() {
   return (
     <Section>
       <Container>
-        <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
             <SectionHeading
               eyebrow="One team, not six vendors"
@@ -203,7 +203,7 @@ function Services() {
             All services
           </ButtonLink>
         </div>
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((s, i) => (
             <ServiceCard key={s.slug} service={s} index={i} />
           ))}
@@ -269,7 +269,7 @@ function ExampleWork() {
             More examples
           </ButtonLink>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {EXAMPLE_ENGAGEMENTS.slice(0, 3).map((e, i) => (
             <ExampleCard key={e.slug} example={e} index={i} />
           ))}
@@ -302,7 +302,7 @@ function Faq() {
   return (
     <Section>
       <Container>
-        <div className="grid gap-12 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SectionHeading eyebrow="FAQ" title="Questions," accent="answered." />
             <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">

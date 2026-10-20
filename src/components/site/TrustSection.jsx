@@ -45,7 +45,7 @@ export default function TrustSection() {
           accent="No lock-in."
           description="Working with an outside team should feel safe. Here is what you can expect from day one."
         />
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ITEMS.map(({ icon: Icon, title, body }, i) => (
             <Reveal key={title} delay={(i % 3) * 0.05} className="h-full">
               <div className="flex h-full gap-4 rounded-2xl border border-line bg-white p-6">

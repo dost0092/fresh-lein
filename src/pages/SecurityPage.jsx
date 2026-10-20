@@ -51,7 +51,7 @@ export default function SecurityPage() {
             title="Security by design"
             description="We follow standard SaaS security practices and continuously improve as we scale."
           />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {practices.map(({ icon: Icon, title, text }) => (
               <div key={title} className="rounded-xl border border-border/60 bg-white p-5">
                 <div className="icon-surface mb-3 h-10 w-10">

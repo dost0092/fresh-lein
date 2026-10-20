@@ -19,7 +19,7 @@ export default function CtaBand({
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-20 lg:py-24">
           <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
           <Container className="relative !px-0">
-            <div className="grid items-end gap-12 lg:grid-cols-12">
+            <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
               <div className="lg:col-span-8">
                 <h2 className="site-h2 !text-white">
                   {title} <span className="site-accent text-white/55">{accent}</span>

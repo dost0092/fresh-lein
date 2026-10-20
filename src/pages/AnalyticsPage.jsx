@@ -91,7 +91,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Charts Row 1 */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Filing by State */}
             <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Filings by State</h3>
@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Charts Row 2 */}
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Monthly Trend */}
             <div className="bg-white rounded-lg border border-border p-6 shadow-card">
               <h3 className="font-heading font-semibold text-foreground mb-4 text-sm">Monthly Filing Trend</h3>

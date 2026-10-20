@@ -38,7 +38,7 @@ export function AudienceExplorer() {
   const sol = SOLUTIONS[active];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-10">
       <div className="lg:col-span-4">
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0" role="tablist">
           {SOLUTIONS.map((s, i) => {
@@ -80,7 +80,7 @@ export function AudienceExplorer() {
               {sol.headline}
             </h3>
 
-            <div className="relative mt-8 grid gap-8 sm:grid-cols-2">
+            <div className="relative mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div>
                 <p className="text-sm font-semibold text-ink-mute">What gets in the way</p>
                 <ul className="mt-4 space-y-3">
@@ -155,7 +155,7 @@ export function ProcessSteps({ compact = false }) {
 
 export function EngagementCards() {
   return (
-    <div className="grid gap-5 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
       {ENGAGEMENTS.map((e, i) => (
         <Reveal key={e.name} delay={i * 0.08} className="h-full">
           <div

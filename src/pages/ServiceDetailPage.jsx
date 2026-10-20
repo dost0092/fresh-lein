@@ -53,7 +53,7 @@ export default function ServiceDetailPage() {
               Services <span className="text-ink/25">/</span> <span className="text-ink">{service.name}</span>
             </Link>
           </Reveal>
-          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-end">
+          <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
               <Reveal delay={0.05}>
                 <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-ink ring-1 ring-line">
@@ -96,7 +96,7 @@ export default function ServiceDetailPage() {
       <Section>
         <Container>
           <SectionHeading eyebrow="What we deliver" title="Concrete deliverables," accent="not slideware." />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {service.deliverables.map((d, i) => (
               <Reveal key={d} delay={(i % 3) * 0.06}>
                 <div className="site-card h-full p-7">
@@ -112,14 +112,14 @@ export default function ServiceDetailPage() {
       {/* Use cases + who it's for */}
       <Section tone="paper">
         <Container>
-          <div className="grid gap-14 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
             <div>
               <SectionHeading eyebrow="Use cases" title="Where teams" accent="put it to work." />
               <CheckList items={service.useCases} className="mt-10" />
             </div>
             <div>
               <Eyebrow>Who it is for</Eyebrow>
-              <div className="mt-6 grid gap-3">
+              <div className="mt-6 grid grid-cols-1 gap-3">
                 {audiences.map((a) => (
                   <Link
                     key={a.slug}
@@ -159,7 +159,7 @@ export default function ServiceDetailPage() {
         <Section tone="paper">
           <Container>
             <SectionHeading eyebrow="Example work" title="What this looks like" accent="in practice." />
-            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {examples.map((e, i) => (
                 <ExampleCard key={e.slug} example={e} index={i} />
               ))}
@@ -171,7 +171,7 @@ export default function ServiceDetailPage() {
       <Section>
         <Container>
           <SectionHeading eyebrow="Pairs well with" title="Combine services into" accent="one system." />
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {others.map((s, i) => (
               <ServiceCard key={s.slug} service={s} index={i} />
             ))}
