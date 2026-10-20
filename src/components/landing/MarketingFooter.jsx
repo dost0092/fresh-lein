@@ -51,9 +51,9 @@ export default function MarketingFooter() {
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/60">{BRAND.promise}</p>
             <a
               href={CONTACT_MAILTO}
-              className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-white/85 transition-colors hover:text-zest"
+              className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-white/85 transition-colors hover:text-white"
             >
-              <Mail className="h-4 w-4 text-zest" />
+              <Mail className="h-4 w-4 text-white/60" />
               {COMPANY.contactEmail}
             </a>
             <SocialLinks className="mt-6" onDark />

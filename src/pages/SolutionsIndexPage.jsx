@@ -40,8 +40,8 @@ export default function SolutionsIndexPage() {
                   className="site-card site-card-hover group flex h-full flex-col p-8 sm:p-10"
                 >
                   <div className="flex items-start justify-between">
-                    <IconTile icon={s.icon} className="transition-colors group-hover:bg-ink group-hover:text-zest group-hover:ring-ink" />
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-zest">
+                    <IconTile icon={s.icon} className="transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink" />
+                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-white">
                       <ArrowUpRight className="h-5 w-5" />
                     </span>
                   </div>
@@ -50,7 +50,7 @@ export default function SolutionsIndexPage() {
                   <ul className="mt-6 flex-1 space-y-2">
                     {s.builds.slice(0, 3).map((b) => (
                       <li key={b} className="flex gap-2.5 text-[14.5px] text-ink-soft">
-                        <span className="mt-[8px] h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500" />
+                        <span className="mt-[8px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink/25" />
                         {b}
                       </li>
                     ))}

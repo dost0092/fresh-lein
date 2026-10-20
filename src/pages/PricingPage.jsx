@@ -58,13 +58,12 @@ export default function PricingPage() {
               <CheckList items={COST_DRIVERS} className="mt-8" />
             </Reveal>
             <Reveal delay={0.08}>
-              <div className="relative h-full overflow-hidden rounded-[2rem] bg-ink p-8 text-white sm:p-10">
-                <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
-                <p className="relative font-mono text-[11px] uppercase tracking-[0.16em] text-zest">Always included</p>
-                <h3 className="relative mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] !text-white sm:text-3xl">
+              <div className="h-full rounded-[2rem] border border-line bg-white p-8 sm:p-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">Always included</p>
+                <h3 className="mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">
                   What every engagement comes with
                 </h3>
-                <CheckList items={ALWAYS_INCLUDED} onDark className="relative mt-8 !gap-4" />
+                <CheckList items={ALWAYS_INCLUDED} className="mt-8 !gap-4" />
               </div>
             </Reveal>
           </div>

@@ -47,7 +47,7 @@ export default function AboutPage() {
               <Eyebrow>Our story</Eyebrow>
               <p className="mt-6 font-tight text-[1.75rem] font-semibold leading-[1.2] tracking-[-0.025em] text-ink sm:text-[2.1rem]">
                 FreshLien started by turning messy county records into clean leads.{' '}
-                <span className="site-accent text-leaf">Clients kept asking us to build the rest.</span>
+                <span className="site-accent text-ink-mute">Clients kept asking us to build the rest.</span>
               </p>
             </Reveal>
             <Reveal delay={0.08} className="space-y-5 text-[16px] leading-relaxed text-ink-soft lg:col-span-7">
@@ -109,17 +109,16 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <Section tone="ink" className="overflow-hidden">
-        <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-        <Container className="relative">
-          <SectionHeading onDark eyebrow="What we believe" title="How we" accent="show up." />
+      <Section tone="paper">
+        <Container>
+          <SectionHeading eyebrow="What we believe" title="How we" accent="show up." />
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.06} className="h-full">
-                <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-7">
-                  <span className="font-mono text-sm text-zest">0{i + 1}</span>
-                  <h3 className="mt-6 font-tight text-xl font-semibold !text-white">{p.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-white/60">{p.body}</p>
+                <div className="h-full rounded-3xl border border-line bg-white p-7">
+                  <span className="font-mono text-sm text-ink-mute">0{i + 1}</span>
+                  <h3 className="mt-6 font-tight text-xl font-semibold text-ink">{p.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{p.body}</p>
                 </div>
               </Reveal>
             ))}

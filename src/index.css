@@ -398,7 +398,7 @@
   }
 
   .site-eyebrow {
-    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-leaf-500;
+    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-mute;
   }
 
   .site-btn {
@@ -407,11 +407,11 @@
   }
 
   .site-btn-primary {
-    @apply site-btn bg-ink text-white hover:bg-leaf hover:shadow-[0_8px_24px_-8px_rgba(19,81,51,0.6)];
+    @apply site-btn bg-ink text-white hover:bg-ink-3;
   }
 
   .site-btn-zest {
-    @apply site-btn bg-zest text-ink hover:bg-white;
+    @apply site-btn bg-white text-ink hover:bg-white/85;
   }
 
   .site-btn-secondary {
@@ -427,7 +427,7 @@
   }
 
   .site-card-hover {
-    @apply hover:-translate-y-1 hover:border-ink/15 hover:shadow-[0_24px_48px_-24px_rgba(11,26,19,0.25)];
+    @apply hover:-translate-y-0.5 hover:border-ink/15 hover:shadow-[0_16px_40px_-24px_rgba(20,24,22,0.18)];
   }
 
   .site-chip {
@@ -436,7 +436,7 @@
 
   .site-input {
     @apply h-12 w-full rounded-xl border border-line bg-white px-4 text-[15px] text-ink transition-colors placeholder:text-ink-mute/70
-      focus:border-leaf-500 focus:outline-none focus:ring-4 focus:ring-leaf-500/10;
+      focus:border-ink/40 focus:outline-none focus:ring-4 focus:ring-ink/5;
   }
 
   .site-textarea {
@@ -448,14 +448,14 @@
   }
 
   .site-grid-bg {
-    background-image: linear-gradient(to right, rgba(11, 26, 19, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(11, 26, 19, 0.06) 1px, transparent 1px);
+    background-image: linear-gradient(to right, rgba(20, 24, 22, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(20, 24, 22, 0.035) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 
   .site-grid-bg-dark {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 

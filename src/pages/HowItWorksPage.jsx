@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
             <span className="absolute bottom-6 left-[27px] top-6 w-px bg-line sm:left-[31px]" aria-hidden />
             {PROCESS.map((p, i) => (
               <Reveal key={p.step} as="li" delay={i * 0.04} className="relative pb-14 pl-20 last:pb-0 sm:pl-24">
-                <span className="absolute left-0 top-0 inline-flex h-14 w-14 items-center justify-center rounded-full border border-line bg-white font-mono text-sm font-medium text-leaf shadow-sm sm:h-16 sm:w-16">
+                <span className="absolute left-0 top-0 inline-flex h-14 w-14 items-center justify-center rounded-full border border-line bg-white font-mono text-sm font-medium text-ink shadow-sm sm:h-16 sm:w-16">
                   {p.step}
                 </span>
                 <div className="flex flex-wrap items-center gap-3 pt-3">
@@ -62,17 +62,16 @@ export default function HowItWorksPage() {
         </Container>
       </Section>
 
-      <Section tone="ink" className="overflow-hidden">
-        <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-        <Container className="relative">
-          <SectionHeading onDark eyebrow="Our principles" title="The rules we" accent="work by." />
+      <Section tone="paper">
+        <Container>
+          <SectionHeading eyebrow="Our principles" title="The rules we" accent="work by." />
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.06} className="h-full">
-                <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-7">
-                  <span className="font-mono text-sm text-zest">0{i + 1}</span>
-                  <h3 className="mt-6 font-tight text-xl font-semibold !text-white">{p.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-white/60">{p.body}</p>
+                <div className="h-full rounded-3xl border border-line bg-white p-7">
+                  <span className="font-mono text-sm text-ink-mute">0{i + 1}</span>
+                  <h3 className="mt-6 font-tight text-xl font-semibold text-ink">{p.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{p.body}</p>
                 </div>
               </Reveal>
             ))}
@@ -80,7 +79,7 @@ export default function HowItWorksPage() {
         </Container>
       </Section>
 
-      <Section tone="paper">
+      <Section>
         <Container>
           <SectionHeading align="center" eyebrow="Engagements" title="Pick the shape" accent="that fits." />
           <div className="mt-14">
@@ -89,7 +88,7 @@ export default function HowItWorksPage() {
         </Container>
       </Section>
 
-      <Section>
+      <Section tone="paper">
         <Container size="narrow">
           <SectionHeading align="center" eyebrow="FAQ" title="Common" accent="questions." />
           <Accordion items={SITE_FAQS} className="mt-12" />

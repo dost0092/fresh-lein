@@ -38,8 +38,8 @@ export function Section({ className, children, id, tone = 'white' }) {
 
 export function Eyebrow({ children, className, onDark }) {
   return (
-    <p className={cn('site-eyebrow', onDark && 'text-zest', className)}>
-      <span className={cn('h-1.5 w-1.5 rounded-full bg-leaf-500', onDark && 'bg-zest')} />
+    <p className={cn('site-eyebrow', onDark && 'text-white/60', className)}>
+      <span className={cn('h-1.5 w-1.5 rounded-full bg-leaf-500', onDark && 'bg-white/50')} />
       {children}
     </p>
   );
@@ -55,7 +55,7 @@ export function SectionHeading({ eyebrow, title, accent, after, description, ali
         {accent && (
           <>
             {' '}
-            <span className={cn('site-accent', onDark ? 'text-zest' : 'text-leaf')}>{accent}</span>
+            <span className={cn('site-accent', onDark ? 'text-white/55' : 'text-ink-mute')}>{accent}</span>
           </>
         )}
         {after && <> {after}</>}
@@ -105,7 +105,7 @@ export function TextLink({ to, children, className, onDark }) {
       to={to}
       className={cn(
         'group inline-flex items-center gap-1.5 text-[15px] font-semibold',
-        onDark ? 'text-zest hover:text-white' : 'text-leaf hover:text-ink',
+        onDark ? 'text-white hover:text-white/70' : 'text-ink underline decoration-line underline-offset-4 hover:decoration-ink',
         className
       )}
     >
@@ -142,7 +142,7 @@ export function IconTile({ icon: Icon, className, onDark, size = 'md' }) {
         'inline-flex shrink-0 items-center justify-center rounded-2xl',
         size === 'md' && 'h-12 w-12',
         size === 'sm' && 'h-10 w-10 rounded-xl',
-        onDark ? 'bg-white/10 text-zest ring-1 ring-white/10' : 'bg-leaf-50 text-leaf ring-1 ring-leaf-100',
+        onDark ? 'bg-white/10 text-white ring-1 ring-white/10' : 'bg-paper text-ink-soft ring-1 ring-line',
         className
       )}
     >
@@ -159,7 +159,7 @@ export function CheckList({ items, className, onDark, cols = 1 }) {
           <span
             className={cn(
               'mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
-              onDark ? 'bg-zest text-ink' : 'bg-leaf text-white'
+              onDark ? 'bg-white/15 text-white' : 'bg-leaf-100 text-leaf'
             )}
           >
             <Check className="h-3 w-3" strokeWidth={3} />
@@ -214,10 +214,6 @@ export function PageHero({ eyebrow, title, accent, after, description, children,
   return (
     <section className={cn('relative overflow-hidden border-b border-line bg-paper', className)}>
       <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0 opacity-70" aria-hidden />
-      <div
-        className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-zest/30 blur-3xl"
-        aria-hidden
-      />
       <Container className="relative pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-44">
         <Reveal>
           {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
@@ -226,7 +222,7 @@ export function PageHero({ eyebrow, title, accent, after, description, children,
             {accent && (
               <>
                 {' '}
-                <span className="site-accent text-leaf">{accent}</span>
+                <span className="site-accent text-ink-mute">{accent}</span>
               </>
             )}
             {after && <> {after}</>}

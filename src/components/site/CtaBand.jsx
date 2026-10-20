@@ -18,13 +18,11 @@ export default function CtaBand({
       <Reveal>
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 text-white sm:px-12 sm:py-20 lg:px-20 lg:py-24">
           <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-          <div className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-leaf-500/40 blur-[100px]" aria-hidden />
-          <div className="pointer-events-none absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-zest/25 blur-[110px]" aria-hidden />
           <Container className="relative !px-0">
             <div className="grid items-end gap-12 lg:grid-cols-12">
               <div className="lg:col-span-8">
                 <h2 className="site-h2 !text-white">
-                  {title} <span className="site-accent text-zest">{accent}</span>
+                  {title} <span className="site-accent text-white/55">{accent}</span>
                 </h2>
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/65">{description}</p>
                 <div className="mt-10 flex flex-wrap gap-3">
@@ -39,7 +37,7 @@ export default function CtaBand({
               <ul className="space-y-4 lg:col-span-4">
                 {POINTS.map(({ icon: Icon, text }) => (
                   <li key={text} className="flex items-center gap-3 text-[15px] text-white/80">
-                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-zest">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/60">
                       <Icon className="h-4 w-4" />
                     </span>
                     {text}

@@ -35,7 +35,6 @@ export default function SolutionDetailPage() {
     >
       <section className="relative overflow-hidden bg-paper">
         <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-        <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-zest/30 blur-3xl" aria-hidden />
         <Container className="relative pb-20 pt-32 sm:pt-36 lg:pb-28 lg:pt-44">
           <Reveal>
             <Link to="/solutions" className="inline-flex items-center gap-1.5 text-sm text-ink-mute hover:text-ink">
@@ -45,7 +44,7 @@ export default function SolutionDetailPage() {
           <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-center">
             <Reveal delay={0.05} className="lg:col-span-7">
               <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink shadow-sm">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-zest">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-ink text-white">
                   <Icon className="h-3.5 w-3.5" />
                 </span>
                 For {sol.name}
@@ -78,8 +77,8 @@ export default function SolutionDetailPage() {
                           <span
                             className={
                               i === 0
-                                ? 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-zest'
-                                : 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100'
+                                ? 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-paper text-ink ring-1 ring-line'
+                                : 'inline-flex h-10 w-10 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line'
                             }
                           >
                             <SvcIcon className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -119,13 +118,12 @@ export default function SolutionDetailPage() {
               </div>
             </Reveal>
             <Reveal delay={0.08} className="h-full">
-              <div className="relative h-full overflow-hidden rounded-[2rem] bg-ink p-8 text-white sm:p-10">
-                <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
-                <p className="relative font-mono text-[11px] uppercase tracking-[0.16em] text-zest">What we build</p>
-                <h2 className="relative mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] !text-white sm:text-3xl">
+              <div className="h-full rounded-[2rem] border border-line bg-paper p-8 sm:p-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-mute">What we build</p>
+                <h2 className="mt-4 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">
                   A system built around your deals
                 </h2>
-                <CheckList items={sol.builds} onDark className="relative mt-8 !gap-4" />
+                <CheckList items={sol.builds} className="mt-8 !gap-4" />
               </div>
             </Reveal>
           </div>

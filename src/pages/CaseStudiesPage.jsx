@@ -32,7 +32,7 @@ export default function CaseStudiesPage() {
       <Section>
         <Container>
           <div className="mb-10 flex items-start gap-3 rounded-2xl border border-line bg-paper p-5 text-sm leading-relaxed text-ink-soft">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-ink-mute" />
             <p>
               These are representative engagements that describe the scope and shape of our work. Client names and
               figures are kept private. Ask us on a call and we will walk you through work relevant to your team.

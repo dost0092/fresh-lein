@@ -16,7 +16,7 @@ function ServiceRow({ service, index }) {
         <div className="flex items-start gap-5 lg:col-span-5">
           <span className="pt-1 font-mono text-sm text-ink-mute">{String(index + 1).padStart(2, '0')}</span>
           <div>
-            <IconTile icon={service.icon} className="transition-colors group-hover:bg-ink group-hover:text-zest group-hover:ring-ink" />
+            <IconTile icon={service.icon} className="transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink" />
             <h2 className="mt-5 font-tight text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-[1.75rem]">
               {service.name}
             </h2>
@@ -28,7 +28,7 @@ function ServiceRow({ service, index }) {
           <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
             {service.deliverables.slice(0, 4).map((d) => (
               <li key={d} className="flex gap-2.5 text-[14.5px] leading-snug text-ink-soft">
-                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500" />
+                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink/25" />
                 {d}
               </li>
             ))}
@@ -39,11 +39,11 @@ function ServiceRow({ service, index }) {
                 {t}
               </span>
             ))}
-            <span className="site-chip !border-transparent !bg-leaf-50 !text-leaf">Typical: {service.timeline}</span>
+            <span className="site-chip !bg-paper">Typical: {service.timeline}</span>
           </div>
         </div>
         <div className="flex items-start justify-end lg:col-span-1">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-zest">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line text-ink transition-all group-hover:border-ink group-hover:bg-ink group-hover:text-white">
             <ArrowUpRight className="h-5 w-5" />
           </span>
         </div>

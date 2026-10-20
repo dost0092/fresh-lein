@@ -64,7 +64,7 @@ function MegaPanel({ menuKey, onNavigate }) {
                   className="group flex items-start gap-3.5 rounded-2xl p-3.5 transition-colors hover:bg-paper"
                 >
                   {Icon && (
-                    <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100 transition-colors group-hover:bg-ink group-hover:text-zest group-hover:ring-ink">
+                    <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line transition-colors group-hover:bg-ink group-hover:text-white group-hover:ring-ink">
                       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                     </span>
                   )}
@@ -80,7 +80,7 @@ function MegaPanel({ menuKey, onNavigate }) {
             <Link
               to={menu.all.to}
               onClick={onNavigate}
-              className="group mt-3 inline-flex items-center gap-1.5 px-3.5 text-sm font-semibold text-leaf hover:text-ink"
+              className="group mt-3 inline-flex items-center gap-1.5 px-3.5 text-sm font-semibold text-ink hover:text-ink-soft"
             >
               {menu.all.label}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -91,17 +91,15 @@ function MegaPanel({ menuKey, onNavigate }) {
           <Link
             to="/book-audit"
             onClick={onNavigate}
-            className="group relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl bg-ink p-6 text-white"
+            className="group relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl border border-line bg-paper p-6 transition-colors hover:border-ink/20"
           >
-            <div className="site-grid-bg-dark pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
             <div className="relative">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-zest">Not sure where to start?</p>
-              <p className="mt-3 font-tight text-xl font-semibold leading-snug text-white">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute">Not sure where to start?</p>
+              <p className="mt-3 font-tight text-xl font-semibold leading-snug text-ink">
                 Book a 30-minute call. We will tell you what to build first.
               </p>
             </div>
-            <span className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-zest">
+            <span className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
               Book a call
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </span>
@@ -139,7 +137,7 @@ function MobileMenu({ open, onClose, isAuthenticated }) {
                 {expanded === key && (
                   <div className="grid gap-1 pb-4">
                     {menu.all && (
-                      <Link to={menu.all.to} onClick={onClose} className="rounded-xl px-3 py-2.5 text-[15px] font-semibold text-leaf">
+                      <Link to={menu.all.to} onClick={onClose} className="rounded-xl px-3 py-2.5 text-[15px] font-semibold text-ink">
                         {menu.all.label}
                       </Link>
                     )}

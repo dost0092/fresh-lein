@@ -70,8 +70,6 @@ function Hero() {
   return (
     <section className="relative overflow-hidden bg-paper">
       <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-      <div className="pointer-events-none absolute -left-40 top-20 h-[480px] w-[480px] rounded-full bg-leaf-100 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -right-32 -top-32 h-[560px] w-[560px] rounded-full bg-zest/35 blur-3xl" aria-hidden />
 
       <Container className="relative pb-24 pt-32 sm:pt-36 lg:pb-32 lg:pt-44">
         <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-10">
@@ -81,7 +79,7 @@ function Hero() {
                 to="/services"
                 className="group inline-flex items-center gap-2 rounded-full border border-line bg-white/80 py-1 pl-1 pr-3 text-[13px] font-medium text-ink-soft shadow-sm backdrop-blur transition-colors hover:border-ink/20"
               >
-                <span className="rounded-full bg-ink px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-wider text-zest">
+                <span className="rounded-full bg-ink px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-wider text-white/60">
                   Services
                 </span>
                 Data · AI · CRM · Campaigns for real estate
@@ -90,7 +88,7 @@ function Hero() {
             </Reveal>
             <Reveal delay={0.05}>
               <h1 className="site-display mt-7">
-                The data, AI and growth team <span className="site-accent text-leaf">behind your deals.</span>
+                The data, AI and growth team <span className="site-accent text-ink-mute">behind your deals.</span>
               </h1>
             </Reveal>
             <Reveal delay={0.1}>
@@ -114,7 +112,7 @@ function Hero() {
               <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-ink-soft">
                 {['Fixed-scope quotes', 'Weekly demos', 'You own the code and data'].map((t) => (
                   <li key={t} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-leaf" strokeWidth={2.5} />
+                    <Check className="h-4 w-4 text-ink-mute" strokeWidth={2.5} />
                     {t}
                   </li>
                 ))}
@@ -168,18 +166,17 @@ function OneTeam() {
                   <path d="M100 0 V12 Q100 18 106 18 H494 Q500 18 500 12 V0 M300 0 V36" stroke="currentColor" strokeWidth="1.5" fill="none" vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
-              <div className="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:flex-row sm:items-center">
-                <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
+              <div className="flex flex-col gap-5 rounded-2xl border border-line bg-paper p-6 sm:flex-row sm:items-center">
                 <LogoMark className="relative h-11 w-11 shrink-0" />
                 <div className="relative">
-                  <p className="font-tight text-lg font-semibold !text-white">One FreshLien team</p>
-                  <p className="mt-1 text-[14px] leading-snug text-white/60">
+                  <p className="font-tight text-lg font-semibold text-ink">One FreshLien team</p>
+                  <p className="mt-1 text-[14px] leading-snug text-ink-mute">
                     Designed together, connected end to end, and handed over to you.
                   </p>
                 </div>
                 <Link
                   to="/book-audit"
-                  className="relative inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-zest hover:text-white sm:ml-auto"
+                  className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-soft sm:ml-auto"
                 >
                   Start a project <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -219,11 +216,9 @@ function Services() {
 
 function Audiences() {
   return (
-    <Section tone="ink" className="overflow-hidden">
-      <div className="site-grid-bg-dark site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-      <Container className="relative">
+    <Section tone="paper">
+      <Container>
         <SectionHeading
-          onDark
           eyebrow="Solutions"
           title="Built for every seat at the"
           accent="real estate table."
@@ -295,7 +290,7 @@ function Principles() {
               <Eyebrow>Why FreshLien</Eyebrow>
               <p className="mt-6 font-tight text-[2rem] font-semibold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
                 “Most real estate teams don’t need another subscription.{' '}
-                <span className="site-accent text-leaf">They need someone to build the system.</span>”
+                <span className="site-accent text-ink-mute">They need someone to build the system.</span>”
               </p>
               <p className="mt-6 text-[15px] text-ink-mute">The idea FreshLien was founded on.</p>
             </Reveal>
@@ -303,7 +298,7 @@ function Principles() {
           <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-7">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.06}>
-                <span className="font-mono text-sm text-leaf">0{i + 1}</span>
+                <span className="font-mono text-sm text-ink-mute">0{i + 1}</span>
                 <h3 className="site-h3 mt-3">{p.title}</h3>
                 <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{p.body}</p>
               </Reveal>
@@ -343,14 +338,14 @@ function Faq() {
             <SectionHeading eyebrow="FAQ" title="Questions," accent="answered." />
             <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
               Something else on your mind?{' '}
-              <Link to="/contact" className="font-semibold text-leaf hover:text-ink">
+              <Link to="/contact" className="font-semibold text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
                 Ask us directly
               </Link>
               .
             </p>
             <Link
               to="/faq"
-              className="group mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ink hover:text-leaf"
+              className="group mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ink hover:text-ink-soft"
             >
               All FAQs <ArrowUpRight className="h-4 w-4" />
             </Link>

@@ -112,7 +112,7 @@ export default function LeadForm({ variant = 'full', subject, defaults = {}, sen
                       active ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-soft hover:border-ink/30'
                     )}
                   >
-                    {active && <Check className="h-3.5 w-3.5 text-zest" strokeWidth={3} />}
+                    {active && <Check className="h-3.5 w-3.5 text-white/60" strokeWidth={3} />}
                     {s.name}
                   </button>
                 );
@@ -182,7 +182,7 @@ export default function LeadForm({ variant = 'full', subject, defaults = {}, sen
 export function SentState({ title = 'Thanks, we have got it.', body }) {
   return (
     <div className="py-10 text-center">
-      <span className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full bg-leaf text-white">
+      <span className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full bg-ink text-white">
         <Check className="h-7 w-7" strokeWidth={2.5} />
       </span>
       <h2 className="mt-6 font-tight text-2xl font-semibold text-ink">{title}</h2>

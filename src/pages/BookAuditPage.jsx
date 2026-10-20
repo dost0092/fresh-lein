@@ -34,13 +34,12 @@ export default function BookAuditPage() {
     >
       <section className="relative overflow-hidden bg-paper">
         <div className="site-grid-bg site-fade-mask pointer-events-none absolute inset-0" aria-hidden />
-        <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-zest/30 blur-3xl" aria-hidden />
         <Container className="relative pb-24 pt-32 sm:pt-36 lg:pt-44">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
               <Eyebrow>Book a strategy call</Eyebrow>
               <h1 className="site-display mt-5 !text-[2.6rem] sm:!text-[3.4rem]">
-                Let us look at your workflow <span className="site-accent text-leaf">together.</span>
+                Let us look at your workflow <span className="site-accent text-ink-mute">together.</span>
               </h1>
               <p className="site-lead mt-6">
                 Share a few details and we will reply within one business day with times for a 30-minute call. No prep,
@@ -57,7 +56,7 @@ export default function BookAuditPage() {
                 <ol className="mt-5 space-y-4">
                   {PROCESS.slice(0, 3).map((p) => (
                     <li key={p.step} className="flex gap-4">
-                      <span className="font-mono text-sm text-leaf">{p.step}</span>
+                      <span className="font-mono text-sm text-ink-mute">{p.step}</span>
                       <div>
                         <p className="font-semibold text-ink">{p.title}</p>
                         <p className="text-sm text-ink-mute">{p.duration}</p>
@@ -69,9 +68,9 @@ export default function BookAuditPage() {
 
               <a
                 href={CONTACT_MAILTO_SUBJECT('Project inquiry')}
-                className="mt-10 inline-flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-leaf"
+                className="mt-10 inline-flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-ink"
               >
-                <Mail className="h-4 w-4 text-leaf" /> Prefer email? {COMPANY.contactEmail}
+                <Mail className="h-4 w-4 text-ink-mute" /> Prefer email? {COMPANY.contactEmail}
               </a>
             </Reveal>
 

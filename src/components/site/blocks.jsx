@@ -26,7 +26,7 @@ export function ServiceCard({ service, index = 0, className }) {
         </div>
         <h3 className="site-h3 mt-8">{service.name}</h3>
         <p className="mt-3 flex-1 text-[15px] leading-relaxed text-ink-soft">{service.short}</p>
-        <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-leaf transition-colors group-hover:text-ink">
+        <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft transition-colors group-hover:text-ink">
           Explore
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </span>
@@ -81,10 +81,10 @@ export function AudienceExplorer() {
                 onClick={() => setActive(i)}
                 className={cn(
                   'flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all lg:w-full',
-                  isActive ? 'bg-white text-ink shadow-lg' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                  isActive ? 'bg-white text-ink shadow-sm ring-1 ring-line' : 'text-ink-soft hover:bg-white/70 hover:text-ink'
                 )}
               >
-                <Icon className={cn('h-[18px] w-[18px]', isActive ? 'text-leaf' : 'text-white/40')} strokeWidth={1.75} />
+                <Icon className={cn('h-[18px] w-[18px]', isActive ? 'text-ink' : 'text-ink-mute')} strokeWidth={1.75} />
                 <span className="whitespace-nowrap text-[15px] font-semibold">{s.name}</span>
                 <ArrowRight className={cn('ml-auto hidden h-4 w-4 lg:block', isActive ? 'opacity-100' : 'opacity-0')} />
               </button>
@@ -101,21 +101,20 @@ export function AudienceExplorer() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="relative h-full overflow-hidden rounded-[2rem] border border-white/10 bg-ink-2 p-7 sm:p-10"
+            className="relative h-full overflow-hidden rounded-[2rem] border border-line bg-white p-7 sm:p-10"
           >
-            <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-leaf-500/30 blur-3xl" aria-hidden />
-            <p className="relative font-mono text-[11px] uppercase tracking-[0.18em] text-zest">For {sol.name}</p>
-            <h3 className="relative mt-4 font-tight text-2xl font-semibold leading-tight tracking-[-0.02em] !text-white sm:text-[2rem]">
+            <p className="relative font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute">For {sol.name}</p>
+            <h3 className="relative mt-4 font-tight text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-[2rem]">
               {sol.headline}
             </h3>
 
             <div className="relative mt-8 grid gap-8 sm:grid-cols-2">
               <div>
-                <p className="text-sm font-semibold text-white/50">What gets in the way</p>
+                <p className="text-sm font-semibold text-ink-mute">What gets in the way</p>
                 <ul className="mt-4 space-y-3">
                   {sol.pains.map((p) => (
-                    <li key={p} className="flex items-start gap-3 text-[15px] leading-relaxed text-white/60">
-                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/60">
+                    <li key={p} className="flex items-start gap-3 text-[15px] leading-relaxed text-ink-soft">
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper text-ink-mute ring-1 ring-line">
                         <X className="h-3 w-3" strokeWidth={3} />
                       </span>
                       {p}
@@ -124,18 +123,18 @@ export function AudienceExplorer() {
                 </ul>
               </div>
               <div>
-                <p className="text-sm font-semibold text-white/50">What we build</p>
-                <CheckList items={sol.builds} onDark className="mt-4" />
+                <p className="text-sm font-semibold text-ink-mute">What we build</p>
+                <CheckList items={sol.builds} className="mt-4" />
               </div>
             </div>
 
-            <div className="relative mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+            <div className="relative mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
               <div className="flex flex-wrap gap-2">
                 {sol.services.slice(0, 3).map((slug) => (
                   <Link
                     key={slug}
                     to={`/services/${slug}`}
-                    className="rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-white/70 transition-colors hover:border-zest hover:text-zest"
+                    className="rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft transition-colors hover:border-ink/30 hover:text-ink"
                   >
                     {getService(slug)?.name}
                   </Link>
@@ -143,7 +142,7 @@ export function AudienceExplorer() {
               </div>
               <Link
                 to={`/solutions/${sol.slug}`}
-                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-zest hover:text-white"
+                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-soft"
               >
                 See the full solution
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -163,7 +162,7 @@ export function ProcessSteps({ compact = false }) {
         <Reveal key={p.step} delay={i * 0.07} as="li" className="relative">
           <div className="site-card h-full p-6">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-sm font-medium text-leaf">{p.step}</span>
+              <span className="font-mono text-sm font-medium text-ink-mute">{p.step}</span>
               <span className="rounded-full bg-paper px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ink-mute">
                 {p.duration}
               </span>
@@ -193,14 +192,11 @@ export function EngagementCards() {
               e.featured ? 'bg-ink text-white' : 'border border-line bg-white'
             )}
           >
-            {e.featured && (
-              <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-leaf-500/40 blur-3xl" aria-hidden />
-            )}
             <div className="relative flex items-center justify-between">
               <span
                 className={cn(
                   'rounded-full px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.14em]',
-                  e.featured ? 'bg-zest text-ink' : 'bg-paper text-ink-mute'
+                  e.featured ? 'bg-white text-ink' : 'bg-paper text-ink-mute'
                 )}
               >
                 {e.tagline}
@@ -245,8 +241,8 @@ export function ExampleCard({ example, index = 0, expanded = false }) {
                 <span
                   key={slug}
                   className={cn(
-                    'inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-lg ring-1',
-                    i === 0 ? 'bg-ink text-zest ring-ink' : 'bg-white text-leaf ring-line'
+                    'inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm ring-1',
+                    i === 0 ? 'bg-white text-ink ring-line' : 'bg-white text-ink-mute ring-line'
                   )}
                   title={s.name}
                 >
@@ -269,7 +265,7 @@ export function ExampleCard({ example, index = 0, expanded = false }) {
             </>
           )}
           <div className="mt-auto pt-6">
-            <p className="rounded-2xl bg-leaf-50 p-4 text-[14.5px] font-medium leading-relaxed text-leaf">{example.outcome}</p>
+            <p className="rounded-2xl border border-line bg-paper p-4 text-[14.5px] leading-relaxed text-ink-soft">{example.outcome}</p>
           </div>
         </div>
       </article>

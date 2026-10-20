@@ -90,11 +90,11 @@ module.exports = {
   				light: '#EDF5F0',
   			},
   			ink: {
-  				DEFAULT: '#0B1A13',
-  				2: '#11261C',
-  				3: '#1A3428',
-  				soft: '#45534B',
-  				mute: '#6B7871'
+  				DEFAULT: '#151817',
+  				2: '#1D211F',
+  				3: '#2A2F2C',
+  				soft: '#4A514D',
+  				mute: '#737A76'
   			},
   			leaf: {
   				DEFAULT: '#135133',
@@ -108,8 +108,8 @@ module.exports = {
   				DEFAULT: '#D4F36C',
   				soft: '#EEFBC4'
   			},
-  			paper: '#F7F8F4',
-  			line: '#E3E7E1'
+  			paper: '#F8F8F6',
+  			line: '#E7E8E4'
   		},
   		fontFamily: {
   			heading: ['var(--font-heading)'],

@@ -50,7 +50,7 @@ export default function ContactPage() {
             <Reveal className="lg:col-span-5">
               <Eyebrow>Contact</Eyebrow>
               <h1 className="site-display mt-5 !text-[2.6rem] sm:!text-[3.4rem]">
-                Talk to a <span className="site-accent text-leaf">real person.</span>
+                Talk to a <span className="site-accent text-ink-mute">real person.</span>
               </h1>
               <p className="site-lead mt-6">
                 Questions, partnerships, or a project in mind. Send a note and someone from the team will get back to you
@@ -61,7 +61,7 @@ export default function ContactPage() {
                   const Icon = o.icon;
                   const inner = (
                     <>
-                      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-leaf-50 text-leaf ring-1 ring-leaf-100">
+                      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-paper text-ink-soft ring-1 ring-line">
                         <Icon className="h-5 w-5" strokeWidth={1.75} />
                       </span>
                       <div className="min-w-0">
